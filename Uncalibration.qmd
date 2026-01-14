@@ -5,7 +5,6 @@ editor: visual
 ---
 
 ```{r}
-install.packages("rcarbon")
 library(rcarbon)
 ```
 
@@ -13,15 +12,11 @@ library(rcarbon)
 ```{r}
 uncalibrate(c(43500, 43390, 31510, 31365, 29505, 24045, 24680))
   x, 
-  calCurves = "intcal20",
+  calCurves = "intcal13",
   eps = 1e-05,
   compact = TRUE,
   verbose = TRUE,
   ...
 )
-```
-
-```{r}
-
 ```
 
