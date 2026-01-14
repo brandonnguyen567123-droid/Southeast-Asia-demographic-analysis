@@ -25,7 +25,7 @@ bins <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins,
-  timeRange = c(50000, 0))
+  timeRange = c(25000, 5000))
 plot(spd_res)
 
 ```
