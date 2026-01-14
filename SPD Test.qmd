@@ -1,0 +1,33 @@
+---
+title: "SPD test"
+format: html
+editor: visual
+---
+
+```{r}
+library(readxl)
+library(rcarbon)
+
+dates <- read_excel("Demographic analysis sites.xlsx")
+
+calDates <- calibrate(
+  x = dates$C14Age,
+  errors = dates$C14SD,
+  calCurves = "intcal20"  
+)
+
+bins <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 200
+)
+
+spd_res <- spd(
+  calDates, 
+  bins = bins,
+  timeRange = c(50000, 0))
+plot(spd_res)
+
+```
+
+
