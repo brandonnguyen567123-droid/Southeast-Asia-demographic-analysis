@@ -1,7 +1,6 @@
 ---
 title: "SPD test"
-format: html
-editor: visual
+format: gfm
 ---
 
 ```{r}
