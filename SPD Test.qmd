@@ -15,7 +15,30 @@ calDates <- calibrate(
   calCurves = "intcal20"  
 )
 
-bins <- binPrep(
+spd_unbinned <- spd(
+  calDates,
+  timeRange = c(25000, 5000))
+plot(spd_unbinned)
+
+```
+
+```{r}
+bins_100 <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 100
+)
+
+spd_res <- spd(
+  calDates, 
+  bins = bins_100,
+  timeRange = c(25000, 5000))
+plot(spd_res)
+```
+
+
+```{r}
+bins_200 <- binPrep(
   sites = dates$Site,
   ages = dates$C14Age,
   h = 200
@@ -23,10 +46,76 @@ bins <- binPrep(
 
 spd_res <- spd(
   calDates, 
-  bins = bins,
+  bins = bins_200,
   timeRange = c(25000, 5000))
 plot(spd_res)
-
 ```
+
+```{r}
+
+bins_200 <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 200
+)
+
+calDates2 = calDates[thinDates(ages = dates$C14Age,
+                               errors = dates$C14SD,
+                               bins = bins_200,
+                               size = 1,
+                               method = 'random')]
+
+spd_thin <- spd(
+  calDates2,
+  timeRange = c(25000, 5000)
+)
+
+plot(spd_thin)
+```
+
+```{r}
+bins_500 <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 500
+)
+
+spd_res <- spd(
+  calDates, 
+  bins = bins_500,
+  timeRange = c(25000, 5000))
+plot(spd_res)
+```
+
+```{r}
+bins_5000 <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 5000
+)
+
+spd_res <- spd(
+  calDates, 
+  bins = bins_5000,
+  timeRange = c(25000, 5000))
+plot(spd_res)
+```
+
+```{r}
+bins_200 <- binPrep(
+  sites = dates$Site,
+  ages = dates$C14Age,
+  h = 200
+)
+
+ckde_res = sampleDates(calDates,bins=bins_200,nsim=100,verbose=FALSE)
+
+Sea.ckde = ckde(ckde_res,
+                timeRange = c(25000, 5000),
+                bw = 200)
+
+plot(Sea.ckde, type = 'multiline')
+```
+
 
 
