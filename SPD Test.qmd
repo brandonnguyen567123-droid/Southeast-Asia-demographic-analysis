@@ -24,16 +24,21 @@ calDates <- calibrate(
 ```
 
 ## Results
-The resulting plots are relatively consistent in peaks and show that practically every period is accounted for. The consistent increase in dates after 14,000 ka do call for some investigation which is our current focus.
+The resulting plots are relatively consistent in peaks and show that practically every period is accounted for. The consistent increase in dates after 14,000 BP do call for some investigation which is our current focus.
 ```{r}
+#| label: fig-unbinned
+#| fig-cap: Unbinned SPD plot
 # Plotting the summed probability distribution
 spd_unbinned <- spd(
   calDates,
   timeRange = c(25000, 5000))
 plot(spd_unbinned)
 ```
+In @fig-unbinned there is a continuous occupation of Southeast Asia from 25000 BP to present although there is a more consistent increase in height starting from 14 ka.
 
 ```{r}
+#| label: fig-100-bin
+#| fig-cap: SPD plot with a bin of 100 years
 # Grouping dates within 100 years of each other into bins
 bins_100 <- binPrep(
   sites = dates$Site,
@@ -48,9 +53,11 @@ spd_res <- spd(
   timeRange = c(25000, 5000))
 plot(spd_res)
 ```
-
+In @fig-100-bin the peaks are consistent but grow more intense the only exceptions being the hills just before 15 ka and just after 10 ka are a little depressed from the binning compared to the rest of the peaks.
 
 ```{r}
+#| label: fig-200-bin
+#| fig-cap: SPD plot with a bin of 200 years
 # Grouping dates within 200 years of each other into bins
 bins_200 <- binPrep(
   sites = dates$Site,
@@ -65,9 +72,11 @@ spd_res <- spd(
   timeRange = c(25000, 5000))
 plot(spd_res)
 ```
-
+In @fig-200-bin the changes are more noticeable as the peak around 13 ka and just before 10 ka is much higher than the original plot.
 
 ```{r}
+#| label: fig-500-bin
+#| fig-cap: SPD plot with a bin of 500 years
 # Grouping dates within 500 years of each other into bins
 bins_500 <- binPrep(
   sites = dates$Site,
@@ -82,8 +91,11 @@ spd_res <- spd(
   timeRange = c(25000, 5000))
 plot(spd_res)
 ```
+In @fig-500-bin the peaks around 13 ka are even more intense but the hill around 14 ka depresses a little, the peak just before 10 ka also lowers considerably compared to the original plot.
 
 ```{r}
+#| label: fig-5000-bin
+#| fig-cap: SPD plot with a bin of 5000 years
 # Grouping dates within 5000 years of each other into bins
 bins_5000 <- binPrep(
   sites = dates$Site,
@@ -98,8 +110,11 @@ spd_res <- spd(
   timeRange = c(25000, 5000))
 plot(spd_res)
 ```
+In @fig-5000-bin a lot of the hills depress however a couple of them spike up into their own peaks especially around 25-23 ka, 17 ka, and 12 ka.
 
 ```{r}
+#| label: fig-thinned
+#| fig-cap: SPD plot with thinning
 # Grouping dates within 200 years of each other into bins
 bins_200 <- binPrep(
   sites = dates$Site,
@@ -122,8 +137,11 @@ spd_thin <- spd(
 # Plotting the SPD after thinning
 plot(spd_thin)
 ```
+In @fig-thinned the thinning caused more mild variation like the 100 and 200 year bins but the peaks around 13 and 12 ka intensify and the one just after 10 ka depresses. 
 
 ```{r}
+#| label: fig-CKDE
+#| fig-cap: CKDE plot
 # Grouping dates within 200 years of each other into bins
 bins_200 <- binPrep(
   sites = dates$Site,
@@ -140,6 +158,6 @@ Sea.ckde = ckde(ckde_res,
 #Plotting the CKDE
 plot(Sea.ckde, type = 'multiline')
 ```
-
+In @fig-CKDE the bands show a consistent occupation but support the notion of increased intensity starting from 14 ka.
 
 
