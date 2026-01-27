@@ -57,7 +57,7 @@ spd_unbinned <- spd(
 plot(spd_unbinned)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-unbinned-1.png)
+![](README_files/figure-commonmark/fig-unbinned-1.png)
 
 In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
 continuous occupation of Southeast Asia from 25000 BP to present
@@ -361,7 +361,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-100-bin-1.png)
+![](README_files/figure-commonmark/fig-100-bin-1.png)
 
 In <a href="#fig-100-bin" class="quarto-xref">Figure 2</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
@@ -661,7 +661,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-200-bin-1.png)
+![](README_files/figure-commonmark/fig-200-bin-1.png)
 
 In <a href="#fig-200-bin" class="quarto-xref">Figure 3</a> the changes
 are more noticeable as the peak around 13 ka and just before 10 ka is
@@ -936,7 +936,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-500-bin-1.png)
+![](README_files/figure-commonmark/fig-500-bin-1.png)
 
 In <a href="#fig-500-bin" class="quarto-xref">Figure 4</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
@@ -1084,7 +1084,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-5000-bin-1.png)
+![](README_files/figure-commonmark/fig-5000-bin-1.png)
 
 In <a href="#fig-5000-bin" class="quarto-xref">Figure 5</a> a lot of the
 hills depress however a couple of them spike up into their own peaks
@@ -1119,7 +1119,7 @@ spd_thin <- spd(
 plot(spd_thin)
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-thinned-1.png)
+![](README_files/figure-commonmark/fig-thinned-1.png)
 
 In <a href="#fig-thinned" class="quarto-xref">Figure 6</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
@@ -1143,7 +1143,7 @@ Sea.ckde = ckde(ckde_res,
 plot(Sea.ckde, type = 'multiline')
 ```
 
-![](SPD-Test_files/figure-commonmark/fig-CKDE-1.png)
+![](README_files/figure-commonmark/fig-CKDE-1.png)
 
 In <a href="#fig-CKDE" class="quarto-xref">Figure 7</a> the bands show a
 consistent occupation but support the notion of increased intensity

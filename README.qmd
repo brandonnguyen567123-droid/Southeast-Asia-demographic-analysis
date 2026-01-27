@@ -19,8 +19,9 @@ dates <- read_excel("Demographic analysis sites.xlsx")
 calDates <- calibrate(
   x = dates$C14Age,
   errors = dates$C14SD,
-  calCurves = "intcal20"  
-)
+  calCurves = "intcal20",
+  verbose = FALSE)
+
 ```
 
 ## Results
