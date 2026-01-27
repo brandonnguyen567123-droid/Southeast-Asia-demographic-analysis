@@ -5,50 +5,29 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   render-quarto:
     runs-on: ubuntu-latest
-    container: rocker/rstudio:4.3  # Use R container with R installed
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
     
+    - name: Setup R
+      uses: r-lib/actions/setup-r@v2
+      with:
+        r-version: '4.3'
+        use-public-rspm: true
+    
+    - name: Install system dependencies for Quarto
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl jq
+        
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
-  
-    
-    - name: Install common R packages for Quarto
-      run: |
-        # Install common Quarto R packages
-        Rscript -e "install.packages(c('knitr', 'rmarkdown', 'tidyverse', 'ggplot2', 'dplyr', 'tidyr'), repos = 'https://cloud.r-project.org')"
-        
-        # Install packages based on quarto files content
-        Rscript -e "
-          # Find and parse R packages used in quarto files
-          files <- list.files(pattern = '\\\\.qmd$', recursive = TRUE, full.names = TRUE)
-          if(length(files) > 0) {
-            packages <- c()
-            for(file in files) {
-              content <- readLines(file, warn = FALSE)
-              # Look for library() or require() calls
-              lib_lines <- grep('library\\(|require\\(', content, value = TRUE)
-              for(line in lib_lines) {
-                pkg <- gsub('.*library\\(|require\\(|\\)|[\"\\' ].*', '', line)
-                if(nchar(pkg) > 0 && !pkg %in% c('', ' ')) {
-                  packages <- c(packages, pkg)
-                }
-              }
-            }
-            packages <- unique(packages)
-            if(length(packages) > 0) {
-              cat('Found R packages in qmd files:', paste(packages, collapse = ', '), '\n')
-              install.packages(packages, repos = 'https://cloud.r-project.org')
-            }
-          }
-        "
     
     - name: Cache R packages
       uses: actions/cache@v3
@@ -57,64 +36,171 @@ jobs:
           /usr/local/lib/R/site-library
           /usr/lib/R/site-library
           ~/.cache/R
-        key: ${{ runner.os }}-r-packages-${{ hashFiles('**/*.qmd', 'DESCRIPTION', 'requirements.R') }}
+          ~/.local/share/quarto
+        key: ${{ runner.os }}-r-quarto-${{ hashFiles('**/*.qmd', 'DESCRIPTION', 'requirements.R') }}
         restore-keys: |
-          ${{ runner.os }}-r-packages-
+          ${{ runner.os }}-r-quarto-
+  
     
-    - name: Create _freeze directory for caching
+    - name: Install base R packages for Quarto
       run: |
-        # Create _freeze directory for quarto caching
+        Rscript -e "
+          base_packages <- c('knitr', 'rmarkdown', 'tinytex', 'stringr')
+          installed <- rownames(installed.packages())
+          needed <- setdiff(base_packages, installed)
+          if (length(needed) > 0) {
+            install.packages(needed, repos = 'https://cloud.r-project.org')
+          }
+        "
+    
+    - name: Install R packages from quarto files
+      run: |
+        Rscript -e "
+          # Function to extract package names
+          extract_packages <- function(content) {
+            packages <- c()
+            
+            # Find library() and require() calls
+            lib_lines <- grep('library\\(|require\\(', content, value = TRUE)
+            for(line in lib_lines) {
+              # Remove comments
+              line <- gsub('#.*$', '', line)
+              # Extract package name
+              pkg <- gsub('.*library\\(|require\\(', '', line)
+              pkg <- gsub('\\).*', '', pkg)
+              pkg <- gsub('[\"\\']', '', pkg)
+              pkg <- trimws(pkg)
+              if(nchar(pkg) > 0) {
+                packages <- c(packages, pkg)
+              }
+            }
+            
+            # Find pkg::function calls (simplified)
+            pkgref_lines <- grep('::', content, value = TRUE)
+            for(line in pkgref_lines) {
+              # Remove comments
+              line <- gsub('#.*$', '', line)
+              # Extract package names before ::
+              matches <- regmatches(line, gregexpr('[a-zA-Z0-9.]+::', line))[[1]]
+              for(match in matches) {
+                pkg <- gsub('::$', '', match)
+                if(nchar(pkg) > 0 && !grepl('^[0-9]', pkg)) {
+                  packages <- c(packages, pkg)
+                }
+              }
+            }
+            
+            unique(packages)
+          }
+          
+          # Find and parse qmd files
+          files <- list.files(pattern = '\\\\.qmd$', recursive = TRUE, full.names = TRUE, ignore.case = TRUE)
+          files <- files[!grepl('\\\\.git|_freeze|renv', files)]
+          
+          all_packages <- c()
+          
+          if(length(files) > 0) {
+            cat('Found', length(files), 'Quarto files\\n')
+            for(file in files[1:min(20, length(files))]) { # Limit to 20 files to avoid long parsing
+              tryCatch({
+                content <- readLines(file, warn = FALSE)
+                packages <- extract_packages(content)
+                all_packages <- c(all_packages, packages)
+                if(length(packages) > 0) {
+                  cat('  ', basename(file), '->', paste(packages, collapse = ', '), '\\n')
+                }
+              }, error = function(e) {
+                cat('  Error reading', file, ':', e$message, '\\n')
+              })
+            }
+            
+            all_packages <- unique(all_packages)
+            all_packages <- all_packages[!all_packages %in% c('base', 'utils', 'stats', 'graphics', 'grDevices', 'methods', 'datasets')]
+            
+            if(length(all_packages) > 0) {
+              cat('\\nInstalling packages from Quarto files:', paste(all_packages, collapse = ', '), '\\n')
+              
+              # Check which are already installed
+              installed <- rownames(installed.packages())
+              needed <- setdiff(all_packages, installed)
+              
+              if(length(needed) > 0) {
+                cat('Need to install:', paste(needed, collapse = ', '), '\\n')
+                for(pkg in needed) {
+                  tryCatch({
+                    install.packages(pkg, repos = 'https://cloud.r-project.org', quiet = TRUE)
+                    cat('  ✓', pkg, '\\n')
+                  }, error = function(e) {
+                    cat('  ✗ Failed to install', pkg, ':', e$message, '\\n')
+                  })
+                }
+              } else {
+                cat('All packages already installed\\n')
+              }
+            } else {
+              cat('No packages found in Quarto files\\n')
+            }
+          } else {
+            cat('No .qmd files found\\n')
+          }
+        "
+    
+    - name: Create freeze directory for caching
+      run: |
         mkdir -p _freeze
     
-    - name: Test render all Quarto files
+    - name: List quarto files
       run: |
-        echo "=== Finding and rendering Quarto files ==="
+        echo "=== Quarto files found ==="
+        find . -name "*.qmd" -type f ! -path "./.git/*" ! -path "*/_freeze/*" ! -path "*/renv/*" | sort
+        echo ""
+    
+    - name: Test render quarto files
+      run: |
+        echo "=== Rendering Quarto files ==="
         
-        # Find all .qmd files
-        QMD_FILES=$(find . -name "*.qmd" -type f | grep -v ".git" | grep -v "_freeze" || true)
+        # Find all qmd files
+        QMD_FILES=$(find . -name "*.qmd" -type f ! -path "./.git/*" ! -path "*/_freeze/*" ! -path "*/renv/*" | sort || true)
         
         if [ -z "$QMD_FILES" ]; then
           echo "No .qmd files found"
           exit 0
         fi
         
-        echo "Found $(echo "$QMD_FILES" | wc -l) Quarto (.qmd) files:"
-        echo "$QMD_FILES"
+        echo "Found $(echo "$QMD_FILES" | wc -l) files to render"
         echo ""
         
         FAILED_FILES=""
         SUCCESS_COUNT=0
+        TOTAL_FILES=0
         
         # Render each file
         for file in $QMD_FILES; do
-          echo "--- Rendering: $file ---"
+          TOTAL_FILES=$((TOTAL_FILES + 1))
+          echo "--- [$TOTAL_FILES] Rendering: $file ---"
           
-          # Create output directory in same location
-          OUTPUT_DIR="$(dirname "$file")/output"
-          mkdir -p "$OUTPUT_DIR"
+          # Create output directory
+          OUTPUT_DIR="$(dirname "$file")"
+          OUTPUT_FILE="${OUTPUT_DIR}/$(basename "$file" .qmd).html"
           
-          # Try to render with timeout
-          TIMEOUT=300  # 5 minutes per file
-          
-          if timeout $TIMEOUT quarto render "$file" \
-            --to html \
-            --output-dir "$OUTPUT_DIR" \
-            --cache-refresh \
-            --execute-daemon-restart; then
-            
-            echo "✅ Successfully rendered: $file"
+          # Try to render
+          if quarto render "$file" --to html --output "$OUTPUT_FILE"; then
+            echo "✅ Success: $(basename "$file")"
             SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+            
+            # Check if output was created
+            if [ -f "$OUTPUT_FILE" ]; then
+              echo "   Output: $OUTPUT_FILE"
+            else
+              echo "   Warning: No output file created"
+            fi
           else
-            echo "❌ Failed to render: $file"
-            echo "Trying with verbose output..."
-            
-            # Try again with verbose output to see the error
-            timeout $TIMEOUT quarto render "$file" \
-              --to html \
-              --output-dir "$OUTPUT_DIR" \
-              --verbose || true
-            
+            echo "❌ Failed: $(basename "$file")"
             FAILED_FILES="${FAILED_FILES}\n- ${file}"
+            
+            # Try to get more info
+            echo "   Trying with debug output..."
+            quarto render "$file" --to html --debug || true
           fi
           
           echo ""
@@ -122,23 +208,25 @@ jobs:
         
         # Summary
         echo "=== Rendering Summary ==="
-        echo "Total files found: $(echo "$QMD_FILES" | wc -l)"
+        echo "Total files processed: $TOTAL_FILES"
         echo "Successfully rendered: $SUCCESS_COUNT"
         
         if [ -n "$FAILED_FILES" ]; then
-          echo "Failed files: $FAILED_FILES"
-          echo "::error::Some Quarto files failed to render: $FAILED_FILES"
+          echo "::error::Some Quarto files failed to render"
+          echo "Failed files ($((TOTAL_FILES - SUCCESS_COUNT))):"
+          echo -e "$FAILED_FILES"
           exit 1
         else
           echo "✅ All Quarto files rendered successfully!"
         fi
     
-    - name: Upload rendered HTML files as artifacts
+    - name: Upload rendered HTML as artifact
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: rendered-html-output
+        name: rendered-html
         path: |
-          **/output/
+          **/*.html
+          !**/.git/
           !**/node_modules/
         retention-days: 7
