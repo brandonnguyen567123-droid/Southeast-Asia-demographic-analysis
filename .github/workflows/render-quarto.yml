@@ -1,0 +1,144 @@
+name: Test Quarto Rendering
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  render-quarto:
+    runs-on: ubuntu-latest
+    container: rocker/rstudio:4.3  # Use R container with R installed
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Quarto
+      uses: quarto-dev/quarto-actions/setup@v2
+  
+    
+    - name: Install common R packages for Quarto
+      run: |
+        # Install common Quarto R packages
+        Rscript -e "install.packages(c('knitr', 'rmarkdown', 'tidyverse', 'ggplot2', 'dplyr', 'tidyr'), repos = 'https://cloud.r-project.org')"
+        
+        # Install packages based on quarto files content
+        Rscript -e "
+          # Find and parse R packages used in quarto files
+          files <- list.files(pattern = '\\\\.qmd$', recursive = TRUE, full.names = TRUE)
+          if(length(files) > 0) {
+            packages <- c()
+            for(file in files) {
+              content <- readLines(file, warn = FALSE)
+              # Look for library() or require() calls
+              lib_lines <- grep('library\\(|require\\(', content, value = TRUE)
+              for(line in lib_lines) {
+                pkg <- gsub('.*library\\(|require\\(|\\)|[\"\\' ].*', '', line)
+                if(nchar(pkg) > 0 && !pkg %in% c('', ' ')) {
+                  packages <- c(packages, pkg)
+                }
+              }
+            }
+            packages <- unique(packages)
+            if(length(packages) > 0) {
+              cat('Found R packages in qmd files:', paste(packages, collapse = ', '), '\n')
+              install.packages(packages, repos = 'https://cloud.r-project.org')
+            }
+          }
+        "
+    
+    - name: Cache R packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          /usr/local/lib/R/site-library
+          /usr/lib/R/site-library
+          ~/.cache/R
+        key: ${{ runner.os }}-r-packages-${{ hashFiles('**/*.qmd', 'DESCRIPTION', 'requirements.R') }}
+        restore-keys: |
+          ${{ runner.os }}-r-packages-
+    
+    - name: Create _freeze directory for caching
+      run: |
+        # Create _freeze directory for quarto caching
+        mkdir -p _freeze
+    
+    - name: Test render all Quarto files
+      run: |
+        echo "=== Finding and rendering Quarto files ==="
+        
+        # Find all .qmd files
+        QMD_FILES=$(find . -name "*.qmd" -type f | grep -v ".git" | grep -v "_freeze" || true)
+        
+        if [ -z "$QMD_FILES" ]; then
+          echo "No .qmd files found"
+          exit 0
+        fi
+        
+        echo "Found $(echo "$QMD_FILES" | wc -l) Quarto (.qmd) files:"
+        echo "$QMD_FILES"
+        echo ""
+        
+        FAILED_FILES=""
+        SUCCESS_COUNT=0
+        
+        # Render each file
+        for file in $QMD_FILES; do
+          echo "--- Rendering: $file ---"
+          
+          # Create output directory in same location
+          OUTPUT_DIR="$(dirname "$file")/output"
+          mkdir -p "$OUTPUT_DIR"
+          
+          # Try to render with timeout
+          TIMEOUT=300  # 5 minutes per file
+          
+          if timeout $TIMEOUT quarto render "$file" \
+            --to html \
+            --output-dir "$OUTPUT_DIR" \
+            --cache-refresh \
+            --execute-daemon-restart; then
+            
+            echo "✅ Successfully rendered: $file"
+            SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+          else
+            echo "❌ Failed to render: $file"
+            echo "Trying with verbose output..."
+            
+            # Try again with verbose output to see the error
+            timeout $TIMEOUT quarto render "$file" \
+              --to html \
+              --output-dir "$OUTPUT_DIR" \
+              --verbose || true
+            
+            FAILED_FILES="${FAILED_FILES}\n- ${file}"
+          fi
+          
+          echo ""
+        done
+        
+        # Summary
+        echo "=== Rendering Summary ==="
+        echo "Total files found: $(echo "$QMD_FILES" | wc -l)"
+        echo "Successfully rendered: $SUCCESS_COUNT"
+        
+        if [ -n "$FAILED_FILES" ]; then
+          echo "Failed files: $FAILED_FILES"
+          echo "::error::Some Quarto files failed to render: $FAILED_FILES"
+          exit 1
+        else
+          echo "✅ All Quarto files rendered successfully!"
+        fi
+    
+    - name: Upload rendered HTML files as artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: rendered-html-output
+        path: |
+          **/output/
+          !**/node_modules/
+        retention-days: 7
