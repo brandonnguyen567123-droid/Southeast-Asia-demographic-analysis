@@ -16,74 +16,111 @@ jobs:
     
     - name: Setup R
       uses: r-lib/actions/setup-r@v2
+      with:
+        r-version: '4.3'
     
-    - name: Install spatial system dependencies
+    - name: Install system libraries for spatial packages
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           libgdal-dev \
           libgeos-dev \
           libproj-dev \
-          libudunits2-dev \
-          libsqlite3-dev
+          libudunits2-dev
         
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
     
-    - name: Install R packages from DESCRIPTION or install.R
+    - name: Install R packages from package list
       run: |
-        # Install remotes first
-        Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')"
+        # Create a simple installation script
+        cat > install_packages.R << 'EOF'
+        # List of packages to install
+        packages <- c(
+          # Quarto essentials
+          "knitr",
+          "rmarkdown",
+          "tinytex",
+          
+          # Tidyverse
+          "tidyverse",
+          
+          # Spatial packages
+          "sf",
+          "terra",
+          "units",
+          
+          # rcarbon and dependencies
+          "rcarbon"
+        )
         
-        # If there's an install.R file, use it
-        if [ -f "install.R" ]; then
-          echo "Using install.R to install packages"
-          Rscript install.R
-        # If there's a DESCRIPTION file, use remotes
-        elif [ -f "DESCRIPTION" ]; then
-          echo "Installing dependencies from DESCRIPTION"
-          Rscript -e "remotes::install_deps(dependencies = TRUE)"
-        # Otherwise install common packages
-        else
-          echo "Installing common packages"
-          Rscript -e "
-            pkgs <- c('knitr', 'rmarkdown', 'tinytex', 'ggplot2', 'dplyr', 'tidyr')
-            install.packages(pkgs, repos = 'https://cloud.r-project.org')
-          "
-        fi
-    
-    - name: Install sf and rcarbon with system dependencies
-      run: |
-        Rscript -e "
-          # Install spatial packages
-          spatial_pkgs <- c('units', 'sf', 'terra')
-          
-          for (pkg in spatial_pkgs) {
-            if (!requireNamespace(pkg, quietly = TRUE)) {
-              cat('Installing', pkg, '...\n')
-              install.packages(pkg, repos = 'https://cloud.r-project.org', configure.args = c(
-                '--with-gdal-config=/usr/bin/gdal-config',
-                '--with-geos-config=/usr/bin/geos-config',
-                '--with-proj-include=/usr/include',
-                '--with-proj-lib=/usr/lib/x86_64-linux-gnu'
-              ))
+        cat("Installing packages...\n")
+        
+        # Try CRAN first
+        for (pkg in packages) {
+          cat("Installing", pkg, "... ")
+          tryCatch({
+            install.packages(pkg, repos = "https://cloud.r-project.org", quiet = TRUE)
+            cat("✓\n")
+          }, error = function(e) {
+            cat("✗ (CRAN failed:", e$message, ")\n")
+            
+            # For rcarbon specifically, try different methods
+            if (pkg == "rcarbon") {
+              cat("  Trying alternative methods for rcarbon...\n")
+              
+              # Method 1: Install from CRAN archive
+              tryCatch({
+                cat("  Method 1: CRAN archive... ")
+                url <- "https://cran.r-project.org/src/contrib/Archive/rcarbon/rcarbon_1.5.0.tar.gz"
+                install.packages(url, repos = NULL, type = "source")
+                cat("✓\n")
+              }, error = function(e1) {
+                cat("✗\n")
+                
+                # Method 2: Install dependencies manually
+                tryCatch({
+                  cat("  Method 2: Manual install... ")
+                  # Download and install manually
+                  temp_file <- tempfile(fileext = ".tar.gz")
+                  download.file("https://cran.r-project.org/src/contrib/rcarbon_1.5.0.tar.gz", temp_file)
+                  install.packages(temp_file, repos = NULL, type = "source")
+                  cat("✓\n")
+                }, error = function(e2) {
+                  cat("✗\n")
+                })
+              })
             }
-          }
-          
-          # Install rcarbon from GitHub
-          if (!requireNamespace('rcarbon', quietly = TRUE)) {
-            cat('Installing rcarbon from GitHub...\n')
-            remotes::install_github('ahb108/rcarbon')
-          }
-        "
+          })
+        }
+        
+        # Verify installation
+        cat("\nVerifying installation:\n")
+        for (pkg in packages) {
+          status <- requireNamespace(pkg, quietly = TRUE)
+          cat(pkg, ":", if (status) "✓" else "✗", "\n")
+        }
+        EOF
+        
+        Rscript install_packages.R
     
-    - name: Render Quarto files
+    - name: Render all Quarto files
       run: |
-        # Simple render all .qmd files
+        # Simple render command
         find . -name "*.qmd" -type f ! -path "./.git/*" | while read file; do
-          echo "Rendering: $file"
-          quarto render "$file" --to html || {
-            echo "::error::Failed to render $file"
+          echo "=== Rendering: $file ==="
+          
+          # Try to render
+          if quarto render "$file" --to html; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            
+            # Check for missing packages
+            echo "Checking for missing packages in file:"
+            grep -n "library\|require" "$file" | head -5 || true
+            
             exit 1
-          }
+          fi
+          echo ""
         done
