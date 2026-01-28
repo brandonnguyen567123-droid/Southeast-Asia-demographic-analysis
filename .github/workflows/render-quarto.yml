@@ -17,95 +17,73 @@ jobs:
     - name: Setup R
       uses: r-lib/actions/setup-r@v2
     
+    - name: Install spatial system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libgdal-dev \
+          libgeos-dev \
+          libproj-dev \
+          libudunits2-dev \
+          libsqlite3-dev
+        
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
     
-    - name: Install common R packages
+    - name: Install R packages from DESCRIPTION or install.R
       run: |
-        Rscript -e "install.packages(c('knitr', 'rmarkdown', 'tinytex'), repos = 'https://cloud.r-project.org')"
+        # Install remotes first
+        Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')"
+        
+        # If there's an install.R file, use it
+        if [ -f "install.R" ]; then
+          echo "Using install.R to install packages"
+          Rscript install.R
+        # If there's a DESCRIPTION file, use remotes
+        elif [ -f "DESCRIPTION" ]; then
+          echo "Installing dependencies from DESCRIPTION"
+          Rscript -e "remotes::install_deps(dependencies = TRUE)"
+        # Otherwise install common packages
+        else
+          echo "Installing common packages"
+          Rscript -e "
+            pkgs <- c('knitr', 'rmarkdown', 'tinytex', 'ggplot2', 'dplyr', 'tidyr')
+            install.packages(pkgs, repos = 'https://cloud.r-project.org')
+          "
+        fi
     
-    - name: Render Quarto files with auto-install
+    - name: Install sf and rcarbon with system dependencies
       run: |
-        # Create a script that tries to render and install missing packages
-        cat > render_quarto.R << 'EOF'
-        # Function to render a qmd file, installing packages as needed
-        render_qmd_with_auto_install <- function(file) {
-          cat("Rendering:", file, "\n")
+        Rscript -e "
+          # Install spatial packages
+          spatial_pkgs <- c('units', 'sf', 'terra')
           
-          # Try to render
-          result <- tryCatch({
-            system2("quarto", c("render", shQuote(file), "--to", "html", "--execute"), 
-                   stdout = TRUE, stderr = TRUE)
-          }, error = function(e) e)
+          for (pkg in spatial_pkgs) {
+            if (!requireNamespace(pkg, quietly = TRUE)) {
+              cat('Installing', pkg, '...\n')
+              install.packages(pkg, repos = 'https://cloud.r-project.org', configure.args = c(
+                '--with-gdal-config=/usr/bin/gdal-config',
+                '--with-geos-config=/usr/bin/geos-config',
+                '--with-proj-include=/usr/include',
+                '--with-proj-lib=/usr/lib/x86_64-linux-gnu'
+              ))
+            }
+          }
           
-          # Check if it failed due to missing package
-          if (inherits(result, "error") || any(grepl("there is no package called", result))) {
-            # Extract missing package name
-            missing_pkg <- NULL
-            for (line in result) {
-              if (grepl("there is no package called ['\"]([a-zA-Z0-9._]+)['\"]", line)) {
-                missing_pkg <- gsub(".*there is no package called ['\"]([a-zA-Z0-9._]+)['\"].*", "\\1", line)
-                break
-              }
-            }
-            
-            if (!is.null(missing_pkg)) {
-              cat("Missing package detected:", missing_pkg, "\n")
-              cat("Installing", missing_pkg, "...\n")
-              
-              tryCatch({
-                install.packages(missing_pkg, repos = "https://cloud.r-project.org")
-                cat("Successfully installed", missing_pkg, "\n")
-                
-                # Try rendering again
-                cat("Retrying render...\n")
-                system2("quarto", c("render", shQuote(file), "--to", "html", "--execute"))
-                return(TRUE)
-              }, error = function(e) {
-                cat("Failed to install", missing_pkg, ":", e$message, "\n")
-                return(FALSE)
-              })
-            } else {
-              cat("Failed for unknown reason:\n")
-              cat(paste(result, collapse = "\n"), "\n")
-              return(FALSE)
-            }
-          } else {
-            cat("Successfully rendered", file, "\n")
-            return(TRUE)
+          # Install rcarbon from GitHub
+          if (!requireNamespace('rcarbon', quietly = TRUE)) {
+            cat('Installing rcarbon from GitHub...\n')
+            remotes::install_github('ahb108/rcarbon')
           }
-        }
-        
-        # Find and render all .qmd files
-        qmd_files <- list.files(pattern = "\\.qmd$", recursive = TRUE, full.names = TRUE)
-        qmd_files <- qmd_files[!grepl("\\.git", qmd_files)]
-        
-        if (length(qmd_files) == 0) {
-          cat("No .qmd files found\n")
-          quit(save = "no", status = 0)
-        }
-        
-        cat("Found", length(qmd_files), "Quarto files\n")
-        
-        failed_files <- c()
-        
-        for (file in qmd_files) {
-          success <- render_qmd_with_auto_install(file)
-          if (!success) {
-            failed_files <- c(failed_files, file)
+        "
+    
+    - name: Render Quarto files
+      run: |
+        # Simple render all .qmd files
+        find . -name "*.qmd" -type f ! -path "./.git/*" | while read file; do
+          echo "Rendering: $file"
+          quarto render "$file" --to html || {
+            echo "::error::Failed to render $file"
+            exit 1
           }
-          cat("\n")
-        }
-        
-        if (length(failed_files) > 0) {
-          cat("Failed to render the following files:\n")
-          cat(paste(failed_files, collapse = "\n"), "\n")
-          quit(save = "no", status = 1)
-        } else {
-          cat("All files rendered successfully!\n")
-          quit(save = "no", status = 0)
-        }
-        EOF
-        
-        # Run the render script
-        Rscript render_quarto.R
+        done
