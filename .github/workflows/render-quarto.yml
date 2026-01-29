@@ -21,7 +21,7 @@ jobs:
 
     # Make your PAT available to R, pak, remotes, etc.
     - name: Set GITHUB_PAT
-      run: echo "GITHUB_PAT=${{ secrets.GITHUB_PAT }}" >> $GITHUB_ENV
+      run: echo "GITHUB_PAT=${{ secrets.MY_GITHUB_PAT }}" >> $GITHUB_ENV
     
     - name: Install system libraries for spatial packages
       run: |
