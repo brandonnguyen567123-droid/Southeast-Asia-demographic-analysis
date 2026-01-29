@@ -30,6 +30,10 @@ jobs:
         
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
+
+    - name: Install rcarbon from GitHub
+      run: |
+         Rscript -e 'remotes::install_github("ahb108/rcarbon", upgrade = "never")'
     
     - name: Install R packages from package list
       run: |
