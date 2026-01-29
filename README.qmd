@@ -51,7 +51,8 @@ bins_100 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_100,
-  timeRange = c(25000, 5000))
+  timeRange = c(25000, 5000),
+  verbose = FALSE)
 plot(spd_res)
 ```
 In @fig-100-bin the peaks are consistent but grow more intense the only exceptions being the hills just before 15 ka and just after 10 ka are a little depressed from the binning compared to the rest of the peaks.
@@ -70,7 +71,8 @@ bins_200 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_200,
-  timeRange = c(25000, 5000))
+  timeRange = c(25000, 5000),
+  verbose = FALSE)
 plot(spd_res)
 ```
 In @fig-200-bin the changes are more noticeable as the peak around 13 ka and just before 10 ka is much higher than the original plot.
@@ -89,7 +91,8 @@ bins_500 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_500,
-  timeRange = c(25000, 5000))
+  timeRange = c(25000, 5000),
+  verbose = FALSE)
 plot(spd_res)
 ```
 In @fig-500-bin the peaks around 13 ka are even more intense but the hill around 14 ka depresses a little, the peak just before 10 ka also lowers considerably compared to the original plot.
@@ -108,7 +111,8 @@ bins_5000 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_5000,
-  timeRange = c(25000, 5000))
+  timeRange = c(25000, 5000),
+  verbose = FALSE)
 plot(spd_res)
 ```
 In @fig-5000-bin a lot of the hills depress however a couple of them spike up into their own peaks especially around 25-23 ka, 17 ka, and 12 ka.
