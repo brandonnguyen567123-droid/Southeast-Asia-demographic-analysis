@@ -22,9 +22,43 @@ sampled from each calibrated date to generate a kernel density estimate,
 its done multiple times which all are visualized as an envelope.
 
 ``` r
+library(tidyverse)
+```
+
+    Warning: package 'ggplot2' was built under R version 4.5.2
+
+    Warning: package 'tibble' was built under R version 4.5.2
+
+    Warning: package 'tidyr' was built under R version 4.5.2
+
+    Warning: package 'readr' was built under R version 4.5.2
+
+    Warning: package 'purrr' was built under R version 4.5.2
+
+    ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ✔ dplyr     1.1.4     ✔ readr     2.1.6
+    ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+    ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+    ✔ purrr     1.2.1     
+    ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ✖ dplyr::filter() masks stats::filter()
+    ✖ dplyr::lag()    masks stats::lag()
+    ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(readxl)
 library(rcarbon)
+```
 
+
+    Attaching package: 'rcarbon'
+
+    The following object is masked from 'package:dplyr':
+
+        combine
+
+``` r
 # Read excel sheet with dates across Southeast Asia and southern China
 dates <- read_excel("Demographic analysis sites.xlsx")
 
@@ -44,10 +78,12 @@ dates after 14,000 BP do call for some investigation which is our
 current focus.
 
 ``` r
+age_range <- c(50000,2000)
+
 # Plotting the summed probability distribution
 spd_unbinned <- spd(
   calDates,
-  timeRange = c(25000, 5000))
+  timeRange = age_range)
 ```
 
     [1] "Extracting and aggregating..."
@@ -55,20 +91,32 @@ spd_unbinned <- spd(
 
 ``` r
 plot(spd_unbinned)
-```
 
-<div id="fig-unbinned">
+# with ggplot2
+ggplot(spd_unbinned$grid) +
+  aes(calBP, PrDens) +
+  geom_line() +
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 26000, xmax = 19000,  # df$start[1], df$end[1]
+           colour = "red",
+           fill = "red",
+           alpha = 0.2) +
+    annotate("text",
+           x = 22000, # midpoint of start and end
+           y = 0.09,
+           label = "LGM") + # df$event_name[1]
+  scale_x_reverse() +
+  theme_minimal() 
+```
 
 ![](README_files/figure-commonmark/fig-unbinned-1.png)
 
-Figure 1: Unbinned SPD plot
+![](README_files/figure-commonmark/fig-unbinned-2.png)
 
-</div>
-
-In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
-continuous occupation of Southeast Asia from 25000 BP to present
-although there is a more consistent increase in height starting from 14
-ka.
+In **?@fig-unbinned** there is a continuous occupation of Southeast Asia
+from 25000 BP to present although there is a more consistent increase in
+height starting from 14 ka.
 
 ``` r
 # Grouping dates within 100 years of each other into bins
@@ -82,20 +130,15 @@ bins_100 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_100,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
+
 plot(spd_res)
 ```
 
-<div id="fig-100-bin">
-
 ![](README_files/figure-commonmark/fig-100-bin-1.png)
 
-Figure 2: SPD plot with a bin of 100 years
-
-</div>
-
-In <a href="#fig-100-bin" class="quarto-xref">Figure 2</a> the peaks are
+In <a href="#fig-100-bin" class="quarto-xref">Figure 3</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
 just before 15 ka and just after 10 ka are a little depressed from the
 binning compared to the rest of the peaks.
@@ -112,20 +155,15 @@ bins_200 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_200,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
+
 plot(spd_res)
 ```
 
-<div id="fig-200-bin">
-
 ![](README_files/figure-commonmark/fig-200-bin-1.png)
 
-Figure 3: SPD plot with a bin of 200 years
-
-</div>
-
-In <a href="#fig-200-bin" class="quarto-xref">Figure 3</a> the changes
+In <a href="#fig-200-bin" class="quarto-xref">Figure 4</a> the changes
 are more noticeable as the peak around 13 ka and just before 10 ka is
 much higher than the original plot.
 
@@ -141,20 +179,14 @@ bins_500 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_500,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
 plot(spd_res)
 ```
 
-<div id="fig-500-bin">
-
 ![](README_files/figure-commonmark/fig-500-bin-1.png)
 
-Figure 4: SPD plot with a bin of 500 years
-
-</div>
-
-In <a href="#fig-500-bin" class="quarto-xref">Figure 4</a> the peaks
+In <a href="#fig-500-bin" class="quarto-xref">Figure 5</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
 little, the peak just before 10 ka also lowers considerably compared to
 the original plot.
@@ -171,20 +203,14 @@ bins_5000 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_5000,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
 plot(spd_res)
 ```
 
-<div id="fig-5000-bin">
-
 ![](README_files/figure-commonmark/fig-5000-bin-1.png)
 
-Figure 5: SPD plot with a bin of 5000 years
-
-</div>
-
-In <a href="#fig-5000-bin" class="quarto-xref">Figure 5</a> a lot of the
+In <a href="#fig-5000-bin" class="quarto-xref">Figure 6</a> a lot of the
 hills depress however a couple of them spike up into their own peaks
 especially around 25-23 ka, 17 ka, and 12 ka.
 
@@ -205,7 +231,7 @@ calDates2 = calDates[thinDates(ages = dates$C14Age,
 
 spd_thin <- spd(
   calDates2,
-  timeRange = c(25000, 5000)
+  timeRange = age_range
 )
 ```
 
@@ -217,15 +243,9 @@ spd_thin <- spd(
 plot(spd_thin)
 ```
 
-<div id="fig-thinned">
-
 ![](README_files/figure-commonmark/fig-thinned-1.png)
 
-Figure 6: SPD plot with thinning
-
-</div>
-
-In <a href="#fig-thinned" class="quarto-xref">Figure 6</a> the thinning
+In <a href="#fig-thinned" class="quarto-xref">Figure 7</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
 around 13 and 12 ka intensify and the one just after 10 ka depresses.
 
@@ -241,20 +261,15 @@ bins_200 <- binPrep(
 ckde_res = sampleDates(calDates,bins=bins_200,nsim=100,verbose=FALSE)
 
 Sea.ckde = ckde(ckde_res,
-                timeRange = c(25000, 5000),
+                timeRange = age_range,
                 bw = 200)
+
 #Plotting the CKDE
 plot(Sea.ckde, type = 'multiline')
 ```
 
-<div id="fig-CKDE">
-
 ![](README_files/figure-commonmark/fig-CKDE-1.png)
 
-Figure 7: CKDE plot
-
-</div>
-
-In <a href="#fig-CKDE" class="quarto-xref">Figure 7</a> the bands show a
+In <a href="#fig-CKDE" class="quarto-xref">Figure 8</a> the bands show a
 consistent occupation but support the notion of increased intensity
 starting from 14 ka.

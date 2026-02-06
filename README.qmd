@@ -8,7 +8,9 @@ I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to early Holoce
 
 ## Methods
 First we calibrated all the dates using IntCal20 in rcarbon, then we made summed probability distributions and visualized it in multiple ways, first without binning. Next to account for well dated sites overshadowing sites with less amount of dates we binned the data by 100 years, then 200 years, then 500, and finally 5000. Another method used to account for inter-site variation is thinning where only 1 date from each bin is chosen to construct the SPD with. A new method used to plot was composite kernel density estimates where random calendar dates were sampled from each calibrated date to generate a kernel density estimate, its done multiple times which all are visualized as an envelope. 
+
 ```{r}
+library(tidyverse)
 library(readxl)
 library(rcarbon)
 
@@ -25,21 +27,47 @@ calDates <- calibrate(
 ```
 
 ## Results
+
 The resulting plots are relatively consistent in peaks and show that practically every period is accounted for. The consistent increase in dates after 14,000 BP do call for some investigation which is our current focus.
+
 ```{r}
 #| label: fig-unbinned
 #| fig-cap: Unbinned SPD plot
+
+
+age_range <- c(50000,2000)
+
 # Plotting the summed probability distribution
 spd_unbinned <- spd(
   calDates,
-  timeRange = c(25000, 5000))
+  timeRange = age_range)
+
 plot(spd_unbinned)
+
+# with ggplot2
+ggplot(spd_unbinned$grid) +
+  aes(calBP, PrDens) +
+  geom_line() +
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 26000, xmax = 19000,  # df$start[1], df$end[1]
+           colour = "red",
+           fill = "red",
+           alpha = 0.2) +
+    annotate("text",
+           x = 22000, # midpoint of start and end
+           y = 0.09,
+           label = "LGM") + # df$event_name[1]
+  scale_x_reverse() +
+  theme_minimal() 
 ```
+
 In @fig-unbinned there is a continuous occupation of Southeast Asia from 25000 BP to present although there is a more consistent increase in height starting from 14 ka.
 
 ```{r}
 #| label: fig-100-bin
 #| fig-cap: SPD plot with a bin of 100 years
+
 # Grouping dates within 100 years of each other into bins
 bins_100 <- binPrep(
   sites = dates$Site,
@@ -51,15 +79,18 @@ bins_100 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_100,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
+
 plot(spd_res)
 ```
+
 In @fig-100-bin the peaks are consistent but grow more intense the only exceptions being the hills just before 15 ka and just after 10 ka are a little depressed from the binning compared to the rest of the peaks.
 
 ```{r}
 #| label: fig-200-bin
 #| fig-cap: SPD plot with a bin of 200 years
+
 # Grouping dates within 200 years of each other into bins
 bins_200 <- binPrep(
   sites = dates$Site,
@@ -71,8 +102,9 @@ bins_200 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_200,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
+
 plot(spd_res)
 ```
 In @fig-200-bin the changes are more noticeable as the peak around 13 ka and just before 10 ka is much higher than the original plot.
@@ -91,7 +123,7 @@ bins_500 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_500,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
 plot(spd_res)
 ```
@@ -111,7 +143,7 @@ bins_5000 <- binPrep(
 spd_res <- spd(
   calDates, 
   bins = bins_5000,
-  timeRange = c(25000, 5000),
+  timeRange = age_range,
   verbose = FALSE)
 plot(spd_res)
 ```
@@ -136,7 +168,7 @@ calDates2 = calDates[thinDates(ages = dates$C14Age,
 
 spd_thin <- spd(
   calDates2,
-  timeRange = c(25000, 5000)
+  timeRange = age_range
 )
 
 # Plotting the SPD after thinning
@@ -158,8 +190,9 @@ bins_200 <- binPrep(
 ckde_res = sampleDates(calDates,bins=bins_200,nsim=100,verbose=FALSE)
 
 Sea.ckde = ckde(ckde_res,
-                timeRange = c(25000, 5000),
+                timeRange = age_range,
                 bw = 200)
+
 #Plotting the CKDE
 plot(Sea.ckde, type = 'multiline')
 ```
