@@ -17,7 +17,7 @@ jobs:
     - name: Setup R
       uses: r-lib/actions/setup-r@v2
       with:
-        r-version: '4.3'
+        r-version: '4.4'
 
     - name: Set GITHUB_PAT
       run: echo "GITHUB_PAT=${{ secrets.MY_GITHUB_PAT }}" >> $GITHUB_ENV
