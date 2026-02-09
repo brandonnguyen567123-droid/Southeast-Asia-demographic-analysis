@@ -3,7 +3,7 @@
 
 ## Data
 
-I gathered 269 uncalibrated radiocarbon ages from 32 Pliestocene to
+I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to
 early Holocene sites across Southeast Asia and southern China. For one
 of the Chinese sites Xiaodong I had to uncalibrate the ages using the
 built in feature in rcarbon.
@@ -25,21 +25,11 @@ its done multiple times which all are visualized as an envelope.
 library(tidyverse)
 ```
 
-    Warning: package 'ggplot2' was built under R version 4.5.2
-
-    Warning: package 'tibble' was built under R version 4.5.2
-
-    Warning: package 'tidyr' was built under R version 4.5.2
-
-    Warning: package 'readr' was built under R version 4.5.2
-
-    Warning: package 'purrr' was built under R version 4.5.2
-
     ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ✔ dplyr     1.1.4     ✔ readr     2.1.6
+    ✔ dplyr     1.2.0     ✔ readr     2.1.6
     ✔ forcats   1.0.1     ✔ stringr   1.6.0
-    ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
-    ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+    ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+    ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
     ✔ purrr     1.2.1     
     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ✖ dplyr::filter() masks stats::filter()
@@ -92,31 +82,270 @@ spd_unbinned <- spd(
 ``` r
 plot(spd_unbinned)
 
+#| label: fig-unbinned-climate
+#| fig-cap: Unbinned SPD plot with climate events overlayed 
+```
+
+<div id="fig-unbinned">
+
+![](README_files/figure-commonmark/fig-unbinned-1.png)
+
+Figure 1: Unbinned SPD plot
+
+</div>
+
+``` r
 # with ggplot2
 ggplot(spd_unbinned$grid) +
   aes(calBP, PrDens) +
   geom_line() +
   annotate("rect",
            ymin = 0, ymax = Inf,
-           xmin = 26000, xmax = 19000,  # df$start[1], df$end[1]
+           xmin = 26500, xmax = 19000,  # df$start[1], df$end[1]
            colour = "red",
            fill = "red",
-           alpha = 0.2) +
+           alpha = 0.1) +
     annotate("text",
-           x = 22000, # midpoint of start and end
+           x = 22500, # midpoint of start and end
            y = 0.09,
            label = "LGM") + # df$event_name[1]
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 12900, xmax = 11700,  
+           colour = "pink",
+           fill = "pink",
+           alpha = 0.2) +
+    annotate("text",
+           x = 12300, 
+           y = 0.09,
+           label = "YD") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 14700, xmax = 12900,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 13800, 
+           y = 0.09,
+           label = "GI-1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 18000, xmax = 14700,  
+           colour = "pink",
+           fill = "pink",
+           alpha = 0.2) +
+    annotate("text",
+           x = 16350, 
+           y = 0.09,
+           label = "OD") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 8400, xmax = 8000,  
+           colour = "green",
+           fill = "green",
+           alpha = 0.2) +
+    annotate("text",
+           x = 8200, 
+           y = 0.09,
+           label = "8.2ky") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 23340, xmax = 23240,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 23290, 
+           y = 0.08,
+           label = "GI-2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 27780, xmax = 27480,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 27630, 
+           y = 0.08,
+           label = "GI-3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 28900, xmax = 28600,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 28750, 
+           y = 0.09,
+           label = "GI-4") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 32500, xmax = 32000,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 32250, 
+           y = 0.08,
+           label = "GI-5") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 33740, xmax = 33440,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 33590, 
+           y = 0.09,
+           label = "GI-6") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 35480, xmax = 34780,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 35130, 
+           y = 0.09,
+           label = "GI-7") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 38220, xmax = 36620,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 37420, 
+           y = 0.09,
+           label = "GI-8") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 40160, xmax = 39860,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 40010, 
+           y = 0.08,
+           label = "GI-9") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 41460, xmax = 40760,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 41110, 
+           y = 0.09,
+           label = "GI-10") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 43340, xmax = 42340,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 42840, 
+           y = 0.08,
+           label = "GI-11") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 46860, xmax = 44260,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 45560, 
+           y = 0.09,
+           label = "GI-12") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 29000, xmax = 11700,  
+           colour = "cyan",
+           alpha = 0) +
+    annotate("text",
+           x = 20350, 
+           y = 0.1,
+           label = "MIS2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 11700, xmax = 0,  
+           colour = "navy",
+           alpha = 0) +
+    annotate("text",
+           x = 5850, 
+           y = 0.1,
+           label = "MIS1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 50000, xmax = 29000,  
+           colour = "dodgerblue",
+           alpha = 0) +
+    annotate("text",
+           x = 39500, 
+           y = 0.1,
+           label = "MIS3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 16800, xmax = 16800,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 16800, 
+           y = 0.07,
+           label = "H1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 24000, xmax = 24000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 24000, 
+           y = 0.07,
+           label = "H2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 31000, xmax = 31000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 31000, 
+           y = 0.07,
+           label = "H3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 38000, xmax = 38000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 38000, 
+           y = 0.07,
+           label = "H4") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 45000, xmax = 45000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 45000, 
+           y = 0.07,
+           label = "H5") + 
   scale_x_reverse() +
   theme_minimal() 
 ```
 
-![](README_files/figure-commonmark/fig-unbinned-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
 
-![](README_files/figure-commonmark/fig-unbinned-2.png)
-
-In **?@fig-unbinned** there is a continuous occupation of Southeast Asia
-from 25000 BP to present although there is a more consistent increase in
-height starting from 14 ka.
+In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
+continuous occupation of Southeast Asia from 25000 BP to present
+although there is a more consistent increase in height starting from 14
+ka.
 
 ``` r
 # Grouping dates within 100 years of each other into bins
@@ -136,9 +365,15 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-100-bin">
+
 ![](README_files/figure-commonmark/fig-100-bin-1.png)
 
-In <a href="#fig-100-bin" class="quarto-xref">Figure 3</a> the peaks are
+Figure 2: SPD plot with a bin of 100 years
+
+</div>
+
+In <a href="#fig-100-bin" class="quarto-xref">Figure 2</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
 just before 15 ka and just after 10 ka are a little depressed from the
 binning compared to the rest of the peaks.
@@ -161,9 +396,268 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-200-bin">
+
 ![](README_files/figure-commonmark/fig-200-bin-1.png)
 
-In <a href="#fig-200-bin" class="quarto-xref">Figure 4</a> the changes
+Figure 3: SPD plot with a bin of 200 years
+
+</div>
+
+``` r
+ggplot(spd_res$grid) +
+  aes(calBP, PrDens) +
+  geom_line() +
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 26500, xmax = 19000,  # df$start[1], df$end[1]
+           colour = "red",
+           fill = "red",
+           alpha = 0.1) +
+    annotate("text",
+           x = 22500, # midpoint of start and end
+           y = 0.09,
+           label = "LGM") + # df$event_name[1]
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 12900, xmax = 11700,  
+           colour = "pink",
+           fill = "pink",
+           alpha = 0.2) +
+    annotate("text",
+           x = 12300, 
+           y = 0.09,
+           label = "YD") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 14700, xmax = 12900,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 13800, 
+           y = 0.09,
+           label = "GI-1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 18000, xmax = 14700,  
+           colour = "pink",
+           fill = "pink",
+           alpha = 0.2) +
+    annotate("text",
+           x = 16350, 
+           y = 0.09,
+           label = "OD") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 8400, xmax = 8000,  
+           colour = "green",
+           fill = "green",
+           alpha = 0.2) +
+    annotate("text",
+           x = 8200, 
+           y = 0.09,
+           label = "8.2ky") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 23340, xmax = 23240,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 23290, 
+           y = 0.08,
+           label = "GI-2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 27780, xmax = 27480,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 27630, 
+           y = 0.08,
+           label = "GI-3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 28900, xmax = 28600,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 28750, 
+           y = 0.09,
+           label = "GI-4") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 32500, xmax = 32000,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 32250, 
+           y = 0.08,
+           label = "GI-5") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 33740, xmax = 33440,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 33590, 
+           y = 0.09,
+           label = "GI-6") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 35480, xmax = 34780,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 35130, 
+           y = 0.09,
+           label = "GI-7") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 38220, xmax = 36620,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 37420, 
+           y = 0.09,
+           label = "GI-8") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 40160, xmax = 39860,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 40010, 
+           y = 0.08,
+           label = "GI-9") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 41460, xmax = 40760,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 41110, 
+           y = 0.09,
+           label = "GI-10") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 43340, xmax = 42340,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 42840, 
+           y = 0.08,
+           label = "GI-11") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 46860, xmax = 44260,  
+           colour = "blue",
+           fill = "blue",
+           alpha = 0.2) +
+    annotate("text",
+           x = 45560, 
+           y = 0.09,
+           label = "GI-12") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 29000, xmax = 11700,  
+           colour = "cyan",
+           alpha = 0) +
+    annotate("text",
+           x = 20350, 
+           y = 0.1,
+           label = "MIS2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 11700, xmax = 0,  
+           colour = "navy",
+           alpha = 0) +
+    annotate("text",
+           x = 5850, 
+           y = 0.1,
+           label = "MIS1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 50000, xmax = 29000,  
+           colour = "dodgerblue",
+           alpha = 0) +
+    annotate("text",
+           x = 39500, 
+           y = 0.1,
+           label = "MIS3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 16800, xmax = 16800,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 16800, 
+           y = 0.07,
+           label = "H1") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 24000, xmax = 24000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 24000, 
+           y = 0.07,
+           label = "H2") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 31000, xmax = 31000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 31000, 
+           y = 0.07,
+           label = "H3") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 38000, xmax = 38000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 38000, 
+           y = 0.07,
+           label = "H4") + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = 45000, xmax = 45000,  
+           colour = "orange",
+           fill = "orange",
+           alpha = 0.2) +
+    annotate("text",
+           x = 45000, 
+           y = 0.07,
+           label = "H5") + 
+  scale_x_reverse() +
+  theme_minimal() 
+```
+
+<div id="fig-200-bin-climate">
+
+![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
+
+Figure 4: SPD plot with a bin of 200 years with climate events overlayed
+
+</div>
+
+In <a href="#fig-200-bin" class="quarto-xref">Figure 3</a> the changes
 are more noticeable as the peak around 13 ka and just before 10 ka is
 much higher than the original plot.
 
@@ -184,7 +678,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-500-bin">
+
 ![](README_files/figure-commonmark/fig-500-bin-1.png)
+
+Figure 5: SPD plot with a bin of 500 years
+
+</div>
 
 In <a href="#fig-500-bin" class="quarto-xref">Figure 5</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
@@ -208,7 +708,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-5000-bin">
+
 ![](README_files/figure-commonmark/fig-5000-bin-1.png)
+
+Figure 6: SPD plot with a bin of 5000 years
+
+</div>
 
 In <a href="#fig-5000-bin" class="quarto-xref">Figure 6</a> a lot of the
 hills depress however a couple of them spike up into their own peaks
@@ -243,7 +749,13 @@ spd_thin <- spd(
 plot(spd_thin)
 ```
 
+<div id="fig-thinned">
+
 ![](README_files/figure-commonmark/fig-thinned-1.png)
+
+Figure 7: SPD plot with thinning
+
+</div>
 
 In <a href="#fig-thinned" class="quarto-xref">Figure 7</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
@@ -268,8 +780,71 @@ Sea.ckde = ckde(ckde_res,
 plot(Sea.ckde, type = 'multiline')
 ```
 
+<div id="fig-CKDE">
+
 ![](README_files/figure-commonmark/fig-CKDE-1.png)
+
+Figure 8: CKDE plot
+
+</div>
 
 In <a href="#fig-CKDE" class="quarto-xref">Figure 8</a> the bands show a
 consistent occupation but support the notion of increased intensity
 starting from 14 ka.
+
+``` r
+library(tidyverse)
+library(readxl)
+library(rnaturalearth)
+library(rnaturalearthdata)
+```
+
+
+    Attaching package: 'rnaturalearthdata'
+
+    The following object is masked from 'package:rnaturalearth':
+
+        countries110
+
+``` r
+library(sf)
+```
+
+    Linking to GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0; sf_use_s2() is TRUE
+
+``` r
+library(ggrepel)
+
+# Load site data from Excel file
+dates_data <- read_excel("Demographic analysis sites.xlsx")
+
+# Prepare the spatial data by filtering unique sites
+sites_sf <- dates_data %>%
+  distinct(Site, lat, long) %>%
+  st_as_sf(coords = c("long", "lat"), 
+           remove = FALSE, 
+           crs = 4326)
+
+# Get the map background
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Generate the Map, focus on Southeast Asia, and label sites clearly 
+sea_map <- ggplot(world) +
+  geom_sf() +
+  geom_sf(data = sites_sf, size = 2) +
+  coord_sf(xlim = c(90, 115), 
+           ylim = c(8, 30), 
+           expand = FALSE) +
+  geom_text_repel(data = sites_sf,
+                  aes(x = long, y = lat, label = Site),
+                  max.overlaps = 20,
+                  size = 3, 
+                  bg.color = "white",
+                  bg.r = 0.15) +
+  theme_void() +
+  labs(title = "Late Pleistocene to early Holocene archaeological Sites in mainland Southeast Asia and Southern China") 
+
+sea_map
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
