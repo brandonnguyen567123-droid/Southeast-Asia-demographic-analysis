@@ -49,6 +49,8 @@ plot(spd_unbinned)
 ```
 
 ```{r}
+#| label: fig-unbinned-climate
+#| fig-cap: Unbinned SPD plot with climate events overlayed 
 # with ggplot2
 ggplot(spd_unbinned$grid) +
   aes(calBP, PrDens) +
@@ -687,6 +689,9 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(sf)
 library(ggrepel)
+
+#| label: fig-map
+#| fig-cap: Southeast Asia map
 
 # Load site data from Excel file
 dates_data <- read_excel("Demographic analysis sites.xlsx")
