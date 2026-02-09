@@ -127,7 +127,7 @@ ggplot(spd_unbinned$grid) +
            alpha = 0.2) +
     annotate("text",
            x = 13800, 
-           y = 0.09,
+           y = 0.08,
            label = "GI-1") + 
     annotate("rect",
            ymin = 0, ymax = Inf,
@@ -207,7 +207,7 @@ ggplot(spd_unbinned$grid) +
            alpha = 0.2) +
     annotate("text",
            x = 35130, 
-           y = 0.09,
+           y = 0.08,
            label = "GI-7") + 
     annotate("rect",
            ymin = 0, ymax = Inf,
@@ -436,7 +436,7 @@ ggplot(spd_res$grid) +
            alpha = 0.2) +
     annotate("text",
            x = 13800, 
-           y = 0.09,
+           y = 0.08,
            label = "GI-1") + 
     annotate("rect",
            ymin = 0, ymax = Inf,
@@ -516,7 +516,7 @@ ggplot(spd_res$grid) +
            alpha = 0.2) +
     annotate("text",
            x = 35130, 
-           y = 0.09,
+           y = 0.08,
            label = "GI-7") + 
     annotate("rect",
            ymin = 0, ymax = Inf,
@@ -842,7 +842,7 @@ sea_map <- ggplot(world) +
                   bg.color = "white",
                   bg.r = 0.15) +
   theme_void() +
-  labs(title = "Late Pleistocene to early Holocene archaeological Sites in mainland Southeast Asia and Southern China") 
+  labs(title = "Early sites in Southeast Asia") 
 
 sea_map
 ```
