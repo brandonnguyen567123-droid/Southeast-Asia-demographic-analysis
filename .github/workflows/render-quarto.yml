@@ -19,10 +19,9 @@ jobs:
       with:
         r-version: '4.3'
 
-    # Make your PAT available to R, pak, remotes, etc.
     - name: Set GITHUB_PAT
       run: echo "GITHUB_PAT=${{ secrets.MY_GITHUB_PAT }}" >> $GITHUB_ENV
-    
+
     - name: Install system libraries for spatial packages
       run: |
         sudo apt-get update
@@ -31,71 +30,67 @@ jobs:
           libgeos-dev \
           libproj-dev \
           libudunits2-dev
-        
+
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
 
-    # Install rcarbon from GitHub BEFORE anything else
+    - name: Cache renv packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/R/renv
+          renv/library
+        key: renv-${{ hashFiles('renv.lock') }}
+        restore-keys: |
+          renv-
+
     - name: Install rcarbon from GitHub
       run: |
         Rscript -e 'install.packages("remotes")'
         Rscript -e 'remotes::install_github("ahb108/rcarbon", upgrade = "never")'
 
-    - name: Install R packages from package list
+    - name: Restore renv packages
       run: |
-        # Create a simple installation script
-        cat > install_packages.R << 'EOF'
-        # List of packages to install (rcarbon removed)
-        packages <- c(
-          # Quarto essentials
-          "knitr",
-          "rmarkdown",
-          "tinytex",
-          
-          # Tidyverse
-          "tidyverse",
-          
-          # Spatial packages
-          "sf",
-          "terra",
-          "units"
-        )
-        
-        cat("Installing packages...\n")
-        
-        # Try CRAN first
-        for (pkg in packages) {
-          cat("Installing", pkg, "... ")
-          tryCatch({
-            install.packages(pkg, repos = "https://cloud.r-project.org", quiet = TRUE)
-            cat("✓\n")
-          }, error = function(e) {
-            cat("✗ (CRAN failed:", e$message, ")\n")
-          })
-        }
-        
-        # Verify installation
-        cat("\nVerifying installation:\n")
-        for (pkg in packages) {
-          status <- requireNamespace(pkg, quietly = TRUE)
-          cat(pkg, ":", if (status) "✓" else "✗", "\n")
-        }
-        EOF
-        
-        Rscript install_packages.R
-    
+        Rscript -e 'install.packages("renv", repos = "https://cloud.r-project.org")'
+        Rscript -e 'renv::restore(prompt = FALSE)'
+
     - name: Render all Quarto files
       run: |
+        mkdir -p rendered_html
         find . -name "*.qmd" -type f ! -path "./.git/*" | while read file; do
           echo "=== Rendering: $file ==="
           
-          if quarto render "$file" --to html; then
-            echo "✅ Success"
+          if quarto render "$file" --to html --output-dir rendered_html; then
+            echo "Success"
           else
-            echo "❌ Failed"
-            echo "Checking for missing packages in file:"
+            echo "Failed"
             grep -n "library\|require" "$file" | head -5 || true
             exit 1
           fi
           echo ""
         done
+
+    - name: Upload rendered HTML
+      uses: actions/upload-artifact@v4
+      with:
+        name: rendered-html
+        path: rendered_html
+
+  deploy:
+    needs: render-quarto
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+    - name: Download rendered HTML
+      uses: actions/download-artifact@v4
+      with:
+        name: rendered-html
+        path: site
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: site
+        publish_branch: gh-pages
