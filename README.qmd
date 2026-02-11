@@ -51,20 +51,28 @@ plot(spd_unbinned)
 ```{r}
 #| label: fig-unbinned-climate
 #| fig-cap: Unbinned SPD plot with climate events overlayed 
+
+
+climate_events <- read_excel("Demographic analysis sites.xlsx",
+                             sheet = 2) |> 
+  mutate(midpoint = `End year` + ( `Start year` - `End year`) / 2 )
+
+
 # with ggplot2
 ggplot(spd_unbinned$grid) +
   aes(calBP, PrDens) +
   geom_line() +
   annotate("rect",
            ymin = 0, ymax = Inf,
-           xmin = 26500, xmax = 19000,  # df$start[1], df$end[1]
+           xmin = climate_events$`Start year`[4], 
+           xmax = climate_events$`End year`[4],  
            colour = "red",
            fill = "red",
            alpha = 0.1) +
     annotate("text",
-           x = 22500, # midpoint of start and end
+           x = climate_events$midpoint[4], # midpoint of start and end
            y = 0.09,
-           label = "LGM") + # df$event_name[1]
+           label = climate_events$Abbreviation[4]) + # df$event_name[1]
     annotate("rect",
            ymin = 0, ymax = Inf,
            xmin = 12900, xmax = 11700,  
