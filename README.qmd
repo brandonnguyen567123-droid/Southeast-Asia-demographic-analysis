@@ -330,7 +330,35 @@ ggplot(spd_unbinned$grid) +
   theme_minimal() 
 ```
 
+```{r}
+expnull <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(18000, 12900), 
+                      nsim = 100)
 
+plot(expnull)
+```
+
+```{r}
+expnull2 <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(15000, 11000), 
+                      nsim = 100)
+
+plot(expnull2)
+```
+
+```{r}
+expnull3 <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(57000, 19000), 
+                      nsim = 100)
+
+plot(expnull3)
+```
 
 In @fig-unbinned there is a continuous occupation of Southeast Asia from 25000 BP to present although there is a more consistent increase in height starting from 14 ka.
 
@@ -936,5 +964,24 @@ sea_map_after_14ka <-ggplot(world) +
   labs(title = "Occupation after 13 ka") 
 
 sea_map_after_14ka
+```
+
+```{r}
+# Import the karst data
+karst_sf <- st_read("whymap_karst__v1_poly.shp")
+
+ggplot(world) +
+  geom_sf(fill = "white") +              # Base map
+  geom_sf(data = karst_sf,                     # Karst data
+          color = "steelblue1",
+          fill = "steelblue1",
+          alpha = 1, 
+          size = 1) +
+  geom_sf(data = sites_sf, size = 2) + # Existing sites 
+  coord_sf(xlim = c(90, 115), 
+           ylim = c(8, 30), 
+           expand = FALSE) +
+  theme_minimal() +
+  labs(title = "Archaeological Sites and Karst Formations")
 ```
 
