@@ -1,13 +1,7 @@
 ---
-title: "SPD test"
+title: "Using radiocarbon ages as a proxy for human population dynamics in late Pleistocene mainland Southeast Asia"
 format: gfm
 ---
-
-## Data
-I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to early Holocene sites across Southeast Asia and southern China. For one of the Chinese sites Xiaodong I had to uncalibrate the ages using the built in feature in rcarbon. 
-
-## Methods
-First we calibrated all the dates using IntCal20 in rcarbon, then we made summed probability distributions and visualized it in multiple ways, first without binning. Next to account for well dated sites overshadowing sites with less amount of dates we binned the data by 100 years, then 200 years, then 500, and finally 5000. Another method used to account for inter-site variation is thinning where only 1 date from each bin is chosen to construct the SPD with. A new method used to plot was composite kernel density estimates where random calendar dates were sampled from each calibrated date to generate a kernel density estimate, its done multiple times which all are visualized as an envelope. 
 
 ```{r}
 library(tidyverse)
@@ -25,6 +19,14 @@ calDates <- calibrate(
   verbose = FALSE)
 
 ```
+
+## Data
+
+I gathered `r nrow(dates)` uncalibrated radiocarbon ages from 30 Pliestocene to early Holocene sites across Southeast Asia and southern China. For one of the Chinese sites Xiaodong I had to uncalibrate the ages using the built in feature in rcarbon. 
+
+## Methods
+
+First we calibrated all the dates using IntCal20 in rcarbon, then we made summed probability distributions and visualized it in multiple ways, first without binning. Next to account for well dated sites overshadowing sites with less amount of dates we binned the data by 100 years, then 200 years, then 500, and finally 5000. Another method used to account for inter-site variation is thinning where only 1 date from each bin is chosen to construct the SPD with. A new method used to plot was composite kernel density estimates where random calendar dates were sampled from each calibrated date to generate a kernel density estimate, its done multiple times which all are visualized as an envelope. 
 
 ## Results
 

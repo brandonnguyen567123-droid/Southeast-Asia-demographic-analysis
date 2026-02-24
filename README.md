@@ -1,25 +1,6 @@
-# SPD test
+# Using radiocarbon ages as a proxy for human population dynamics in
+late Pleistocene mainland Southeast Asia
 
-
-## Data
-
-I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to
-early Holocene sites across Southeast Asia and southern China. For one
-of the Chinese sites Xiaodong I had to uncalibrate the ages using the
-built in feature in rcarbon.
-
-## Methods
-
-First we calibrated all the dates using IntCal20 in rcarbon, then we
-made summed probability distributions and visualized it in multiple
-ways, first without binning. Next to account for well dated sites
-overshadowing sites with less amount of dates we binned the data by 100
-years, then 200 years, then 500, and finally 5000. Another method used
-to account for inter-site variation is thinning where only 1 date from
-each bin is chosen to construct the SPD with. A new method used to plot
-was composite kernel density estimates where random calendar dates were
-sampled from each calibrated date to generate a kernel density estimate,
-its done multiple times which all are visualized as an envelope.
 
 ``` r
 library(tidyverse)
@@ -60,6 +41,26 @@ calDates <- calibrate(
   verbose = FALSE)
 ```
 
+## Data
+
+I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to
+early Holocene sites across Southeast Asia and southern China. For one
+of the Chinese sites Xiaodong I had to uncalibrate the ages using the
+built in feature in rcarbon.
+
+## Methods
+
+First we calibrated all the dates using IntCal20 in rcarbon, then we
+made summed probability distributions and visualized it in multiple
+ways, first without binning. Next to account for well dated sites
+overshadowing sites with less amount of dates we binned the data by 100
+years, then 200 years, then 500, and finally 5000. Another method used
+to account for inter-site variation is thinning where only 1 date from
+each bin is chosen to construct the SPD with. A new method used to plot
+was composite kernel density estimates where random calendar dates were
+sampled from each calibrated date to generate a kernel density estimate,
+its done multiple times which all are visualized as an envelope.
+
 ## Results
 
 The resulting plots are relatively consistent in peaks and show that
@@ -86,13 +87,7 @@ plot(spd_unbinned)
 #| fig-cap: Unbinned SPD plot with climate events overlayed 
 ```
 
-<div id="fig-unbinned">
-
 ![](README_files/figure-commonmark/fig-unbinned-1.png)
-
-Figure 1: Unbinned SPD plot
-
-</div>
 
 ``` r
 climate_events <- read_excel("Demographic analysis sites.xlsx",
@@ -372,13 +367,7 @@ ggplot(spd_unbinned$grid) +
   theme_minimal() 
 ```
 
-<div id="fig-unbinned-climate">
-
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
-
-Figure 2: Unbinned SPD plot with climate events overlayed
-
-</div>
 
 In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
 continuous occupation of Southeast Asia from 25000 BP to present
@@ -403,13 +392,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-<div id="fig-100-bin">
-
 ![](README_files/figure-commonmark/fig-100-bin-1.png)
-
-Figure 3: SPD plot with a bin of 100 years
-
-</div>
 
 In <a href="#fig-100-bin" class="quarto-xref">Figure 3</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
@@ -434,13 +417,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-<div id="fig-200-bin">
-
 ![](README_files/figure-commonmark/fig-200-bin-1.png)
-
-Figure 4: SPD plot with a bin of 200 years
-
-</div>
 
 ``` r
 ggplot(spd_res$grid) +
@@ -714,13 +691,7 @@ ggplot(spd_res$grid) +
   theme_minimal() 
 ```
 
-<div id="fig-200-bin-climate">
-
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
-
-Figure 5: SPD plot with a bin of 200 years with climate events overlayed
-
-</div>
 
 In <a href="#fig-200-bin" class="quarto-xref">Figure 4</a> the changes
 are more noticeable as the peak around 13 ka and just before 10 ka is
@@ -743,13 +714,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-<div id="fig-500-bin">
-
 ![](README_files/figure-commonmark/fig-500-bin-1.png)
-
-Figure 6: SPD plot with a bin of 500 years
-
-</div>
 
 In <a href="#fig-500-bin" class="quarto-xref">Figure 6</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
@@ -773,13 +738,7 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
-<div id="fig-5000-bin">
-
 ![](README_files/figure-commonmark/fig-5000-bin-1.png)
-
-Figure 7: SPD plot with a bin of 5000 years
-
-</div>
 
 In <a href="#fig-5000-bin" class="quarto-xref">Figure 7</a> a lot of the
 hills depress however a couple of them spike up into their own peaks
@@ -814,13 +773,7 @@ spd_thin <- spd(
 plot(spd_thin)
 ```
 
-<div id="fig-thinned">
-
 ![](README_files/figure-commonmark/fig-thinned-1.png)
-
-Figure 8: SPD plot with thinning
-
-</div>
 
 In <a href="#fig-thinned" class="quarto-xref">Figure 8</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
@@ -845,13 +798,7 @@ Sea.ckde = ckde(ckde_res,
 plot(Sea.ckde, type = 'multiline')
 ```
 
-<div id="fig-CKDE">
-
 ![](README_files/figure-commonmark/fig-CKDE-1.png)
-
-Figure 9: CKDE plot
-
-</div>
 
 In <a href="#fig-CKDE" class="quarto-xref">Figure 9</a> the bands show a
 consistent occupation but support the notion of increased intensity
@@ -875,7 +822,7 @@ library(rnaturalearthdata)
 library(sf)
 ```
 
-    Linking to GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0; sf_use_s2() is TRUE
+    Linking to GEOS 3.13.0, GDAL 3.5.3, PROJ 9.5.1; sf_use_s2() is TRUE
 
 ``` r
 library(ggrepel)
