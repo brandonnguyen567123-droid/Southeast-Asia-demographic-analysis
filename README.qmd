@@ -337,9 +337,31 @@ expnull <- modelTest(calDates,
                       errors = dates$C14SD, 
                       model = "exponential", 
                       timeRange = c(18000, 12900), 
+                      verbose = FALSE,
                       nsim = 100)
 
 plot(expnull)
+
+# let's adapt for ggplot, how to get the boom and bust events showing 
+obs <- expnull$result.roc[,1:2]
+envelope <- expnull$result.roc[,3:4]
+colnames(obs)<-c("calBP","PrDens")
+colnames(envelope)<-c("lo","hi")
+booms <- which(obs$PrDens>envelope[,2])
+busts <- which(obs$PrDens<envelope[,1])
+col.obs="black"
+colpts = rep(col.obs,length(obs$PrDens))
+colpts[booms] = 'red'
+colpts[busts] = 'blue'
+
+ggplot(expnull$result) +
+  aes(calBP, PrDens) +
+  geom_ribbon(aes(ymin = lo, 
+                  ymax = hi), 
+              fill = "grey70")  +
+    geom_line() +
+  scale_x_reverse() +
+  theme_minimal()
 ```
 
 ```{r}
@@ -347,6 +369,7 @@ expnull2 <- modelTest(calDates,
                       errors = dates$C14SD, 
                       model = "exponential", 
                       timeRange = c(15000, 11000), 
+                      verbose = FALSE,
                       nsim = 100)
 
 plot(expnull2)
@@ -357,6 +380,7 @@ expnull3 <- modelTest(calDates,
                       errors = dates$C14SD, 
                       model = "exponential", 
                       timeRange = c(57000, 19000), 
+                      verbose = FALSE,
                       nsim = 100)
 
 plot(expnull3)

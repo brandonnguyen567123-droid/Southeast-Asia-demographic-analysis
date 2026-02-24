@@ -43,7 +43,7 @@ calDates <- calibrate(
 
 ## Data
 
-I gathered 267 uncalibrated radiocarbon ages from 30 Pliestocene to
+I gathered 352 uncalibrated radiocarbon ages from 30 Pliestocene to
 early Holocene sites across Southeast Asia and southern China. For one
 of the Chinese sites Xiaodong I had to uncalibrate the ages using the
 built in feature in rcarbon.
@@ -368,12 +368,6 @@ ggplot(spd_unbinned$grid) +
 ```
 
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
-
-<<<<<<< HEAD
-=======
-Figure 2: Unbinned SPD plot with climate events overlayed
-
-</div>
 
 ``` r
 expnull <- modelTest(calDates, 
@@ -1059,7 +1053,6 @@ plot(expnull3)
 
 ![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
 
->>>>>>> ae217eef16f8625a5c6c6b9c5a0b87610660b493
 In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
 continuous occupation of Southeast Asia from 25000 BP to present
 although there is a more consistent increase in height starting from 14
@@ -1716,7 +1709,7 @@ karst_sf <- st_read("whymap_karst__v1_poly.shp")
 ```
 
     Reading layer `whymap_karst__v1_poly' from data source 
-      `C:\Users\Brandon Nguyen\Documents\Independent study\whymap_karst__v1_poly.shp' 
+      `/Users/bmarwick/Downloads/Southeast-Asia-demographic-analysis/whymap_karst__v1_poly.shp' 
       using driver `ESRI Shapefile'
     Simple feature collection with 2805 features and 2 fields
     Geometry type: MULTIPOLYGON
