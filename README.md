@@ -59,7 +59,15 @@ to account for inter-site variation is thinning where only 1 date from
 each bin is chosen to construct the SPD with. A new method used to plot
 was composite kernel density estimates where random calendar dates were
 sampled from each calibrated date to generate a kernel density estimate,
-its done multiple times which all are visualized as an envelope.
+its done multiple times which all are visualized as an envelope. After
+the initial SPD plots we decided to evaluate these our findings with a
+Monte-Carlo simulation approach to check if taphonomic loss and
+calibration process affected the shape of the plot. With an exponential
+growth model our Monte-Carlo simulations were used to check 5 timelines,
+Oldest Dryas to Bølling–Allerød Interstadial, Bølling–Allerød
+Interstadial to Younger Dryas, Marine Isotope 3 to Last Glacial Maximum,
+, 50,000 years ago to 8.2-kiloyear event and Last Glacial Maximum to
+8.2-kiloyear event
 
 ## Results
 
@@ -82,12 +90,15 @@ spd_unbinned <- spd(
 
 ``` r
 plot(spd_unbinned)
-
-#| label: fig-unbinned-climate
-#| fig-cap: Unbinned SPD plot with climate events overlayed 
 ```
 
+<div id="fig-unbinned">
+
 ![](README_files/figure-commonmark/fig-unbinned-1.png)
+
+Figure 1: Unbinned SPD plot
+
+</div>
 
 ``` r
 climate_events <- read_excel("Demographic analysis sites.xlsx",
@@ -367,696 +378,951 @@ ggplot(spd_unbinned$grid) +
   theme_minimal() 
 ```
 
+<div id="fig-unbinned-climate">
+
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
+
+Figure 2: Unbinned SPD plot with climate events overlayed
+
+</div>
+
+In <a href="#fig-unbinned-climate" class="quarto-xref">Figure 2</a>
+there is a continuous occupation of Southeast Asia from 25000 BP to
+present although there is a more consistent increase in height starting
+from 14 ka.
 
 ``` r
 expnull <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
                       timeRange = c(18000, 12900), 
+                      verbose = FALSE,
                       nsim = 100)
 ```
 
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
 
-    [1] "Aggregating observed dates..."
-    [1] "Monte-Carlo test..."
-
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     edgeSize reduced
-
-
-      |                                                                            
-      |                                                                      |   0%
-      |                                                                            
-      |=                                                                     |   1%
-      |                                                                            
-      |=                                                                     |   2%
-      |                                                                            
-      |==                                                                    |   3%
-      |                                                                            
-      |===                                                                   |   4%
-      |                                                                            
-      |====                                                                  |   5%
-      |                                                                            
-      |====                                                                  |   6%
-      |                                                                            
-      |=====                                                                 |   7%
-      |                                                                            
-      |======                                                                |   8%
-      |                                                                            
-      |======                                                                |   9%
-      |                                                                            
-      |=======                                                               |  10%
-      |                                                                            
-      |========                                                              |  11%
-      |                                                                            
-      |========                                                              |  12%
-      |                                                                            
-      |=========                                                             |  13%
-      |                                                                            
-      |==========                                                            |  14%
-      |                                                                            
-      |==========                                                            |  15%
-      |                                                                            
-      |===========                                                           |  16%
-      |                                                                            
-      |============                                                          |  17%
-      |                                                                            
-      |=============                                                         |  18%
-      |                                                                            
-      |=============                                                         |  19%
-      |                                                                            
-      |==============                                                        |  20%
-      |                                                                            
-      |===============                                                       |  21%
-      |                                                                            
-      |===============                                                       |  22%
-      |                                                                            
-      |================                                                      |  23%
-      |                                                                            
-      |=================                                                     |  24%
-      |                                                                            
-      |==================                                                    |  25%
-      |                                                                            
-      |==================                                                    |  26%
-      |                                                                            
-      |===================                                                   |  27%
-      |                                                                            
-      |====================                                                  |  28%
-      |                                                                            
-      |====================                                                  |  29%
-      |                                                                            
-      |=====================                                                 |  30%
-      |                                                                            
-      |======================                                                |  31%
-      |                                                                            
-      |======================                                                |  32%
-      |                                                                            
-      |=======================                                               |  33%
-      |                                                                            
-      |========================                                              |  34%
-      |                                                                            
-      |========================                                              |  35%
-      |                                                                            
-      |=========================                                             |  36%
-      |                                                                            
-      |==========================                                            |  37%
-      |                                                                            
-      |===========================                                           |  38%
-      |                                                                            
-      |===========================                                           |  39%
-      |                                                                            
-      |============================                                          |  40%
-      |                                                                            
-      |=============================                                         |  41%
-      |                                                                            
-      |=============================                                         |  42%
-      |                                                                            
-      |==============================                                        |  43%
-      |                                                                            
-      |===============================                                       |  44%
-      |                                                                            
-      |================================                                      |  45%
-      |                                                                            
-      |================================                                      |  46%
-      |                                                                            
-      |=================================                                     |  47%
-      |                                                                            
-      |==================================                                    |  48%
-      |                                                                            
-      |==================================                                    |  49%
-      |                                                                            
-      |===================================                                   |  50%
-      |                                                                            
-      |====================================                                  |  51%
-      |                                                                            
-      |====================================                                  |  52%
-      |                                                                            
-      |=====================================                                 |  53%
-      |                                                                            
-      |======================================                                |  54%
-      |                                                                            
-      |======================================                                |  55%
-      |                                                                            
-      |=======================================                               |  56%
-      |                                                                            
-      |========================================                              |  57%
-      |                                                                            
-      |=========================================                             |  58%
-      |                                                                            
-      |=========================================                             |  59%
-      |                                                                            
-      |==========================================                            |  60%
-      |                                                                            
-      |===========================================                           |  61%
-      |                                                                            
-      |===========================================                           |  62%
-      |                                                                            
-      |============================================                          |  63%
-      |                                                                            
-      |=============================================                         |  64%
-      |                                                                            
-      |==============================================                        |  65%
-      |                                                                            
-      |==============================================                        |  66%
-      |                                                                            
-      |===============================================                       |  67%
-      |                                                                            
-      |================================================                      |  68%
-      |                                                                            
-      |================================================                      |  69%
-      |                                                                            
-      |=================================================                     |  70%
-      |                                                                            
-      |==================================================                    |  71%
-      |                                                                            
-      |==================================================                    |  72%
-      |                                                                            
-      |===================================================                   |  73%
-      |                                                                            
-      |====================================================                  |  74%
-      |                                                                            
-      |====================================================                  |  75%
-      |                                                                            
-      |=====================================================                 |  76%
-      |                                                                            
-      |======================================================                |  77%
-      |                                                                            
-      |=======================================================               |  78%
-      |                                                                            
-      |=======================================================               |  79%
-      |                                                                            
-      |========================================================              |  80%
-      |                                                                            
-      |=========================================================             |  81%
-      |                                                                            
-      |=========================================================             |  82%
-      |                                                                            
-      |==========================================================            |  83%
-      |                                                                            
-      |===========================================================           |  84%
-      |                                                                            
-      |============================================================          |  85%
-      |                                                                            
-      |============================================================          |  86%
-      |                                                                            
-      |=============================================================         |  87%
-      |                                                                            
-      |==============================================================        |  88%
-      |                                                                            
-      |==============================================================        |  89%
-      |                                                                            
-      |===============================================================       |  90%
-      |                                                                            
-      |================================================================      |  91%
-      |                                                                            
-      |================================================================      |  92%
-      |                                                                            
-      |=================================================================     |  93%
-      |                                                                            
-      |==================================================================    |  94%
-      |                                                                            
-      |==================================================================    |  95%
-      |                                                                            
-      |===================================================================   |  96%
-      |                                                                            
-      |====================================================================  |  97%
-      |                                                                            
-      |===================================================================== |  98%
-      |                                                                            
-      |===================================================================== |  99%
-      |                                                                            
-      |======================================================================| 100%
-    [1] "Done."
 
 ``` r
 plot(expnull)
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
+![Monte Carlo test of OD-BA with 100
+simulations](README_files/figure-commonmark/MTCL1-1.png)
+
+``` r
+plot_df <- expnull$result
+
+ggplot(plot_df, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df, PrDens > hi | PrDens < lo),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.3, linewidth = 0.3
+  ) +
+  scale_x_reverse(
+    limits = c(18000, 12900),
+    breaks = seq(18000, 13000, by = -1000)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[19], 
+           xmax = climate_events$`End year`[19],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[19], 
+           y = 0.07,
+           label = climate_events$Abbreviation[19]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[20], 
+           xmax = climate_events$`End year`[20],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[20], 
+           y = 0.03,
+           label = climate_events$Abbreviation[20]) +
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[21], 
+           xmax = climate_events$`End year`[21],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[21], 
+           y = 0.07,
+           label = climate_events$Abbreviation[21]) + 
+  theme_classic()
+```
+
+![Monte Carlo test of OD-BA with 100
+simulations](README_files/figure-commonmark/MTCL1-2.png)
+
+@MTCL1 shows our testing from the Oldest Dryas to Bølling–Allerød
+Interstadial, we see 2 minor deviations where the line goes above the
+envelope near 14.1ka and 13.1ka.
+
+``` r
+expnull1000 <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(18000, 12900), 
+                      verbose = FALSE,
+                      nsim = 1000)
+```
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    edgeSize reduced
+
+``` r
+plot(expnull1000)
+```
+
+![Monte Carlo test of OD-BA with 1000
+simulations](README_files/figure-commonmark/MTCL1000-1.png)
+
+``` r
+plot_df1000 <- expnull1000$result
+
+ggplot(plot_df1000, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df1000, PrDens > hi | PrDens < lo),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.3, linewidth = 0.3
+  ) +
+  scale_x_reverse(
+    limits = c(18000, 12900),
+    breaks = seq(18000, 13000, by = -500)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[19], 
+           xmax = climate_events$`End year`[19],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[19], 
+           y = 0.07,
+           label = climate_events$Abbreviation[19]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[20], 
+           xmax = climate_events$`End year`[20],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[20], 
+           y = 0.03,
+           label = climate_events$Abbreviation[20]) +
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[21], 
+           xmax = climate_events$`End year`[21],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[21], 
+           y = 0.07,
+           label = climate_events$Abbreviation[21]) + 
+  theme_classic()
+```
+
+![Monte Carlo test of OD-BA with 1000
+simulations](README_files/figure-commonmark/MTCL1000-2.png)
+
+In @MTCL1000 we increased the simulations to 1000, the 2 deviations no
+longer exist and the line falls in the expected envelope through the
+whole time.
 
 ``` r
 expnull2 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
                       timeRange = c(15000, 11000), 
+                      verbose = FALSE,
                       nsim = 100)
 ```
 
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
 
-    [1] "Aggregating observed dates..."
-    [1] "Monte-Carlo test..."
-
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     edgeSize reduced
-
-
-      |                                                                            
-      |                                                                      |   0%
-      |                                                                            
-      |=                                                                     |   1%
-      |                                                                            
-      |=                                                                     |   2%
-      |                                                                            
-      |==                                                                    |   3%
-      |                                                                            
-      |===                                                                   |   4%
-      |                                                                            
-      |====                                                                  |   5%
-      |                                                                            
-      |====                                                                  |   6%
-      |                                                                            
-      |=====                                                                 |   7%
-      |                                                                            
-      |======                                                                |   8%
-      |                                                                            
-      |======                                                                |   9%
-      |                                                                            
-      |=======                                                               |  10%
-      |                                                                            
-      |========                                                              |  11%
-      |                                                                            
-      |========                                                              |  12%
-      |                                                                            
-      |=========                                                             |  13%
-      |                                                                            
-      |==========                                                            |  14%
-      |                                                                            
-      |==========                                                            |  15%
-      |                                                                            
-      |===========                                                           |  16%
-      |                                                                            
-      |============                                                          |  17%
-      |                                                                            
-      |=============                                                         |  18%
-      |                                                                            
-      |=============                                                         |  19%
-      |                                                                            
-      |==============                                                        |  20%
-      |                                                                            
-      |===============                                                       |  21%
-      |                                                                            
-      |===============                                                       |  22%
-      |                                                                            
-      |================                                                      |  23%
-      |                                                                            
-      |=================                                                     |  24%
-      |                                                                            
-      |==================                                                    |  25%
-      |                                                                            
-      |==================                                                    |  26%
-      |                                                                            
-      |===================                                                   |  27%
-      |                                                                            
-      |====================                                                  |  28%
-      |                                                                            
-      |====================                                                  |  29%
-      |                                                                            
-      |=====================                                                 |  30%
-      |                                                                            
-      |======================                                                |  31%
-      |                                                                            
-      |======================                                                |  32%
-      |                                                                            
-      |=======================                                               |  33%
-      |                                                                            
-      |========================                                              |  34%
-      |                                                                            
-      |========================                                              |  35%
-      |                                                                            
-      |=========================                                             |  36%
-      |                                                                            
-      |==========================                                            |  37%
-      |                                                                            
-      |===========================                                           |  38%
-      |                                                                            
-      |===========================                                           |  39%
-      |                                                                            
-      |============================                                          |  40%
-      |                                                                            
-      |=============================                                         |  41%
-      |                                                                            
-      |=============================                                         |  42%
-      |                                                                            
-      |==============================                                        |  43%
-      |                                                                            
-      |===============================                                       |  44%
-      |                                                                            
-      |================================                                      |  45%
-      |                                                                            
-      |================================                                      |  46%
-      |                                                                            
-      |=================================                                     |  47%
-      |                                                                            
-      |==================================                                    |  48%
-      |                                                                            
-      |==================================                                    |  49%
-      |                                                                            
-      |===================================                                   |  50%
-      |                                                                            
-      |====================================                                  |  51%
-      |                                                                            
-      |====================================                                  |  52%
-      |                                                                            
-      |=====================================                                 |  53%
-      |                                                                            
-      |======================================                                |  54%
-      |                                                                            
-      |======================================                                |  55%
-      |                                                                            
-      |=======================================                               |  56%
-      |                                                                            
-      |========================================                              |  57%
-      |                                                                            
-      |=========================================                             |  58%
-      |                                                                            
-      |=========================================                             |  59%
-      |                                                                            
-      |==========================================                            |  60%
-      |                                                                            
-      |===========================================                           |  61%
-      |                                                                            
-      |===========================================                           |  62%
-      |                                                                            
-      |============================================                          |  63%
-      |                                                                            
-      |=============================================                         |  64%
-      |                                                                            
-      |==============================================                        |  65%
-      |                                                                            
-      |==============================================                        |  66%
-      |                                                                            
-      |===============================================                       |  67%
-      |                                                                            
-      |================================================                      |  68%
-      |                                                                            
-      |================================================                      |  69%
-      |                                                                            
-      |=================================================                     |  70%
-      |                                                                            
-      |==================================================                    |  71%
-      |                                                                            
-      |==================================================                    |  72%
-      |                                                                            
-      |===================================================                   |  73%
-      |                                                                            
-      |====================================================                  |  74%
-      |                                                                            
-      |====================================================                  |  75%
-      |                                                                            
-      |=====================================================                 |  76%
-      |                                                                            
-      |======================================================                |  77%
-      |                                                                            
-      |=======================================================               |  78%
-      |                                                                            
-      |=======================================================               |  79%
-      |                                                                            
-      |========================================================              |  80%
-      |                                                                            
-      |=========================================================             |  81%
-      |                                                                            
-      |=========================================================             |  82%
-      |                                                                            
-      |==========================================================            |  83%
-      |                                                                            
-      |===========================================================           |  84%
-      |                                                                            
-      |============================================================          |  85%
-      |                                                                            
-      |============================================================          |  86%
-      |                                                                            
-      |=============================================================         |  87%
-      |                                                                            
-      |==============================================================        |  88%
-      |                                                                            
-      |==============================================================        |  89%
-      |                                                                            
-      |===============================================================       |  90%
-      |                                                                            
-      |================================================================      |  91%
-      |                                                                            
-      |================================================================      |  92%
-      |                                                                            
-      |=================================================================     |  93%
-      |                                                                            
-      |==================================================================    |  94%
-      |                                                                            
-      |==================================================================    |  95%
-      |                                                                            
-      |===================================================================   |  96%
-      |                                                                            
-      |====================================================================  |  97%
-      |                                                                            
-      |===================================================================== |  98%
-      |                                                                            
-      |===================================================================== |  99%
-      |                                                                            
-      |======================================================================| 100%
-    [1] "Done."
 
 ``` r
 plot(expnull2)
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
+![Monte Carlo test of BA-YD with 100
+simulations](README_files/figure-commonmark/MTCL2-1.png)
+
+``` r
+plot_df2 <- expnull2$result
+
+ggplot(plot_df2, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df2, PrDens > hi | PrDens < lo),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.3, linewidth = 0.3
+  ) +
+  scale_x_reverse(
+    limits = c(15000, 11000),
+    breaks = seq(15000, 11000, by = -500)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[21], 
+           xmax = climate_events$`End year`[21],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[21], 
+           y = 0.07,
+           label = climate_events$Abbreviation[21]) + 
+    annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[22], 
+           xmax = climate_events$`End year`[22],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[22], 
+           y = 0.065,
+           label = climate_events$Abbreviation[22]) + 
+  theme_classic()
+```
+
+![Monte Carlo test of BA-YD with 100
+simulations](README_files/figure-commonmark/MTCL2-2.png)
+
+@MTCL2 shows our testing from Bølling–Allerød Interstadial to Younger
+Dryas, the same deviation near 13.1ka is seen again while there is a new
+one in the Younger Dryas near 12.9ka.
 
 ``` r
 expnull3 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
-                      timeRange = c(57000, 19000), 
+                      timeRange = c(50000, 19000), 
+                      verbose = FALSE,
                       nsim = 100)
 ```
 
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
 
-    [1] "Aggregating observed dates..."
-    [1] "Monte-Carlo test..."
-
     Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
     edgeSize reduced
-
-
-      |                                                                            
-      |                                                                      |   0%
-      |                                                                            
-      |=                                                                     |   1%
-      |                                                                            
-      |=                                                                     |   2%
-      |                                                                            
-      |==                                                                    |   3%
-      |                                                                            
-      |===                                                                   |   4%
-      |                                                                            
-      |====                                                                  |   5%
-      |                                                                            
-      |====                                                                  |   6%
-      |                                                                            
-      |=====                                                                 |   7%
-      |                                                                            
-      |======                                                                |   8%
-      |                                                                            
-      |======                                                                |   9%
-      |                                                                            
-      |=======                                                               |  10%
-      |                                                                            
-      |========                                                              |  11%
-      |                                                                            
-      |========                                                              |  12%
-      |                                                                            
-      |=========                                                             |  13%
-      |                                                                            
-      |==========                                                            |  14%
-      |                                                                            
-      |==========                                                            |  15%
-      |                                                                            
-      |===========                                                           |  16%
-      |                                                                            
-      |============                                                          |  17%
-      |                                                                            
-      |=============                                                         |  18%
-      |                                                                            
-      |=============                                                         |  19%
-      |                                                                            
-      |==============                                                        |  20%
-      |                                                                            
-      |===============                                                       |  21%
-      |                                                                            
-      |===============                                                       |  22%
-      |                                                                            
-      |================                                                      |  23%
-      |                                                                            
-      |=================                                                     |  24%
-      |                                                                            
-      |==================                                                    |  25%
-      |                                                                            
-      |==================                                                    |  26%
-      |                                                                            
-      |===================                                                   |  27%
-      |                                                                            
-      |====================                                                  |  28%
-      |                                                                            
-      |====================                                                  |  29%
-      |                                                                            
-      |=====================                                                 |  30%
-      |                                                                            
-      |======================                                                |  31%
-      |                                                                            
-      |======================                                                |  32%
-      |                                                                            
-      |=======================                                               |  33%
-      |                                                                            
-      |========================                                              |  34%
-      |                                                                            
-      |========================                                              |  35%
-      |                                                                            
-      |=========================                                             |  36%
-      |                                                                            
-      |==========================                                            |  37%
-      |                                                                            
-      |===========================                                           |  38%
-      |                                                                            
-      |===========================                                           |  39%
-      |                                                                            
-      |============================                                          |  40%
-      |                                                                            
-      |=============================                                         |  41%
-      |                                                                            
-      |=============================                                         |  42%
-      |                                                                            
-      |==============================                                        |  43%
-      |                                                                            
-      |===============================                                       |  44%
-      |                                                                            
-      |================================                                      |  45%
-      |                                                                            
-      |================================                                      |  46%
-      |                                                                            
-      |=================================                                     |  47%
-      |                                                                            
-      |==================================                                    |  48%
-      |                                                                            
-      |==================================                                    |  49%
-      |                                                                            
-      |===================================                                   |  50%
-      |                                                                            
-      |====================================                                  |  51%
-      |                                                                            
-      |====================================                                  |  52%
-      |                                                                            
-      |=====================================                                 |  53%
-      |                                                                            
-      |======================================                                |  54%
-      |                                                                            
-      |======================================                                |  55%
-      |                                                                            
-      |=======================================                               |  56%
-      |                                                                            
-      |========================================                              |  57%
-      |                                                                            
-      |=========================================                             |  58%
-      |                                                                            
-      |=========================================                             |  59%
-      |                                                                            
-      |==========================================                            |  60%
-      |                                                                            
-      |===========================================                           |  61%
-      |                                                                            
-      |===========================================                           |  62%
-      |                                                                            
-      |============================================                          |  63%
-      |                                                                            
-      |=============================================                         |  64%
-      |                                                                            
-      |==============================================                        |  65%
-      |                                                                            
-      |==============================================                        |  66%
-      |                                                                            
-      |===============================================                       |  67%
-      |                                                                            
-      |================================================                      |  68%
-      |                                                                            
-      |================================================                      |  69%
-      |                                                                            
-      |=================================================                     |  70%
-      |                                                                            
-      |==================================================                    |  71%
-      |                                                                            
-      |==================================================                    |  72%
-      |                                                                            
-      |===================================================                   |  73%
-      |                                                                            
-      |====================================================                  |  74%
-      |                                                                            
-      |====================================================                  |  75%
-      |                                                                            
-      |=====================================================                 |  76%
-      |                                                                            
-      |======================================================                |  77%
-      |                                                                            
-      |=======================================================               |  78%
-      |                                                                            
-      |=======================================================               |  79%
-      |                                                                            
-      |========================================================              |  80%
-      |                                                                            
-      |=========================================================             |  81%
-      |                                                                            
-      |=========================================================             |  82%
-      |                                                                            
-      |==========================================================            |  83%
-      |                                                                            
-      |===========================================================           |  84%
-      |                                                                            
-      |============================================================          |  85%
-      |                                                                            
-      |============================================================          |  86%
-      |                                                                            
-      |=============================================================         |  87%
-      |                                                                            
-      |==============================================================        |  88%
-      |                                                                            
-      |==============================================================        |  89%
-      |                                                                            
-      |===============================================================       |  90%
-      |                                                                            
-      |================================================================      |  91%
-      |                                                                            
-      |================================================================      |  92%
-      |                                                                            
-      |=================================================================     |  93%
-      |                                                                            
-      |==================================================================    |  94%
-      |                                                                            
-      |==================================================================    |  95%
-      |                                                                            
-      |===================================================================   |  96%
-      |                                                                            
-      |====================================================================  |  97%
-      |                                                                            
-      |===================================================================== |  98%
-      |                                                                            
-      |===================================================================== |  99%
-      |                                                                            
-      |======================================================================| 100%
-    [1] "Done."
 
 ``` r
 plot(expnull3)
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
+![Monte Carlo test of MIS3-LGM with 100
+simulations](README_files/figure-commonmark/MTCL3-1.png)
 
-In <a href="#fig-unbinned" class="quarto-xref">Figure 1</a> there is a
-continuous occupation of Southeast Asia from 25000 BP to present
-although there is a more consistent increase in height starting from 14
-ka.
+``` r
+plot_df3 <- expnull3$result
+
+ggplot(plot_df3, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df3, PrDens > hi | PrDens < lo),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.01, linewidth = 0.1
+  ) +
+  scale_x_reverse(
+    limits = c(57000, 19000),
+    breaks = seq(57000, 19000, by = -5000)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[1], 
+           xmax = climate_events$`End year`[1],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[1], # midpoint of start and end
+           y = 0.09,
+           label = climate_events$Abbreviation[1]) + # df$event_name[1]
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[2], 
+           xmax = climate_events$`End year`[2],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[2], 
+           y = 0.055,
+           label = climate_events$Abbreviation[2]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[3],
+           xmax = climate_events$`End year`[3],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[3], 
+           y = 0.03,
+           label = climate_events$Abbreviation[3]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[4], 
+           xmax = climate_events$`End year`[4],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[4], 
+           y = 0.05,
+           label = climate_events$Abbreviation[4]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[5], 
+           xmax = climate_events$`End year`[5],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[5], 
+           y = 0.045,
+           label = climate_events$Abbreviation[5]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[6], 
+           xmax = climate_events$`End year`[6],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[6], 
+           y = 0.04,
+           label = climate_events$Abbreviation[6]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[7], 
+           xmax = climate_events$`End year`[7],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[7], 
+           y = 0.05,
+           label = climate_events$Abbreviation[7]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[8],
+           xmax = climate_events$`End year`[8],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[8], 
+           y = 0.03,
+           label = climate_events$Abbreviation[8]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[9], 
+           xmax = climate_events$`End year`[9],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[9], 
+           y = 0.045,
+           label = climate_events$Abbreviation[9]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[10], 
+           xmax = climate_events$`End year`[10],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[10], 
+           y = 0.04,
+           label = climate_events$Abbreviation[10]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[11], 
+           xmax = climate_events$`End year`[11],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[11], 
+           y = 0.05,
+           label = climate_events$Abbreviation[11]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[12],
+           xmax = climate_events$`End year`[12],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[12], 
+           y = 0.03,
+           label = climate_events$Abbreviation[12]) + 
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[13], 
+           xmax = climate_events$`End year`[13],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[13], 
+           y = 0.09,
+           label = climate_events$Abbreviation[13]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[14], 
+           xmax = climate_events$`End year`[14],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[14], 
+           y = 0.05,
+           label = climate_events$Abbreviation[14]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[15], 
+           xmax = climate_events$`End year`[15],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[15], 
+           y = 0.04,
+           label = climate_events$Abbreviation[15]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[16], 
+           xmax = climate_events$`End year`[16],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[16], 
+           y = 0.07,
+           label = climate_events$Abbreviation[16]) + 
+  theme_classic()
+```
+
+![Monte Carlo test of MIS3-LGM with 100
+simulations](README_files/figure-commonmark/MTCL3-2.png)
+
+@MTCL3 shows our test from MIS3 to LGM, there is a positive deviation
+nearly the entire time up to the LGM
+
+``` r
+expnull4 <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(50000, 8000), 
+                      verbose = FALSE,
+                      nsim = 100)
+```
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    edgeSize reduced
+
+``` r
+plot(expnull4)
+```
+
+![Monte Carlo test of 50K-8.2k with 100
+simulations](README_files/figure-commonmark/MTCL4-1.png)
+
+``` r
+plot_df4 <- expnull4$result
+
+ggplot(plot_df4, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df4, PrDens > hi),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.01, linewidth = 0.1
+  ) +
+  geom_vline(
+    data = subset(plot_df4, PrDens < lo),
+    aes(xintercept = calBP),
+    color = "blue", alpha = 0.01, linewidth = 0.1
+  )+
+  scale_x_reverse(
+    limits = c(50000, 8000),
+    breaks = seq(50000, 8000, by = -5000)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[1], 
+           xmax = climate_events$`End year`[1],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[1], # midpoint of start and end
+           y = 0.09,
+           label = climate_events$Abbreviation[1]) + # df$event_name[1]
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[2], 
+           xmax = climate_events$`End year`[2],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[2], 
+           y = 0.055,
+           label = climate_events$Abbreviation[2]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[3],
+           xmax = climate_events$`End year`[3],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[3], 
+           y = 0.03,
+           label = climate_events$Abbreviation[3]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[4], 
+           xmax = climate_events$`End year`[4],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[4], 
+           y = 0.05,
+           label = climate_events$Abbreviation[4]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[5], 
+           xmax = climate_events$`End year`[5],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[5], 
+           y = 0.045,
+           label = climate_events$Abbreviation[5]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[6], 
+           xmax = climate_events$`End year`[6],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[6], 
+           y = 0.04,
+           label = climate_events$Abbreviation[6]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[7], 
+           xmax = climate_events$`End year`[7],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[7], 
+           y = 0.05,
+           label = climate_events$Abbreviation[7]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[8],
+           xmax = climate_events$`End year`[8],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[8], 
+           y = 0.03,
+           label = climate_events$Abbreviation[8]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[9], 
+           xmax = climate_events$`End year`[9],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[9], 
+           y = 0.045,
+           label = climate_events$Abbreviation[9]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[10], 
+           xmax = climate_events$`End year`[10],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[10], 
+           y = 0.04,
+           label = climate_events$Abbreviation[10]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[11], 
+           xmax = climate_events$`End year`[11],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[11], 
+           y = 0.05,
+           label = climate_events$Abbreviation[11]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[12],
+           xmax = climate_events$`End year`[12],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[12], 
+           y = 0.03,
+           label = climate_events$Abbreviation[12]) + 
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[13], 
+           xmax = climate_events$`End year`[13],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[13], 
+           y = 0.09,
+           label = climate_events$Abbreviation[13]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[14], 
+           xmax = climate_events$`End year`[14],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[14], 
+           y = 0.05,
+           label = climate_events$Abbreviation[14]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[15], 
+           xmax = climate_events$`End year`[15],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[15], 
+           y = 0.04,
+           label = climate_events$Abbreviation[15]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[16], 
+           xmax = climate_events$`End year`[16],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[16], 
+           y = 0.07,
+           label = climate_events$Abbreviation[16]) + 
+  annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[17], 
+           xmax = climate_events$`End year`[17],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[17], 
+           y = 0.03,
+           label = climate_events$Abbreviation[17]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[18], 
+           xmax = climate_events$`End year`[18],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[18], 
+           y = 0.05,
+           label = climate_events$Abbreviation[18]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[19], 
+           xmax = climate_events$`End year`[19],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[19], 
+           y = 0.07,
+           label = climate_events$Abbreviation[19]) + 
+  annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[20], 
+           xmax = climate_events$`End year`[20],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[20], 
+           y = 0.03,
+           label = climate_events$Abbreviation[20]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[21], 
+           xmax = climate_events$`End year`[21],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[21], 
+           y = 0.07,
+           label = climate_events$Abbreviation[21]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[22], 
+           xmax = climate_events$`End year`[22],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[22], 
+           y = 0.065,
+           label = climate_events$Abbreviation[22]) + 
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[23], 
+           xmax = climate_events$`End year`[23],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[23], 
+           y = 0.09,
+           label = climate_events$Abbreviation[23]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[24], 
+           xmax = climate_events$`End year`[24],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[24], 
+           y = 0.07,
+           label = "8.2") + 
+  theme_classic()
+```
+
+    Warning: Removed 1 row containing missing values or values outside the scale range
+    (`geom_text()`).
+
+![Monte Carlo test of 50K-8.2k with 100
+simulations](README_files/figure-commonmark/MTCL4-2.png)
+
+@MTCL4 shows our test from 50ka to the 8.2 kiloyear event, we can also
+see a near constant positive deviation up to the MIS2 then a few
+positive deviations during the LGM and then the line follows the
+envelope until the 8.2 kiloyear event where there is a negative
+deviation.
+
+``` r
+expnull5 <- modelTest(calDates, 
+                      errors = dates$C14SD, 
+                      model = "exponential", 
+                      timeRange = c(26500, 8000), 
+                      verbose = FALSE,
+                      nsim = 100)
+```
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    Direct model fitting on SPDs can lead to biased estimates and Null Hypothesis
+
+    Warning in modelTest(calDates, errors = dates$C14SD, model = "exponential", :
+    edgeSize reduced
+
+``` r
+plot(expnull5)
+```
+
+![Monte Carlo test of LGM-8.2k with 100
+simulations](README_files/figure-commonmark/MTCL5-1.png)
+
+``` r
+plot_df5 <- expnull5$result
+
+ggplot(plot_df5, aes(x = calBP)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
+  geom_line(aes(y = PrDens), colour = "black") +
+  # Highlight periods where observed exceeds envelope
+  geom_vline(
+    data = subset(plot_df5, PrDens > hi | PrDens < lo),
+    aes(xintercept = calBP),
+    colour = "green", alpha = 0.3, linewidth = 0.3
+  ) +
+  scale_x_reverse(
+    limits = c(26500, 8000),
+    breaks = seq(26500, 8000, by = -5000)
+  ) +
+  labs(x = "Years cal BP", y = "Summed Probability") +
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[16], 
+           xmax = climate_events$`End year`[16],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[16], 
+           y = 0.07,
+           label = climate_events$Abbreviation[16]) + 
+  annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[17], 
+           xmax = climate_events$`End year`[17],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[17], 
+           y = 0.03,
+           label = climate_events$Abbreviation[17]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.06,
+           xmin = climate_events$`Start year`[18], 
+           xmax = climate_events$`End year`[18],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[18], 
+           y = 0.05,
+           label = climate_events$Abbreviation[18]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[19], 
+           xmax = climate_events$`End year`[19],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[19], 
+           y = 0.07,
+           label = climate_events$Abbreviation[19]) + 
+  annotate("rect",
+           ymin = 0, ymax = 0.03,
+           xmin = climate_events$`Start year`[20], 
+           xmax = climate_events$`End year`[20],  
+           colour = "grey40",
+           fill = "grey40",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[20], 
+           y = 0.03,
+           label = climate_events$Abbreviation[20]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[21], 
+           xmax = climate_events$`End year`[21],  
+           colour = "salmon",
+           fill = "salmon",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[21], 
+           y = 0.07,
+           label = climate_events$Abbreviation[21]) + 
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[22], 
+           xmax = climate_events$`End year`[22],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[22], 
+           y = 0.065,
+           label = climate_events$Abbreviation[22]) + 
+  annotate("rect",
+           ymin = 0, ymax = Inf,
+           xmin = climate_events$`Start year`[23], 
+           xmax = climate_events$`End year`[23],  
+           colour = "grey50",
+           fill = "grey50",
+           alpha = 0.1) +
+    annotate("text",
+           x = climate_events$midpoint[23], 
+           y = 0.09,
+           label = climate_events$Abbreviation[23]) +
+    annotate("rect",
+           ymin = 0, ymax = 0.08,
+           xmin = climate_events$`Start year`[24], 
+           xmax = climate_events$`End year`[24],  
+           colour = "skyblue",
+           fill = "skyblue",
+           alpha = 0.2) +
+    annotate("text",
+           x = climate_events$midpoint[24], 
+           y = 0.07,
+           label = "8.2") + 
+  theme_classic()
+```
+
+    Warning: Removed 1 row containing missing values or values outside the scale range
+    (`geom_text()`).
+
+![Monte Carlo test of LGM-8.2k with 100
+simulations](README_files/figure-commonmark/MTCL5-2.png)
+
+@MTCL5 shows our test for LGM to the 8.2 kiloyear event there are a few
+minor positive deviations near 23ka, 24ka, 18ka, 16ka, 13ka, and a few
+minor negative deviations near the 8.2 kiloyear event.
 
 ``` r
 # Grouping dates within 100 years of each other into bins
@@ -1076,7 +1342,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-100-bin">
+
 ![](README_files/figure-commonmark/fig-100-bin-1.png)
+
+Figure 3: SPD plot with a bin of 100 years
+
+</div>
 
 In <a href="#fig-100-bin" class="quarto-xref">Figure 3</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
@@ -1101,7 +1373,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-200-bin">
+
 ![](README_files/figure-commonmark/fig-200-bin-1.png)
+
+Figure 4: SPD plot with a bin of 200 years
+
+</div>
 
 ``` r
 ggplot(spd_res$grid) +
@@ -1375,7 +1653,13 @@ ggplot(spd_res$grid) +
   theme_minimal() 
 ```
 
+<div id="fig-200-bin-climate">
+
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
+
+Figure 5: SPD plot with a bin of 200 years with climate events overlayed
+
+</div>
 
 In <a href="#fig-200-bin" class="quarto-xref">Figure 4</a> the changes
 are more noticeable as the peak around 13 ka and just before 10 ka is
@@ -1398,7 +1682,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-500-bin">
+
 ![](README_files/figure-commonmark/fig-500-bin-1.png)
+
+Figure 6: SPD plot with a bin of 500 years
+
+</div>
 
 In <a href="#fig-500-bin" class="quarto-xref">Figure 6</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
@@ -1422,7 +1712,13 @@ spd_res <- spd(
 plot(spd_res)
 ```
 
+<div id="fig-5000-bin">
+
 ![](README_files/figure-commonmark/fig-5000-bin-1.png)
+
+Figure 7: SPD plot with a bin of 5000 years
+
+</div>
 
 In <a href="#fig-5000-bin" class="quarto-xref">Figure 7</a> a lot of the
 hills depress however a couple of them spike up into their own peaks
@@ -1457,7 +1753,13 @@ spd_thin <- spd(
 plot(spd_thin)
 ```
 
+<div id="fig-thinned">
+
 ![](README_files/figure-commonmark/fig-thinned-1.png)
+
+Figure 8: SPD plot with thinning
+
+</div>
 
 In <a href="#fig-thinned" class="quarto-xref">Figure 8</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
@@ -1482,7 +1784,13 @@ Sea.ckde = ckde(ckde_res,
 plot(Sea.ckde, type = 'multiline')
 ```
 
+<div id="fig-CKDE">
+
 ![](README_files/figure-commonmark/fig-CKDE-1.png)
+
+Figure 9: CKDE plot
+
+</div>
 
 In <a href="#fig-CKDE" class="quarto-xref">Figure 9</a> the bands show a
 consistent occupation but support the notion of increased intensity
@@ -1506,7 +1814,7 @@ library(rnaturalearthdata)
 library(sf)
 ```
 
-    Linking to GEOS 3.13.0, GDAL 3.5.3, PROJ 9.5.1; sf_use_s2() is TRUE
+    Linking to GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0; sf_use_s2() is TRUE
 
 ``` r
 library(ggrepel)
@@ -1551,7 +1859,10 @@ sea_map <- ggplot(world) +
 sea_map
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
+
+In **?@fig-map** are all the sites in early Mainland Southeast Asia used
+in this study
 
 ``` r
 # Filter for sites older than 30,000 BP
@@ -1592,6 +1903,8 @@ early_sea_map
 ![Sites older than 30,000
 BP](README_files/figure-commonmark/early-fig-map-1.png)
 
+In @early-fig-map the oldest sites from before 30,000 are shown
+
 ``` r
 # Filter for sites between 30,000 and 15,0000 BP
 semi_earliest_sites <- dates_data %>%
@@ -1631,6 +1944,9 @@ semi_early_sea_map
 ![Sites occupied between 30,000-15,000
 BP](README_files/figure-commonmark/semi-early-fig-map-1.png)
 
+In @semi-early-fig-map sites occupied between 30,000 and 15,000 are
+shown
+
 ``` r
 # Filter for sites around the 14 ka event
 sites_14ka <- dates_data %>%
@@ -1666,6 +1982,9 @@ sea_map_14ka
 
 ![Sites occupied during the 14 ka population
 rise](README_files/figure-commonmark/14ka-fig-map-1.png)
+
+In @14ka-fig-map sites occupied during our time of interest are shown,
+from 15,000-13,000
 
 ``` r
 # Filter for sites after the 14 ka event
@@ -1703,13 +2022,16 @@ sea_map_after_14ka
 ![Sites occupied after the 14 ka population
 rise](README_files/figure-commonmark/after-fig-map-1.png)
 
+In @after-fig-map sites occupied after 13,000 are shown, notably there
+is an increase in sites in southern Mainland Southeast Asia
+
 ``` r
 # Import the karst data
 karst_sf <- st_read("whymap_karst__v1_poly.shp")
 ```
 
     Reading layer `whymap_karst__v1_poly' from data source 
-      `/Users/bmarwick/Downloads/Southeast-Asia-demographic-analysis/whymap_karst__v1_poly.shp' 
+      `C:\Users\Brandon Nguyen\Documents\Independent study\whymap_karst__v1_poly.shp' 
       using driver `ESRI Shapefile'
     Simple feature collection with 2805 features and 2 fields
     Geometry type: MULTIPOLYGON
@@ -1729,8 +2051,47 @@ ggplot(world) +
   coord_sf(xlim = c(90, 115), 
            ylim = c(8, 30), 
            expand = FALSE) +
+  geom_text_repel(data = sites_sf,
+                  aes(x = long, y = lat, label = Site),
+                  max.overlaps = Inf,
+                  size = 3, 
+                  nudge_x = 0.5,
+                  force = 10,
+                  point.padding = 0.5,
+                  box.padding = 0.5,
+                  min.segment.length = 0,
+                  bg.color = "white",
+                  bg.r = 0.15) +
   theme_minimal() +
   labs(title = "Archaeological Sites and Karst Formations")
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
+![Early sites with Karst layered on
+top](README_files/figure-commonmark/karst-fig-map-1.png)
+
+In @karst-fig-map all sites are shown with karst formations overlayed
+
+Literature review draft In recent decades much archaeological work has
+been done to illuminate the past of late Pleistocene Mainland Southeast
+Asia (50-10 thousand years ago) but there are still many questions on
+the nature of occupation in the region. The most prevalent feature
+during this period is the Hoabinhian technocomplex. Debates center
+around the origins and even definition of the Hoabinhian as our data on
+the industry grows. Data on pre-Hoabinhian people in Southeast Asia
+remain sparse but recent findings in Laos push back the timeline.
+Observations of human dynamics are still preliminary but despite
+evidence of resilience during the Last Glacial Maximum there may be a
+pattern of growth following the climate event which continues into the
+Holocene.
+
+The earliest evidence of occupation of Mainland Southeast Asia is
+concretely found on a partial human cranium in addition to a few
+pre-Hoabinhian flakes.
+
+Recent research has pushed the industry into multiple sites in Southern
+China raising questions on the origin of the technocomplex along with
+the importance of the region (Ji et al. 2016; Huan et al. 2024; Wu et
+al. 2022).
+
+The Hoabinhian is typically characterized by the iconic sumatralith but
+that definition is now contested.
