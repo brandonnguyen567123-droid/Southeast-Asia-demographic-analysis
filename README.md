@@ -410,8 +410,7 @@ expnull <- modelTest(calDates,
 plot(expnull)
 ```
 
-![Monte Carlo test of OD-BA with 100
-simulations](README_files/figure-commonmark/MTCL1-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
 
 ``` r
 plot_df <- expnull$result
@@ -466,12 +465,18 @@ ggplot(plot_df, aes(x = calBP)) +
   theme_classic()
 ```
 
-![Monte Carlo test of OD-BA with 100
-simulations](README_files/figure-commonmark/MTCL1-2.png)
+<div id="fig-MTCL1">
 
-@MTCL1 shows our testing from the Oldest Dryas to Bølling–Allerød
-Interstadial, we see 2 minor deviations where the line goes above the
-envelope near 14.1ka and 13.1ka.
+![](README_files/figure-commonmark/fig-MTCL1-1.png)
+
+Figure 3: Monte Carlo test of OD-BA with 100 simulations
+
+</div>
+
+<a href="#fig-MTCL1" class="quarto-xref">Figure 3</a> shows our testing
+from the Oldest Dryas to Bølling–Allerød Interstadial, we see 2 minor
+deviations where the line goes above the envelope near 14.1ka and
+13.1ka.
 
 ``` r
 expnull1000 <- modelTest(calDates, 
@@ -492,8 +497,7 @@ expnull1000 <- modelTest(calDates,
 plot(expnull1000)
 ```
 
-![Monte Carlo test of OD-BA with 1000
-simulations](README_files/figure-commonmark/MTCL1000-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
 
 ``` r
 plot_df1000 <- expnull1000$result
@@ -548,12 +552,17 @@ ggplot(plot_df1000, aes(x = calBP)) +
   theme_classic()
 ```
 
-![Monte Carlo test of OD-BA with 1000
-simulations](README_files/figure-commonmark/MTCL1000-2.png)
+<div id="fig-MTCL1000">
 
-In @MTCL1000 we increased the simulations to 1000, the 2 deviations no
-longer exist and the line falls in the expected envelope through the
-whole time.
+![](README_files/figure-commonmark/fig-MTCL1000-1.png)
+
+Figure 4: Monte Carlo test of OD-BA with 1000 simulations
+
+</div>
+
+In <a href="#fig-MTCL1000" class="quarto-xref">Figure 4</a> we increased
+the simulations to 1000, the 2 deviations no longer exist and the line
+falls in the expected envelope through the whole time.
 
 ``` r
 expnull2 <- modelTest(calDates, 
@@ -574,8 +583,7 @@ expnull2 <- modelTest(calDates,
 plot(expnull2)
 ```
 
-![Monte Carlo test of BA-YD with 100
-simulations](README_files/figure-commonmark/MTCL2-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
 
 ``` r
 plot_df2 <- expnull2$result
@@ -619,12 +627,18 @@ ggplot(plot_df2, aes(x = calBP)) +
   theme_classic()
 ```
 
-![Monte Carlo test of BA-YD with 100
-simulations](README_files/figure-commonmark/MTCL2-2.png)
+<div id="fig-MTCL2">
 
-@MTCL2 shows our testing from Bølling–Allerød Interstadial to Younger
-Dryas, the same deviation near 13.1ka is seen again while there is a new
-one in the Younger Dryas near 12.9ka.
+![](README_files/figure-commonmark/fig-MTCL2-1.png)
+
+Figure 5: Monte Carlo test of BA-YD with 100 simulations
+
+</div>
+
+<a href="#fig-MTCL2" class="quarto-xref">Figure 5</a> shows our testing
+from Bølling–Allerød Interstadial to Younger Dryas, the same deviation
+near 13.1ka is seen again while there is a new one in the Younger Dryas
+near 12.9ka.
 
 ``` r
 expnull3 <- modelTest(calDates, 
@@ -645,8 +659,7 @@ expnull3 <- modelTest(calDates,
 plot(expnull3)
 ```
 
-![Monte Carlo test of MIS3-LGM with 100
-simulations](README_files/figure-commonmark/MTCL3-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
 
 ``` r
 plot_df3 <- expnull3$result
@@ -844,11 +857,17 @@ ggplot(plot_df3, aes(x = calBP)) +
   theme_classic()
 ```
 
-![Monte Carlo test of MIS3-LGM with 100
-simulations](README_files/figure-commonmark/MTCL3-2.png)
+<div id="fig-MTCL3">
 
-@MTCL3 shows our test from MIS3 to LGM, there is a positive deviation
-nearly the entire time up to the LGM
+![](README_files/figure-commonmark/fig-MTCL3-1.png)
+
+Figure 6: Monte Carlo test of MIS3-LGM with 100 simulations
+
+</div>
+
+<a href="#fig-MTCL3" class="quarto-xref">Figure 6</a> shows our test
+from MIS3 to LGM, there is a positive deviation nearly the entire time
+up to the LGM
 
 ``` r
 expnull4 <- modelTest(calDates, 
@@ -869,8 +888,7 @@ expnull4 <- modelTest(calDates,
 plot(expnull4)
 ```
 
-![Monte Carlo test of 50K-8.2k with 100
-simulations](README_files/figure-commonmark/MTCL4-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
 
 ``` r
 plot_df4 <- expnull4$result
@@ -1164,14 +1182,19 @@ ggplot(plot_df4, aes(x = calBP)) +
     Warning: Removed 1 row containing missing values or values outside the scale range
     (`geom_text()`).
 
-![Monte Carlo test of 50K-8.2k with 100
-simulations](README_files/figure-commonmark/MTCL4-2.png)
+<div id="fig-MTCL4">
 
-@MTCL4 shows our test from 50ka to the 8.2 kiloyear event, we can also
-see a near constant positive deviation up to the MIS2 then a few
-positive deviations during the LGM and then the line follows the
-envelope until the 8.2 kiloyear event where there is a negative
-deviation.
+![](README_files/figure-commonmark/fig-MTCL4-1.png)
+
+Figure 7: Monte Carlo test of 50K-8.2k with 100 simulations
+
+</div>
+
+<a href="#fig-MTCL4" class="quarto-xref">Figure 7</a> shows our test
+from 50ka to the 8.2 kiloyear event, we can also see a near constant
+positive deviation up to the MIS2 then a few positive deviations during
+the LGM and then the line follows the envelope until the 8.2 kiloyear
+event where there is a negative deviation.
 
 ``` r
 expnull5 <- modelTest(calDates, 
@@ -1192,21 +1215,26 @@ expnull5 <- modelTest(calDates,
 plot(expnull5)
 ```
 
-![Monte Carlo test of LGM-8.2k with 100
-simulations](README_files/figure-commonmark/MTCL5-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
 
 ``` r
 plot_df5 <- expnull5$result
+
 
 ggplot(plot_df5, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
   # Highlight periods where observed exceeds envelope
   geom_vline(
-    data = subset(plot_df5, PrDens > hi | PrDens < lo),
+    data = subset(plot_df5, PrDens > hi),
     aes(xintercept = calBP),
     colour = "green", alpha = 0.3, linewidth = 0.3
   ) +
+  geom_vline(
+    data = subset(plot_df4, PrDens < lo),
+    aes(xintercept = calBP),
+    color = "blue", alpha = 0.01, linewidth = 0.1
+  )+
   scale_x_reverse(
     limits = c(26500, 8000),
     breaks = seq(26500, 8000, by = -5000)
@@ -1317,12 +1345,18 @@ ggplot(plot_df5, aes(x = calBP)) +
     Warning: Removed 1 row containing missing values or values outside the scale range
     (`geom_text()`).
 
-![Monte Carlo test of LGM-8.2k with 100
-simulations](README_files/figure-commonmark/MTCL5-2.png)
+<div id="fig-MTCL5">
 
-@MTCL5 shows our test for LGM to the 8.2 kiloyear event there are a few
-minor positive deviations near 23ka, 24ka, 18ka, 16ka, 13ka, and a few
-minor negative deviations near the 8.2 kiloyear event.
+![](README_files/figure-commonmark/fig-MTCL5-1.png)
+
+Figure 8: Monte Carlo test of LGM-8.2k with 100 simulations
+
+</div>
+
+<a href="#fig-MTCL5" class="quarto-xref">Figure 8</a> shows our test for
+LGM to the 8.2 kiloyear event there are a few minor positive deviations
+near 23ka, 24ka, 18ka, 16ka, 13ka, and a few minor negative deviations
+near the 8.2 kiloyear event.
 
 ``` r
 # Grouping dates within 100 years of each other into bins
@@ -1346,11 +1380,11 @@ plot(spd_res)
 
 ![](README_files/figure-commonmark/fig-100-bin-1.png)
 
-Figure 3: SPD plot with a bin of 100 years
+Figure 9: SPD plot with a bin of 100 years
 
 </div>
 
-In <a href="#fig-100-bin" class="quarto-xref">Figure 3</a> the peaks are
+In <a href="#fig-100-bin" class="quarto-xref">Figure 9</a> the peaks are
 consistent but grow more intense the only exceptions being the hills
 just before 15 ka and just after 10 ka are a little depressed from the
 binning compared to the rest of the peaks.
@@ -1377,7 +1411,7 @@ plot(spd_res)
 
 ![](README_files/figure-commonmark/fig-200-bin-1.png)
 
-Figure 4: SPD plot with a bin of 200 years
+Figure 10: SPD plot with a bin of 200 years
 
 </div>
 
@@ -1657,13 +1691,14 @@ ggplot(spd_res$grid) +
 
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
 
-Figure 5: SPD plot with a bin of 200 years with climate events overlayed
+Figure 11: SPD plot with a bin of 200 years with climate events
+overlayed
 
 </div>
 
-In <a href="#fig-200-bin" class="quarto-xref">Figure 4</a> the changes
-are more noticeable as the peak around 13 ka and just before 10 ka is
-much higher than the original plot.
+In <a href="#fig-200-bin-climate" class="quarto-xref">Figure 11</a> the
+changes are more noticeable as the peak around 13 ka and just before 10
+ka is much higher than the original plot.
 
 ``` r
 # Grouping dates within 500 years of each other into bins
@@ -1686,11 +1721,11 @@ plot(spd_res)
 
 ![](README_files/figure-commonmark/fig-500-bin-1.png)
 
-Figure 6: SPD plot with a bin of 500 years
+Figure 12: SPD plot with a bin of 500 years
 
 </div>
 
-In <a href="#fig-500-bin" class="quarto-xref">Figure 6</a> the peaks
+In <a href="#fig-500-bin" class="quarto-xref">Figure 12</a> the peaks
 around 13 ka are even more intense but the hill around 14 ka depresses a
 little, the peak just before 10 ka also lowers considerably compared to
 the original plot.
@@ -1716,12 +1751,12 @@ plot(spd_res)
 
 ![](README_files/figure-commonmark/fig-5000-bin-1.png)
 
-Figure 7: SPD plot with a bin of 5000 years
+Figure 13: SPD plot with a bin of 5000 years
 
 </div>
 
-In <a href="#fig-5000-bin" class="quarto-xref">Figure 7</a> a lot of the
-hills depress however a couple of them spike up into their own peaks
+In <a href="#fig-5000-bin" class="quarto-xref">Figure 13</a> a lot of
+the hills depress however a couple of them spike up into their own peaks
 especially around 25-23 ka, 17 ka, and 12 ka.
 
 ``` r
@@ -1757,11 +1792,11 @@ plot(spd_thin)
 
 ![](README_files/figure-commonmark/fig-thinned-1.png)
 
-Figure 8: SPD plot with thinning
+Figure 14: SPD plot with thinning
 
 </div>
 
-In <a href="#fig-thinned" class="quarto-xref">Figure 8</a> the thinning
+In <a href="#fig-thinned" class="quarto-xref">Figure 14</a> the thinning
 caused more mild variation like the 100 and 200 year bins but the peaks
 around 13 and 12 ka intensify and the one just after 10 ka depresses.
 
@@ -1788,12 +1823,12 @@ plot(Sea.ckde, type = 'multiline')
 
 ![](README_files/figure-commonmark/fig-CKDE-1.png)
 
-Figure 9: CKDE plot
+Figure 15: CKDE plot
 
 </div>
 
-In <a href="#fig-CKDE" class="quarto-xref">Figure 9</a> the bands show a
-consistent occupation but support the notion of increased intensity
+In <a href="#fig-CKDE" class="quarto-xref">Figure 15</a> the bands show
+a consistent occupation but support the notion of increased intensity
 starting from 14 ka.
 
 ``` r
@@ -1818,9 +1853,6 @@ library(sf)
 
 ``` r
 library(ggrepel)
-
-#| label: fig-map
-#| fig-cap: Map of early sites in Southeast Asia
 
 # Load site data from Excel file
 dates_data <- read_excel("Demographic analysis sites.xlsx")
@@ -1859,10 +1891,16 @@ sea_map <- ggplot(world) +
 sea_map
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
+<div id="fig-map">
 
-In **?@fig-map** are all the sites in early Mainland Southeast Asia used
-in this study
+![](README_files/figure-commonmark/fig-map-1.png)
+
+Figure 16: Map of early sites in Southeast Asia
+
+</div>
+
+In <a href="#fig-map" class="quarto-xref">Figure 16</a> are all the
+sites in early Mainland Southeast Asia used in this study
 
 ``` r
 # Filter for sites older than 30,000 BP
@@ -1900,10 +1938,16 @@ early_sea_map <-ggplot(world) +
 early_sea_map
 ```
 
-![Sites older than 30,000
-BP](README_files/figure-commonmark/early-fig-map-1.png)
+<div id="fig-early-map">
 
-In @early-fig-map the oldest sites from before 30,000 are shown
+![](README_files/figure-commonmark/fig-early-map-1.png)
+
+Figure 17: Sites older than 30,000 BP
+
+</div>
+
+In <a href="#fig-early-map" class="quarto-xref">Figure 17</a> the oldest
+sites from before 30,000 are shown
 
 ``` r
 # Filter for sites between 30,000 and 15,0000 BP
@@ -1941,11 +1985,16 @@ semi_early_sea_map <-ggplot(world) +
 semi_early_sea_map
 ```
 
-![Sites occupied between 30,000-15,000
-BP](README_files/figure-commonmark/semi-early-fig-map-1.png)
+<div id="fig-semi-early-map">
 
-In @semi-early-fig-map sites occupied between 30,000 and 15,000 are
-shown
+![](README_files/figure-commonmark/fig-semi-early-map-1.png)
+
+Figure 18: Sites occupied between 30,000-15,000 BP
+
+</div>
+
+In <a href="#fig-semi-early-map" class="quarto-xref">Figure 18</a> sites
+occupied between 30,000 and 15,000 are shown
 
 ``` r
 # Filter for sites around the 14 ka event
@@ -1980,11 +2029,16 @@ sea_map_14ka <-ggplot(world) +
 sea_map_14ka
 ```
 
-![Sites occupied during the 14 ka population
-rise](README_files/figure-commonmark/14ka-fig-map-1.png)
+<div id="fig-14ka-map">
 
-In @14ka-fig-map sites occupied during our time of interest are shown,
-from 15,000-13,000
+![](README_files/figure-commonmark/fig-14ka-map-1.png)
+
+Figure 19: Sites occupied during the 14 ka population rise
+
+</div>
+
+In **?@fig-14a-map** sites occupied during our time of interest are
+shown, from 15,000-13,000
 
 ``` r
 # Filter for sites after the 14 ka event
@@ -2019,11 +2073,17 @@ sea_map_after_14ka <-ggplot(world) +
 sea_map_after_14ka
 ```
 
-![Sites occupied after the 14 ka population
-rise](README_files/figure-commonmark/after-fig-map-1.png)
+<div id="fig-after-map">
 
-In @after-fig-map sites occupied after 13,000 are shown, notably there
-is an increase in sites in southern Mainland Southeast Asia
+![](README_files/figure-commonmark/fig-after-map-1.png)
+
+Figure 20: Sites occupied after the 14 ka population rise
+
+</div>
+
+In <a href="#fig-after-map" class="quarto-xref">Figure 20</a> sites
+occupied after 13,000 are shown, notably there is an increase in sites
+in southern Mainland Southeast Asia
 
 ``` r
 # Import the karst data
@@ -2066,10 +2126,16 @@ ggplot(world) +
   labs(title = "Archaeological Sites and Karst Formations")
 ```
 
-![Early sites with Karst layered on
-top](README_files/figure-commonmark/karst-fig-map-1.png)
+<div id="fig-karst-map">
 
-In @karst-fig-map all sites are shown with karst formations overlayed
+![](README_files/figure-commonmark/fig-karst-map-1.png)
+
+Figure 21: Early sites with Karst layered on top
+
+</div>
+
+In <a href="#fig-karst-map" class="quarto-xref">Figure 21</a> all sites
+are shown with karst formations overlayed
 
 Literature review draft In recent decades much archaeological work has
 been done to illuminate the past of late Pleistocene Mainland Southeast

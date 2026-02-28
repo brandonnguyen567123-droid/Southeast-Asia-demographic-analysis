@@ -341,7 +341,10 @@ expnull <- modelTest(calDates,
 
 plot(expnull)
 
-#| label: MTCL1
+```
+
+```{r}
+#| label: fig-MTCL1
 #| fig-cap: Monte Carlo test of OD-BA with 100 simulations 
 
 plot_df <- expnull$result
@@ -395,7 +398,8 @@ ggplot(plot_df, aes(x = calBP)) +
            label = climate_events$Abbreviation[21]) + 
   theme_classic()
 ```
-@MTCL1 shows our testing from the Oldest Dryas to Bølling–Allerød Interstadial, we see 2 minor deviations where the line goes above the envelope near 14.1ka and 13.1ka.
+
+@fig-MTCL1 shows our testing from the Oldest Dryas to Bølling–Allerød Interstadial, we see 2 minor deviations where the line goes above the envelope near 14.1ka and 13.1ka.
 
 ```{r}
 expnull1000 <- modelTest(calDates, 
@@ -406,8 +410,10 @@ expnull1000 <- modelTest(calDates,
                       nsim = 1000)
 
 plot(expnull1000)
+```
 
-#| label: MTCL1000
+```{r}
+#| label: fig-MTCL1000
 #| fig-cap: Monte Carlo test of OD-BA with 1000 simulations 
 
 plot_df1000 <- expnull1000$result
@@ -461,7 +467,8 @@ ggplot(plot_df1000, aes(x = calBP)) +
            label = climate_events$Abbreviation[21]) + 
   theme_classic()
 ```
-In @MTCL1000 we increased the simulations to 1000, the 2 deviations no longer exist and the line falls in the expected envelope through the whole time.
+
+In @fig-MTCL1000 we increased the simulations to 1000, the 2 deviations no longer exist and the line falls in the expected envelope through the whole time.
 
 ```{r}
 expnull2 <- modelTest(calDates, 
@@ -472,8 +479,10 @@ expnull2 <- modelTest(calDates,
                       nsim = 100)
 
 plot(expnull2)
+```
 
-#| label: MTCL2
+```{r}
+#| label: fig-MTCL2
 #| fig-cap: Monte Carlo test of BA-YD with 100 simulations  
 
 plot_df2 <- expnull2$result
@@ -516,11 +525,10 @@ ggplot(plot_df2, aes(x = calBP)) +
            label = climate_events$Abbreviation[22]) + 
   theme_classic()
 ```
-@MTCL2 shows our testing from Bølling–Allerød Interstadial to Younger Dryas, the same deviation near 13.1ka is seen again while there is a new one in the Younger Dryas near 12.9ka.
+
+@fig-MTCL2 shows our testing from Bølling–Allerød Interstadial to Younger Dryas, the same deviation near 13.1ka is seen again while there is a new one in the Younger Dryas near 12.9ka.
 
 ```{r}
-#| label: MTCL3
-#| fig-cap: Monte Carlo test of MIS3-LGM with 100 simulations 
 expnull3 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -529,8 +537,10 @@ expnull3 <- modelTest(calDates,
                       nsim = 100)
 
 plot(expnull3)
+```
 
-#| label: MTCL3
+```{r}
+#| label: fig-MTCL3
 #| fig-cap: Monte Carlo test of MIS3-LGM with 100 simulations 
 
 plot_df3 <- expnull3$result
@@ -727,7 +737,8 @@ ggplot(plot_df3, aes(x = calBP)) +
            label = climate_events$Abbreviation[16]) + 
   theme_classic()
 ```
-@MTCL3 shows our test from MIS3 to LGM, there is a positive deviation nearly the entire time up to the LGM
+
+@fig-MTCL3 shows our test from MIS3 to LGM, there is a positive deviation nearly the entire time up to the LGM
 
 ```{r}
 expnull4 <- modelTest(calDates, 
@@ -738,8 +749,10 @@ expnull4 <- modelTest(calDates,
                       nsim = 100)
 
 plot(expnull4)
+```
 
-#| label: MTCL4
+```{r}
+#| label: fig-MTCL4
 #| fig-cap: Monte Carlo test of 50K-8.2k with 100 simulations 
 
 plot_df4 <- expnull4$result
@@ -1029,7 +1042,8 @@ ggplot(plot_df4, aes(x = calBP)) +
            label = "8.2") + 
   theme_classic()
 ```
-@MTCL4 shows our test from 50ka to the 8.2 kiloyear event, we can also see a near constant positive deviation up to the MIS2 then a few positive deviations during the LGM and then the line follows the envelope until the 8.2 kiloyear event where there is a negative deviation.
+
+@fig-MTCL4 shows our test from 50ka to the 8.2 kiloyear event, we can also see a near constant positive deviation up to the MIS2 then a few positive deviations during the LGM and then the line follows the envelope until the 8.2 kiloyear event where there is a negative deviation.
 
 
 ```{r}
@@ -1041,8 +1055,10 @@ expnull5 <- modelTest(calDates,
                       nsim = 100)
 
 plot(expnull5)
+```
 
-#| label: MTCL5
+```{r}
+#| label: fig-MTCL5
 #| fig-cap: Monte Carlo test of LGM-8.2k with 100 simulations 
 
 plot_df5 <- expnull5$result
@@ -1168,7 +1184,8 @@ ggplot(plot_df5, aes(x = calBP)) +
            label = "8.2") + 
   theme_classic()
 ```
-@MTCL5 shows our test for LGM to the 8.2 kiloyear event there are a few minor positive deviations near 23ka, 24ka, 18ka, 16ka, 13ka, and a few minor negative deviations near the 8.2 kiloyear event.
+
+@fig-MTCL5 shows our test for LGM to the 8.2 kiloyear event there are a few minor positive deviations near 23ka, 24ka, 18ka, 16ka, 13ka, and a few minor negative deviations near the 8.2 kiloyear event.
 
 ```{r}
 #| label: fig-100-bin
@@ -1489,7 +1506,7 @@ ggplot(spd_res$grid) +
   theme_minimal() 
 ```
 
-In @fig-200-bin the changes are more noticeable as the peak around 13 ka and just before 10 ka is much higher than the original plot.
+In @fig-200-bin-climate the changes are more noticeable as the peak around 13 ka and just before 10 ka is much higher than the original plot.
 
 ```{r}
 #| label: fig-500-bin
@@ -1581,6 +1598,9 @@ plot(Sea.ckde, type = 'multiline')
 In @fig-CKDE the bands show a consistent occupation but support the notion of increased intensity starting from 14 ka.
 
 ```{r}
+#| label: fig-map
+#| fig-cap: "Map of early sites in Southeast Asia"
+
 library(tidyverse)
 library(readxl)
 library(rnaturalearth)
@@ -1597,9 +1617,6 @@ sites_sf <- dates_data %>%
   st_as_sf(coords = c("long", "lat"), 
            remove = FALSE, 
            crs = 4326)
-
-#| label: fig-map
-#| fig-cap: Map of early sites in Southeast Asia
 
 # Get the map background
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -1631,6 +1648,8 @@ In @fig-map are all the sites in early Mainland Southeast Asia used in this stud
 
 
 ```{r}
+#| label: fig-early-map
+#| fig-cap: "Sites older than 30,000 BP"
 # Filter for sites older than 30,000 BP
 earliest_sites <- dates_data %>%
   filter(C14Age > 30000) %>%
@@ -1638,9 +1657,6 @@ earliest_sites <- dates_data %>%
   st_as_sf(coords = c("long", "lat"), 
            remove = FALSE, 
            crs = 4326)
-
-#| label: early-fig-map
-#| fig-cap: Sites older than 30,000 BP
 
 # Base map of Southeast Asia
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -1668,9 +1684,11 @@ early_sea_map <-ggplot(world) +
 
 early_sea_map
 ```
-In @early-fig-map the oldest sites from before 30,000 are shown
+In @fig-early-map the oldest sites from before 30,000 are shown
 
 ```{r}
+#| label: fig-semi-early-map
+#| fig-cap: "Sites occupied between 30,000-15,000 BP"
 # Filter for sites between 30,000 and 15,0000 BP
 semi_earliest_sites <- dates_data %>%
   filter(C14Age >= 15000 & C14Age <= 30000) %>%
@@ -1678,9 +1696,6 @@ semi_earliest_sites <- dates_data %>%
   st_as_sf(coords = c("long", "lat"), 
            remove = FALSE, 
            crs = 4326)
-
-#| label: semi-early-fig-map
-#| fig-cap: Sites occupied between 30,000-15,000 BP
 
 # Base map of Southeast Asia
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -1708,9 +1723,11 @@ semi_early_sea_map <-ggplot(world) +
 
 semi_early_sea_map
 ```
-In @semi-early-fig-map sites occupied between 30,000 and 15,000 are shown
+In @fig-semi-early-map sites occupied between 30,000 and 15,000 are shown
 
 ```{r}
+#| label: fig-14ka-map
+#| fig-cap: "Sites occupied during the 14 ka population rise" 
 # Filter for sites around the 14 ka event
 sites_14ka <- dates_data %>%
   filter(C14Age >= 13000 & C14Age <= 15000) %>%
@@ -1718,9 +1735,6 @@ sites_14ka <- dates_data %>%
   st_as_sf(coords = c("long", "lat"), 
            remove = FALSE, 
            crs = 4326)
-
-#| label: 14ka-fig-map
-#| fig-cap: Sites occupied during the 14 ka population rise 
 
 # Plot 14 ka sites
 sea_map_14ka <-ggplot(world) +
@@ -1745,9 +1759,11 @@ sea_map_14ka <-ggplot(world) +
 
 sea_map_14ka
 ```
-In @14ka-fig-map sites occupied during our time of interest are shown, from 15,000-13,000
+In @fig-14a-map sites occupied during our time of interest are shown, from 15,000-13,000
 
 ```{r}
+#| label: fig-after-map
+#| fig-cap: "Sites occupied after the 14 ka population rise"
 # Filter for sites after the 14 ka event
 sites_after_14ka <- dates_data %>%
   filter(C14Age <= 13000) %>%
@@ -1755,9 +1771,6 @@ sites_after_14ka <- dates_data %>%
   st_as_sf(coords = c("long", "lat"), 
            remove = FALSE, 
            crs = 4326)
-
-#| label: after-fig-map
-#| fig-cap: Sites occupied after the 14 ka population rise
 
 # Plot the after 14 ka sites
 sea_map_after_14ka <-ggplot(world) +
@@ -1782,14 +1795,13 @@ sea_map_after_14ka <-ggplot(world) +
 
 sea_map_after_14ka
 ```
-In @after-fig-map sites occupied after 13,000 are shown, notably there is an increase in sites in southern Mainland Southeast Asia
+In @fig-after-map sites occupied after 13,000 are shown, notably there is an increase in sites in southern Mainland Southeast Asia
 
 ```{r}
+#| label: fig-karst-map
+#| fig-cap: "Early sites with Karst layered on top"
 # Import the karst data
 karst_sf <- st_read("whymap_karst__v1_poly.shp")
-
-#| label: karst-fig-map
-#| fig-cap: Early sites with Karst layered on top
 
 ggplot(world) +
   geom_sf(fill = "white") +              # Base map
@@ -1816,7 +1828,7 @@ ggplot(world) +
   theme_minimal() +
   labs(title = "Archaeological Sites and Karst Formations")
 ```
-In @karst-fig-map all sites are shown with karst formations overlayed
+In @fig-karst-map all sites are shown with karst formations overlayed
 
 Literature review draft
 In recent decades much archaeological work has been done to illuminate the past of late Pleistocene Mainland Southeast Asia (50-10 thousand years ago) but there are still many questions on the nature of occupation in the region. The most prevalent feature during this period is the Hoabinhian technocomplex. Debates center around the origins and even definition of the Hoabinhian as our data on the industry grows. Data on pre-Hoabinhian people in Southeast Asia remain sparse but recent findings in Laos push back the timeline. Observations of human dynamics are still preliminary but despite evidence of resilience during the Last Glacial Maximum there may be a pattern of growth following the climate event which continues into the Holocene.
