@@ -332,6 +332,7 @@ In @fig-unbinned-climate there is a continuous occupation of Southeast Asia from
 
 
 ```{r}
+# Initial Monte Carlo test for OD to BA
 expnull <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -348,7 +349,7 @@ plot(expnull)
 #| fig-cap: Monte Carlo test of OD-BA with 100 simulations 
 
 plot_df <- expnull$result
-
+#Annotating climate events
 ggplot(plot_df, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -402,6 +403,7 @@ ggplot(plot_df, aes(x = calBP)) +
 @fig-MTCL1 shows our testing from the Oldest Dryas to Bølling–Allerød Interstadial, we see 2 minor deviations where the line goes above the envelope near 14.1ka and 13.1ka.
 
 ```{r}
+# Initial Monte Carlo test for OD to BA with 1000 simulations
 expnull1000 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -417,7 +419,7 @@ plot(expnull1000)
 #| fig-cap: Monte Carlo test of OD-BA with 1000 simulations 
 
 plot_df1000 <- expnull1000$result
-
+# Annotating climate events
 ggplot(plot_df1000, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -468,9 +470,10 @@ ggplot(plot_df1000, aes(x = calBP)) +
   theme_classic()
 ```
 
-In @fig-MTCL1000 we increased the simulations to 1000, the 2 deviations no longer exist and the line falls in the expected envelope through the whole time.
+In @fig-MTCL1000 we increased the simulations to 1000, the 2 deviations still exist and the line falls in the expected envelope through the whole time.
 
 ```{r}
+# Initial Monte Carlo test for BA-YD
 expnull2 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -487,6 +490,7 @@ plot(expnull2)
 
 plot_df2 <- expnull2$result
 
+# Annotating climate events
 ggplot(plot_df2, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -529,6 +533,7 @@ ggplot(plot_df2, aes(x = calBP)) +
 @fig-MTCL2 shows our testing from Bølling–Allerød Interstadial to Younger Dryas, the same deviation near 13.1ka is seen again while there is a new one in the Younger Dryas near 12.9ka.
 
 ```{r}
+# Initial Monte Carlo test for 50ka to LGM
 expnull3 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -544,7 +549,7 @@ plot(expnull3)
 #| fig-cap: Monte Carlo test of MIS3-LGM with 100 simulations 
 
 plot_df3 <- expnull3$result
-
+# Annotating climate events
 ggplot(plot_df3, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -741,6 +746,7 @@ ggplot(plot_df3, aes(x = calBP)) +
 @fig-MTCL3 shows our test from MIS3 to LGM, there is a positive deviation nearly the entire time up to the LGM
 
 ```{r}
+# Initial Monte Carlo test for 50ka to 8.2
 expnull4 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -757,6 +763,7 @@ plot(expnull4)
 
 plot_df4 <- expnull4$result
 
+# Annotating climate events
 ggplot(plot_df4, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -1047,6 +1054,7 @@ ggplot(plot_df4, aes(x = calBP)) +
 
 
 ```{r}
+# Initial Monte Carlo test for LGM to 8.2
 expnull5 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -1063,7 +1071,7 @@ plot(expnull5)
 
 plot_df5 <- expnull5$result
 
-
+# Annotating climate events
 ggplot(plot_df5, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
