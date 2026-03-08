@@ -41,6 +41,10 @@ calDates <- calibrate(
   verbose = FALSE)
 ```
 
+## Introduction
+
+## Background
+
 ## Data
 
 I gathered 352 uncalibrated radiocarbon ages from 30 Pliestocene to
@@ -79,7 +83,6 @@ current focus.
 ``` r
 age_range <- c(50000,2000)
 
-# Plotting the summed probability distribution
 spd_unbinned <- spd(
   calDates,
   timeRange = age_range)
@@ -89,291 +92,104 @@ spd_unbinned <- spd(
     [1] "Done."
 
 ``` r
-plot(spd_unbinned)
-```
-
-<div id="fig-unbinned">
-
-![](README_files/figure-commonmark/fig-unbinned-1.png)
-
-Figure 1: Unbinned SPD plot
-
-</div>
-
-``` r
 climate_events <- read_excel("Demographic analysis sites.xlsx",
                              sheet = 2) |> 
   mutate(midpoint = `End year` + ( `Start year` - `End year`) / 2 )
 
 
 # with ggplot2
+#| label: fig-unbinned-climate
+#| fig-cap: Unbinned SPD plot with climate events overlayed 
+
+climate_events <- read_excel("Demographic analysis sites.xlsx", sheet = 2) |>
+  filter(!is.na(`Climate event`)) |>
+  mutate(
+    Abbreviation = as.character(Abbreviation),
+    midpoint = `End year` + (`Start year` - `End year`) / 2,
+    colour = case_when(
+      Condition == "warmer" ~ "salmon",
+      Condition == "cooler" ~ "skyblue",
+      is.na(Condition)      ~ "grey50"
+    ),
+    ymax = case_when(
+  Abbreviation %in% c("LGM", "OD", "BA", "YD", "8.2k") ~ 0.09,
+  is.na(Condition) ~ Inf,
+  row_number() %% 2 == 0 ~ 0.08,
+  TRUE ~ 0.06
+    ),
+    y_text = case_when(
+  Abbreviation %in% c("MIS 3", "MIS 2", "MIS 1") ~ 0.095,
+  Abbreviation %in% c("LGM", "OD", "BA", "YD", "8.2k") ~ 0.08,
+  is.na(Condition) ~ 0.09,  # Heinrich events
+  row_number() %% 2 == 0 ~ 0.07,
+  TRUE ~ 0.05
+    )
+  )
+
+climate_layers <- lapply(seq_len(nrow(climate_events)), function(i) {
+  e <- climate_events[i, ]
+  if (e$`Start year` == e$`End year`) {
+    # Point events like Heinrich events → vertical line
+    list(
+      annotate("segment",
+               x = e$`Start year`, xend = e$`Start year`,
+               y = 0, yend = Inf,
+               colour = "grey50", linetype = "dashed"),
+      annotate("text",
+               x = e$midpoint, y = 0.09,
+               label = e$Abbreviation)
+    )
+  } else {
+    list(
+      annotate("rect",
+               ymin = 0, ymax = e$ymax,
+               xmin = e$`Start year`, xmax = e$`End year`,
+               colour = e$colour, fill = e$colour,
+               alpha = if_else(is.na(e$Condition), 0.1, 0.2)),
+      annotate("text",
+               x = e$midpoint, y = e$y_text,
+               label = e$Abbreviation)
+    )
+  }
+})
+
+# Define this once alongside climate_events and climate_layers
+climate_layers_for <- function(start_bp, end_bp) {
+  events <- climate_events |> 
+    filter(`Start year` <= start_bp & `End year` >= end_bp)
+  
+  lapply(seq_len(nrow(events)), function(i) {
+    e <- events[i, ]
+    if (e$`Start year` == e$`End year`) {
+      list(
+        annotate("segment",
+                 x = e$`Start year`, xend = e$`Start year`,
+                 y = 0, yend = Inf,
+                 colour = "grey50", linetype = "dashed"),
+        annotate("text",
+                 x = e$midpoint, y = 0.09,
+                 label = e$Abbreviation)
+      )
+    } else {
+      list(
+        annotate("rect",
+                 ymin = 0, ymax = Inf,
+                 xmin = e$`Start year`, xmax = e$`End year`,
+                 colour = e$colour, fill = e$colour,
+                 alpha = if_else(is.na(e$Condition), 0.1, 0.2)),
+        annotate("text",
+                 x = e$midpoint, y = e$y_text,
+                 label = e$Abbreviation)
+      )
+    }
+  })
+}
+
+
 ggplot(spd_unbinned$grid) +
   aes(calBP, PrDens) +
   geom_line() +
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[1], 
-           xmax = climate_events$`End year`[1],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[1], # midpoint of start and end
-           y = 0.09,
-           label = climate_events$Abbreviation[1]) + # df$event_name[1]
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[2], 
-           xmax = climate_events$`End year`[2],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[2], 
-           y = 0.055,
-           label = climate_events$Abbreviation[2]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[3],
-           xmax = climate_events$`End year`[3],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[3], 
-           y = 0.03,
-           label = climate_events$Abbreviation[3]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[4], 
-           xmax = climate_events$`End year`[4],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[4], 
-           y = 0.05,
-           label = climate_events$Abbreviation[4]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[5], 
-           xmax = climate_events$`End year`[5],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[5], 
-           y = 0.045,
-           label = climate_events$Abbreviation[5]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[6], 
-           xmax = climate_events$`End year`[6],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[6], 
-           y = 0.04,
-           label = climate_events$Abbreviation[6]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[7], 
-           xmax = climate_events$`End year`[7],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[7], 
-           y = 0.05,
-           label = climate_events$Abbreviation[7]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[8],
-           xmax = climate_events$`End year`[8],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[8], 
-           y = 0.03,
-           label = climate_events$Abbreviation[8]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[9], 
-           xmax = climate_events$`End year`[9],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[9], 
-           y = 0.045,
-           label = climate_events$Abbreviation[9]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[10], 
-           xmax = climate_events$`End year`[10],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[10], 
-           y = 0.04,
-           label = climate_events$Abbreviation[10]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[11], 
-           xmax = climate_events$`End year`[11],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[11], 
-           y = 0.05,
-           label = climate_events$Abbreviation[11]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[12],
-           xmax = climate_events$`End year`[12],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[12], 
-           y = 0.03,
-           label = climate_events$Abbreviation[12]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[13], 
-           xmax = climate_events$`End year`[13],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[13], 
-           y = 0.09,
-           label = climate_events$Abbreviation[13]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[14], 
-           xmax = climate_events$`End year`[14],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[14], 
-           y = 0.05,
-           label = climate_events$Abbreviation[14]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[15], 
-           xmax = climate_events$`End year`[15],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[15], 
-           y = 0.04,
-           label = climate_events$Abbreviation[15]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[16], 
-           xmax = climate_events$`End year`[16],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[16], 
-           y = 0.07,
-           label = climate_events$Abbreviation[16]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[17], 
-           xmax = climate_events$`End year`[17],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[17], 
-           y = 0.03,
-           label = climate_events$Abbreviation[17]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[18], 
-           xmax = climate_events$`End year`[18],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[18], 
-           y = 0.05,
-           label = climate_events$Abbreviation[18]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[22], 
-           xmax = climate_events$`End year`[22],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[22], 
-           y = 0.065,
-           label = climate_events$Abbreviation[22]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[23], 
-           xmax = climate_events$`End year`[23],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[23], 
-           y = 0.09,
-           label = climate_events$Abbreviation[23]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[24], 
-           xmax = climate_events$`End year`[24],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[24], 
-           y = 0.07,
-           label = "8.2") + 
+  climate_layers+
   scale_x_reverse() +
   theme_minimal() 
 ```
@@ -382,16 +198,17 @@ ggplot(spd_unbinned$grid) +
 
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
 
-Figure 2: Unbinned SPD plot with climate events overlayed
+Figure 1: Unbinned SPD plot with climate events overlayed
 
 </div>
 
-In <a href="#fig-unbinned-climate" class="quarto-xref">Figure 2</a>
+In <a href="#fig-unbinned-climate" class="quarto-xref">Figure 1</a>
 there is a continuous occupation of Southeast Asia from 25000 BP to
 present although there is a more consistent increase in height starting
 from 14 ka.
 
 ``` r
+# Initial Monte Carlo test for OD to BA
 expnull <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -407,14 +224,8 @@ expnull <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
-
-``` r
 plot_df <- expnull$result
-
+#Annotating climate events
 ggplot(plot_df, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -429,39 +240,7 @@ ggplot(plot_df, aes(x = calBP)) +
     breaks = seq(18000, 13000, by = -1000)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
+  climate_layers_for(18000, 12900)+
   theme_classic()
 ```
 
@@ -469,16 +248,17 @@ ggplot(plot_df, aes(x = calBP)) +
 
 ![](README_files/figure-commonmark/fig-MTCL1-1.png)
 
-Figure 3: Monte Carlo test of OD-BA with 100 simulations
+Figure 2: Monte Carlo test of OD-BA with 100 simulations
 
 </div>
 
-<a href="#fig-MTCL1" class="quarto-xref">Figure 3</a> shows our testing
+<a href="#fig-MTCL1" class="quarto-xref">Figure 2</a> shows our testing
 from the Oldest Dryas to Bølling–Allerød Interstadial, we see 2 minor
 deviations where the line goes above the envelope near 14.1ka and
 13.1ka.
 
 ``` r
+# Initial Monte Carlo test for OD to BA with 1000 simulations
 expnull1000 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -494,14 +274,8 @@ expnull1000 <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull1000)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
-
-``` r
 plot_df1000 <- expnull1000$result
-
+# Annotating climate events
 ggplot(plot_df1000, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -516,39 +290,7 @@ ggplot(plot_df1000, aes(x = calBP)) +
     breaks = seq(18000, 13000, by = -500)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
+  climate_layers_for(18000, 12900)+
   theme_classic()
 ```
 
@@ -556,15 +298,16 @@ ggplot(plot_df1000, aes(x = calBP)) +
 
 ![](README_files/figure-commonmark/fig-MTCL1000-1.png)
 
-Figure 4: Monte Carlo test of OD-BA with 1000 simulations
+Figure 3: Monte Carlo test of OD-BA with 1000 simulations
 
 </div>
 
-In <a href="#fig-MTCL1000" class="quarto-xref">Figure 4</a> we increased
-the simulations to 1000, the 2 deviations no longer exist and the line
-falls in the expected envelope through the whole time.
+In <a href="#fig-MTCL1000" class="quarto-xref">Figure 3</a> we increased
+the simulations to 1000, the 2 deviations still exist and the line falls
+in the expected envelope through the whole time.
 
 ``` r
+# Initial Monte Carlo test for BA-YD
 expnull2 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -580,14 +323,9 @@ expnull2 <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull2)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
-
-``` r
 plot_df2 <- expnull2$result
 
+# Annotating climate events
 ggplot(plot_df2, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -602,28 +340,7 @@ ggplot(plot_df2, aes(x = calBP)) +
     breaks = seq(15000, 11000, by = -500)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
-    annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[22], 
-           xmax = climate_events$`End year`[22],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[22], 
-           y = 0.065,
-           label = climate_events$Abbreviation[22]) + 
+  climate_layers_for(15000, 11000)+
   theme_classic()
 ```
 
@@ -631,16 +348,17 @@ ggplot(plot_df2, aes(x = calBP)) +
 
 ![](README_files/figure-commonmark/fig-MTCL2-1.png)
 
-Figure 5: Monte Carlo test of BA-YD with 100 simulations
+Figure 4: Monte Carlo test of BA-YD with 100 simulations
 
 </div>
 
-<a href="#fig-MTCL2" class="quarto-xref">Figure 5</a> shows our testing
+<a href="#fig-MTCL2" class="quarto-xref">Figure 4</a> shows our testing
 from Bølling–Allerød Interstadial to Younger Dryas, the same deviation
 near 13.1ka is seen again while there is a new one in the Younger Dryas
 near 12.9ka.
 
 ``` r
+# Initial Monte Carlo test for 50ka to LGM
 expnull3 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -656,14 +374,8 @@ expnull3 <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull3)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
-
-``` r
 plot_df3 <- expnull3$result
-
+# Annotating climate events
 ggplot(plot_df3, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -678,182 +390,7 @@ ggplot(plot_df3, aes(x = calBP)) +
     breaks = seq(57000, 19000, by = -5000)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[1], 
-           xmax = climate_events$`End year`[1],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[1], # midpoint of start and end
-           y = 0.09,
-           label = climate_events$Abbreviation[1]) + # df$event_name[1]
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[2], 
-           xmax = climate_events$`End year`[2],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[2], 
-           y = 0.055,
-           label = climate_events$Abbreviation[2]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[3],
-           xmax = climate_events$`End year`[3],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[3], 
-           y = 0.03,
-           label = climate_events$Abbreviation[3]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[4], 
-           xmax = climate_events$`End year`[4],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[4], 
-           y = 0.05,
-           label = climate_events$Abbreviation[4]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[5], 
-           xmax = climate_events$`End year`[5],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[5], 
-           y = 0.045,
-           label = climate_events$Abbreviation[5]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[6], 
-           xmax = climate_events$`End year`[6],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[6], 
-           y = 0.04,
-           label = climate_events$Abbreviation[6]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[7], 
-           xmax = climate_events$`End year`[7],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[7], 
-           y = 0.05,
-           label = climate_events$Abbreviation[7]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[8],
-           xmax = climate_events$`End year`[8],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[8], 
-           y = 0.03,
-           label = climate_events$Abbreviation[8]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[9], 
-           xmax = climate_events$`End year`[9],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[9], 
-           y = 0.045,
-           label = climate_events$Abbreviation[9]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[10], 
-           xmax = climate_events$`End year`[10],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[10], 
-           y = 0.04,
-           label = climate_events$Abbreviation[10]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[11], 
-           xmax = climate_events$`End year`[11],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[11], 
-           y = 0.05,
-           label = climate_events$Abbreviation[11]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[12],
-           xmax = climate_events$`End year`[12],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[12], 
-           y = 0.03,
-           label = climate_events$Abbreviation[12]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[13], 
-           xmax = climate_events$`End year`[13],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[13], 
-           y = 0.09,
-           label = climate_events$Abbreviation[13]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[14], 
-           xmax = climate_events$`End year`[14],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[14], 
-           y = 0.05,
-           label = climate_events$Abbreviation[14]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[15], 
-           xmax = climate_events$`End year`[15],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[15], 
-           y = 0.04,
-           label = climate_events$Abbreviation[15]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[16], 
-           xmax = climate_events$`End year`[16],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[16], 
-           y = 0.07,
-           label = climate_events$Abbreviation[16]) + 
+  climate_layers_for(57000, 19000)+
   theme_classic()
 ```
 
@@ -861,15 +398,16 @@ ggplot(plot_df3, aes(x = calBP)) +
 
 ![](README_files/figure-commonmark/fig-MTCL3-1.png)
 
-Figure 6: Monte Carlo test of MIS3-LGM with 100 simulations
+Figure 5: Monte Carlo test of MIS3-LGM with 100 simulations
 
 </div>
 
-<a href="#fig-MTCL3" class="quarto-xref">Figure 6</a> shows our test
+<a href="#fig-MTCL3" class="quarto-xref">Figure 5</a> shows our test
 from MIS3 to LGM, there is a positive deviation nearly the entire time
 up to the LGM
 
 ``` r
+# Initial Monte Carlo test for 50ka to 8.2
 expnull4 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -885,14 +423,9 @@ expnull4 <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull4)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
-
-``` r
 plot_df4 <- expnull4$result
 
+# Annotating climate events
 ggplot(plot_df4, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -912,291 +445,26 @@ ggplot(plot_df4, aes(x = calBP)) +
     breaks = seq(50000, 8000, by = -5000)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[1], 
-           xmax = climate_events$`End year`[1],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[1], # midpoint of start and end
-           y = 0.09,
-           label = climate_events$Abbreviation[1]) + # df$event_name[1]
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[2], 
-           xmax = climate_events$`End year`[2],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[2], 
-           y = 0.055,
-           label = climate_events$Abbreviation[2]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[3],
-           xmax = climate_events$`End year`[3],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[3], 
-           y = 0.03,
-           label = climate_events$Abbreviation[3]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[4], 
-           xmax = climate_events$`End year`[4],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[4], 
-           y = 0.05,
-           label = climate_events$Abbreviation[4]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[5], 
-           xmax = climate_events$`End year`[5],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[5], 
-           y = 0.045,
-           label = climate_events$Abbreviation[5]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[6], 
-           xmax = climate_events$`End year`[6],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[6], 
-           y = 0.04,
-           label = climate_events$Abbreviation[6]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[7], 
-           xmax = climate_events$`End year`[7],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[7], 
-           y = 0.05,
-           label = climate_events$Abbreviation[7]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[8],
-           xmax = climate_events$`End year`[8],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[8], 
-           y = 0.03,
-           label = climate_events$Abbreviation[8]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[9], 
-           xmax = climate_events$`End year`[9],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[9], 
-           y = 0.045,
-           label = climate_events$Abbreviation[9]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[10], 
-           xmax = climate_events$`End year`[10],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[10], 
-           y = 0.04,
-           label = climate_events$Abbreviation[10]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[11], 
-           xmax = climate_events$`End year`[11],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[11], 
-           y = 0.05,
-           label = climate_events$Abbreviation[11]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[12],
-           xmax = climate_events$`End year`[12],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[12], 
-           y = 0.03,
-           label = climate_events$Abbreviation[12]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[13], 
-           xmax = climate_events$`End year`[13],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[13], 
-           y = 0.09,
-           label = climate_events$Abbreviation[13]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[14], 
-           xmax = climate_events$`End year`[14],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[14], 
-           y = 0.05,
-           label = climate_events$Abbreviation[14]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[15], 
-           xmax = climate_events$`End year`[15],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[15], 
-           y = 0.04,
-           label = climate_events$Abbreviation[15]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[16], 
-           xmax = climate_events$`End year`[16],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[16], 
-           y = 0.07,
-           label = climate_events$Abbreviation[16]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[17], 
-           xmax = climate_events$`End year`[17],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[17], 
-           y = 0.03,
-           label = climate_events$Abbreviation[17]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[18], 
-           xmax = climate_events$`End year`[18],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[18], 
-           y = 0.05,
-           label = climate_events$Abbreviation[18]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[22], 
-           xmax = climate_events$`End year`[22],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[22], 
-           y = 0.065,
-           label = climate_events$Abbreviation[22]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[23], 
-           xmax = climate_events$`End year`[23],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[23], 
-           y = 0.09,
-           label = climate_events$Abbreviation[23]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[24], 
-           xmax = climate_events$`End year`[24],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[24], 
-           y = 0.07,
-           label = "8.2") + 
+  climate_layers_for(50000, 8000)+
   theme_classic()
 ```
-
-    Warning: Removed 1 row containing missing values or values outside the scale range
-    (`geom_text()`).
 
 <div id="fig-MTCL4">
 
 ![](README_files/figure-commonmark/fig-MTCL4-1.png)
 
-Figure 7: Monte Carlo test of 50K-8.2k with 100 simulations
+Figure 6: Monte Carlo test of 50K-8.2k with 100 simulations
 
 </div>
 
-<a href="#fig-MTCL4" class="quarto-xref">Figure 7</a> shows our test
+<a href="#fig-MTCL4" class="quarto-xref">Figure 6</a> shows our test
 from 50ka to the 8.2 kiloyear event, we can also see a near constant
 positive deviation up to the MIS2 then a few positive deviations during
 the LGM and then the line follows the envelope until the 8.2 kiloyear
 event where there is a negative deviation.
 
 ``` r
+# Initial Monte Carlo test for LGM to 8.2
 expnull5 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -1212,15 +480,9 @@ expnull5 <- modelTest(calDates,
     edgeSize reduced
 
 ``` r
-plot(expnull5)
-```
-
-![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
-
-``` r
 plot_df5 <- expnull5$result
 
-
+# Annotating climate events
 ggplot(plot_df5, aes(x = calBP)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = "grey70", alpha = 0.8) +
   geom_line(aes(y = PrDens), colour = "black") +
@@ -1240,154 +502,22 @@ ggplot(plot_df5, aes(x = calBP)) +
     breaks = seq(26500, 8000, by = -5000)
   ) +
   labs(x = "Years cal BP", y = "Summed Probability") +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[16], 
-           xmax = climate_events$`End year`[16],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[16], 
-           y = 0.07,
-           label = climate_events$Abbreviation[16]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[17], 
-           xmax = climate_events$`End year`[17],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[17], 
-           y = 0.03,
-           label = climate_events$Abbreviation[17]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[18], 
-           xmax = climate_events$`End year`[18],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[18], 
-           y = 0.05,
-           label = climate_events$Abbreviation[18]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[22], 
-           xmax = climate_events$`End year`[22],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[22], 
-           y = 0.065,
-           label = climate_events$Abbreviation[22]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[23], 
-           xmax = climate_events$`End year`[23],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[23], 
-           y = 0.09,
-           label = climate_events$Abbreviation[23]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[24], 
-           xmax = climate_events$`End year`[24],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[24], 
-           y = 0.07,
-           label = "8.2") + 
+  climate_layers_for(26500, 8000)+
   theme_classic()
 ```
-
-    Warning: Removed 1 row containing missing values or values outside the scale range
-    (`geom_text()`).
 
 <div id="fig-MTCL5">
 
 ![](README_files/figure-commonmark/fig-MTCL5-1.png)
 
-Figure 8: Monte Carlo test of LGM-8.2k with 100 simulations
+Figure 7: Monte Carlo test of LGM-8.2k with 100 simulations
 
 </div>
 
-<a href="#fig-MTCL5" class="quarto-xref">Figure 8</a> shows our test for
+<a href="#fig-MTCL5" class="quarto-xref">Figure 7</a> shows our test for
 LGM to the 8.2 kiloyear event there are a few minor positive deviations
 near 23ka, 24ka, 18ka, 16ka, 13ka, and a few minor negative deviations
 near the 8.2 kiloyear event.
-
-``` r
-# Grouping dates within 100 years of each other into bins
-bins_100 <- binPrep(
-  sites = dates$Site,
-  ages = dates$C14Age,
-  h = 100
-)
-
-# Plotting the summed probability distribution with new bins
-spd_res <- spd(
-  calDates, 
-  bins = bins_100,
-  timeRange = age_range,
-  verbose = FALSE)
-
-plot(spd_res)
-```
-
-<div id="fig-100-bin">
-
-![](README_files/figure-commonmark/fig-100-bin-1.png)
-
-Figure 9: SPD plot with a bin of 100 years
-
-</div>
-
-In <a href="#fig-100-bin" class="quarto-xref">Figure 9</a> the peaks are
-consistent but grow more intense the only exceptions being the hills
-just before 15 ka and just after 10 ka are a little depressed from the
-binning compared to the rest of the peaks.
 
 ``` r
 # Grouping dates within 200 years of each other into bins
@@ -1403,286 +533,13 @@ spd_res <- spd(
   bins = bins_200,
   timeRange = age_range,
   verbose = FALSE)
-
-plot(spd_res)
 ```
-
-<div id="fig-200-bin">
-
-![](README_files/figure-commonmark/fig-200-bin-1.png)
-
-Figure 10: SPD plot with a bin of 200 years
-
-</div>
 
 ``` r
 ggplot(spd_res$grid) +
   aes(calBP, PrDens) +
   geom_line() +
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[1], 
-           xmax = climate_events$`End year`[1],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[1], # midpoint of start and end
-           y = 0.09,
-           label = climate_events$Abbreviation[1]) + # df$event_name[1]
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[2], 
-           xmax = climate_events$`End year`[2],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[2], 
-           y = 0.055,
-           label = climate_events$Abbreviation[2]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[3],
-           xmax = climate_events$`End year`[3],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[3], 
-           y = 0.03,
-           label = climate_events$Abbreviation[3]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[4], 
-           xmax = climate_events$`End year`[4],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[4], 
-           y = 0.05,
-           label = climate_events$Abbreviation[4]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[5], 
-           xmax = climate_events$`End year`[5],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[5], 
-           y = 0.045,
-           label = climate_events$Abbreviation[5]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[6], 
-           xmax = climate_events$`End year`[6],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[6], 
-           y = 0.04,
-           label = climate_events$Abbreviation[6]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[7], 
-           xmax = climate_events$`End year`[7],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[7], 
-           y = 0.05,
-           label = climate_events$Abbreviation[7]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[8],
-           xmax = climate_events$`End year`[8],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[8], 
-           y = 0.03,
-           label = climate_events$Abbreviation[8]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[9], 
-           xmax = climate_events$`End year`[9],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[9], 
-           y = 0.045,
-           label = climate_events$Abbreviation[9]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[10], 
-           xmax = climate_events$`End year`[10],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[10], 
-           y = 0.04,
-           label = climate_events$Abbreviation[10]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[11], 
-           xmax = climate_events$`End year`[11],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[11], 
-           y = 0.05,
-           label = climate_events$Abbreviation[11]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[12],
-           xmax = climate_events$`End year`[12],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[12], 
-           y = 0.03,
-           label = climate_events$Abbreviation[12]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[13], 
-           xmax = climate_events$`End year`[13],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[13], 
-           y = 0.09,
-           label = climate_events$Abbreviation[13]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[14], 
-           xmax = climate_events$`End year`[14],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[14], 
-           y = 0.05,
-           label = climate_events$Abbreviation[14]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[15], 
-           xmax = climate_events$`End year`[15],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[15], 
-           y = 0.04,
-           label = climate_events$Abbreviation[15]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[16], 
-           xmax = climate_events$`End year`[16],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[16], 
-           y = 0.07,
-           label = climate_events$Abbreviation[16]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[17], 
-           xmax = climate_events$`End year`[17],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[17], 
-           y = 0.03,
-           label = climate_events$Abbreviation[17]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.06,
-           xmin = climate_events$`Start year`[18], 
-           xmax = climate_events$`End year`[18],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[18], 
-           y = 0.05,
-           label = climate_events$Abbreviation[18]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[19], 
-           xmax = climate_events$`End year`[19],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[19], 
-           y = 0.07,
-           label = climate_events$Abbreviation[19]) + 
-  annotate("rect",
-           ymin = 0, ymax = 0.03,
-           xmin = climate_events$`Start year`[20], 
-           xmax = climate_events$`End year`[20],  
-           colour = "grey40",
-           fill = "grey40",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[20], 
-           y = 0.03,
-           label = climate_events$Abbreviation[20]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[21], 
-           xmax = climate_events$`End year`[21],  
-           colour = "salmon",
-           fill = "salmon",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[21], 
-           y = 0.07,
-           label = climate_events$Abbreviation[21]) + 
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[22], 
-           xmax = climate_events$`End year`[22],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[22], 
-           y = 0.065,
-           label = climate_events$Abbreviation[22]) + 
-  annotate("rect",
-           ymin = 0, ymax = Inf,
-           xmin = climate_events$`Start year`[23], 
-           xmax = climate_events$`End year`[23],  
-           colour = "grey50",
-           fill = "grey50",
-           alpha = 0.1) +
-    annotate("text",
-           x = climate_events$midpoint[23], 
-           y = 0.09,
-           label = climate_events$Abbreviation[23]) +
-    annotate("rect",
-           ymin = 0, ymax = 0.08,
-           xmin = climate_events$`Start year`[24], 
-           xmax = climate_events$`End year`[24],  
-           colour = "skyblue",
-           fill = "skyblue",
-           alpha = 0.2) +
-    annotate("text",
-           x = climate_events$midpoint[24], 
-           y = 0.07,
-           label = "8.2") + 
+  climate_layers+
   scale_x_reverse() +
   theme_minimal() 
 ```
@@ -1691,145 +548,13 @@ ggplot(spd_res$grid) +
 
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
 
-Figure 11: SPD plot with a bin of 200 years with climate events
-overlayed
+Figure 8: SPD plot with a bin of 200 years with climate events overlayed
 
 </div>
 
-In <a href="#fig-200-bin-climate" class="quarto-xref">Figure 11</a> the
+In <a href="#fig-200-bin-climate" class="quarto-xref">Figure 8</a> the
 changes are more noticeable as the peak around 13 ka and just before 10
 ka is much higher than the original plot.
-
-``` r
-# Grouping dates within 500 years of each other into bins
-bins_500 <- binPrep(
-  sites = dates$Site,
-  ages = dates$C14Age,
-  h = 500
-)
-
-# Plotting the summed probability distribution with new bins
-spd_res <- spd(
-  calDates, 
-  bins = bins_500,
-  timeRange = age_range,
-  verbose = FALSE)
-plot(spd_res)
-```
-
-<div id="fig-500-bin">
-
-![](README_files/figure-commonmark/fig-500-bin-1.png)
-
-Figure 12: SPD plot with a bin of 500 years
-
-</div>
-
-In <a href="#fig-500-bin" class="quarto-xref">Figure 12</a> the peaks
-around 13 ka are even more intense but the hill around 14 ka depresses a
-little, the peak just before 10 ka also lowers considerably compared to
-the original plot.
-
-``` r
-# Grouping dates within 5000 years of each other into bins
-bins_5000 <- binPrep(
-  sites = dates$Site,
-  ages = dates$C14Age,
-  h = 5000
-)
-
-# Plotting the summed probability distribution with new bins
-spd_res <- spd(
-  calDates, 
-  bins = bins_5000,
-  timeRange = age_range,
-  verbose = FALSE)
-plot(spd_res)
-```
-
-<div id="fig-5000-bin">
-
-![](README_files/figure-commonmark/fig-5000-bin-1.png)
-
-Figure 13: SPD plot with a bin of 5000 years
-
-</div>
-
-In <a href="#fig-5000-bin" class="quarto-xref">Figure 13</a> a lot of
-the hills depress however a couple of them spike up into their own peaks
-especially around 25-23 ka, 17 ka, and 12 ka.
-
-``` r
-# Grouping dates within 200 years of each other into bins
-bins_200 <- binPrep(
-  sites = dates$Site,
-  ages = dates$C14Age,
-  h = 200
-)
-
-# Thinning selects 1 random date from each bin
-calDates2 = calDates[thinDates(ages = dates$C14Age,
-                               errors = dates$C14SD,
-                               bins = bins_200,
-                               size = 1,
-                               method = 'random')]
-
-spd_thin <- spd(
-  calDates2,
-  timeRange = age_range
-)
-```
-
-    [1] "Extracting and aggregating..."
-    [1] "Done."
-
-``` r
-# Plotting the SPD after thinning
-plot(spd_thin)
-```
-
-<div id="fig-thinned">
-
-![](README_files/figure-commonmark/fig-thinned-1.png)
-
-Figure 14: SPD plot with thinning
-
-</div>
-
-In <a href="#fig-thinned" class="quarto-xref">Figure 14</a> the thinning
-caused more mild variation like the 100 and 200 year bins but the peaks
-around 13 and 12 ka intensify and the one just after 10 ka depresses.
-
-``` r
-# Grouping dates within 200 years of each other into bins
-bins_200 <- binPrep(
-  sites = dates$Site,
-  ages = dates$C14Age,
-  h = 200
-)
-
-# Randomly sampling from each calibrated date to generate a kernel density estimate
-ckde_res = sampleDates(calDates,bins=bins_200,nsim=100,verbose=FALSE)
-
-Sea.ckde = ckde(ckde_res,
-                timeRange = age_range,
-                bw = 200)
-
-#Plotting the CKDE
-plot(Sea.ckde, type = 'multiline')
-```
-
-<div id="fig-CKDE">
-
-![](README_files/figure-commonmark/fig-CKDE-1.png)
-
-Figure 15: CKDE plot
-
-</div>
-
-In <a href="#fig-CKDE" class="quarto-xref">Figure 15</a> the bands show
-a consistent occupation but support the notion of increased intensity
-starting from 14 ka.
 
 ``` r
 library(tidyverse)
@@ -1895,12 +620,12 @@ sea_map
 
 ![](README_files/figure-commonmark/fig-map-1.png)
 
-Figure 16: Map of early sites in Southeast Asia
+Figure 9: Map of early sites in Southeast Asia
 
 </div>
 
-In <a href="#fig-map" class="quarto-xref">Figure 16</a> are all the
-sites in early Mainland Southeast Asia used in this study
+In <a href="#fig-map" class="quarto-xref">Figure 9</a> are all the sites
+in early Mainland Southeast Asia used in this study
 
 ``` r
 # Filter for sites older than 30,000 BP
@@ -1942,103 +667,12 @@ early_sea_map
 
 ![](README_files/figure-commonmark/fig-early-map-1.png)
 
-Figure 17: Sites older than 30,000 BP
+Figure 10: Sites older than 30,000 BP
 
 </div>
 
-In <a href="#fig-early-map" class="quarto-xref">Figure 17</a> the oldest
+In <a href="#fig-early-map" class="quarto-xref">Figure 10</a> the oldest
 sites from before 30,000 are shown
-
-``` r
-# Filter for sites between 30,000 and 15,0000 BP
-semi_earliest_sites <- dates_data %>%
-  filter(C14Age >= 15000 & C14Age <= 30000) %>%
-  distinct(Site, lat, long) %>%
-  st_as_sf(coords = c("long", "lat"), 
-           remove = FALSE, 
-           crs = 4326)
-
-# Base map of Southeast Asia
-world <- ne_countries(scale = "medium", returnclass = "sf")
-
-# Plot sites
-semi_early_sea_map <-ggplot(world) +
-  geom_sf() +
-  geom_sf(data = semi_earliest_sites, size = 2) +
-  coord_sf(xlim = c(90, 115), 
-           ylim = c(8, 30), 
-           expand = FALSE) +
-  geom_text_repel(data = semi_earliest_sites,
-                  aes(x = long, y = lat, label = Site),
-                  max.overlaps = Inf,
-                  size = 3, 
-                  nudge_x = 0.5,
-                  force = 10,
-                  point.padding = 0.5,
-                  box.padding = 0.5,
-                  min.segment.length = 0,
-                  bg.color = "white",
-                  bg.r = 0.15) +
-  theme_void() +
-  labs(title = "Occupation between 30-15 ka") 
-
-semi_early_sea_map
-```
-
-<div id="fig-semi-early-map">
-
-![](README_files/figure-commonmark/fig-semi-early-map-1.png)
-
-Figure 18: Sites occupied between 30,000-15,000 BP
-
-</div>
-
-In <a href="#fig-semi-early-map" class="quarto-xref">Figure 18</a> sites
-occupied between 30,000 and 15,000 are shown
-
-``` r
-# Filter for sites around the 14 ka event
-sites_14ka <- dates_data %>%
-  filter(C14Age >= 13000 & C14Age <= 15000) %>%
-  distinct(Site, lat, long) %>%
-  st_as_sf(coords = c("long", "lat"), 
-           remove = FALSE, 
-           crs = 4326)
-
-# Plot 14 ka sites
-sea_map_14ka <-ggplot(world) +
-  geom_sf() +
-  geom_sf(data = sites_14ka, size = 2) +
-  coord_sf(xlim = c(90, 115), 
-           ylim = c(8, 30), 
-           expand = FALSE) +
-  geom_text_repel(data = sites_14ka,
-                  aes(x = long, y = lat, label = Site),
-                  max.overlaps = Inf,
-                  size = 3, 
-                  nudge_x = 0.5,
-                  force = 10,
-                  point.padding = 0.5,
-                  box.padding = 0.5,
-                  min.segment.length = 0,
-                  bg.color = "white",
-                  bg.r = 0.15) +
-  theme_void() +
-  labs(title = "Occupation between 15-13 ka") 
-
-sea_map_14ka
-```
-
-<div id="fig-14ka-map">
-
-![](README_files/figure-commonmark/fig-14ka-map-1.png)
-
-Figure 19: Sites occupied during the 14 ka population rise
-
-</div>
-
-In **?@fig-14a-map** sites occupied during our time of interest are
-shown, from 15,000-13,000
 
 ``` r
 # Filter for sites after the 14 ka event
@@ -2077,11 +711,11 @@ sea_map_after_14ka
 
 ![](README_files/figure-commonmark/fig-after-map-1.png)
 
-Figure 20: Sites occupied after the 14 ka population rise
+Figure 11: Sites occupied after the 14 ka population rise
 
 </div>
 
-In <a href="#fig-after-map" class="quarto-xref">Figure 20</a> sites
+In <a href="#fig-after-map" class="quarto-xref">Figure 11</a> sites
 occupied after 13,000 are shown, notably there is an increase in sites
 in southern Mainland Southeast Asia
 
@@ -2130,34 +764,9 @@ ggplot(world) +
 
 ![](README_files/figure-commonmark/fig-karst-map-1.png)
 
-Figure 21: Early sites with Karst layered on top
+Figure 12: Early sites with Karst layered on top
 
 </div>
 
-In <a href="#fig-karst-map" class="quarto-xref">Figure 21</a> all sites
+In <a href="#fig-karst-map" class="quarto-xref">Figure 12</a> all sites
 are shown with karst formations overlayed
-
-Literature review draft In recent decades much archaeological work has
-been done to illuminate the past of late Pleistocene Mainland Southeast
-Asia (50-10 thousand years ago) but there are still many questions on
-the nature of occupation in the region. The most prevalent feature
-during this period is the Hoabinhian technocomplex. Debates center
-around the origins and even definition of the Hoabinhian as our data on
-the industry grows. Data on pre-Hoabinhian people in Southeast Asia
-remain sparse but recent findings in Laos push back the timeline.
-Observations of human dynamics are still preliminary but despite
-evidence of resilience during the Last Glacial Maximum there may be a
-pattern of growth following the climate event which continues into the
-Holocene.
-
-The earliest evidence of occupation of Mainland Southeast Asia is
-concretely found on a partial human cranium in addition to a few
-pre-Hoabinhian flakes.
-
-Recent research has pushed the industry into multiple sites in Southern
-China raising questions on the origin of the technocomplex along with
-the importance of the region (Ji et al. 2016; Huan et al. 2024; Wu et
-al. 2022).
-
-The Hoabinhian is typically characterized by the iconic sumatralith but
-that definition is now contested.
