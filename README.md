@@ -33,6 +33,8 @@ library(rcarbon)
 # Read excel sheet with dates across Southeast Asia and southern China
 dates <- read_excel("Demographic analysis sites.xlsx")
 
+n_site <- length(unique(dates$Site))
+
 # Calibrate dates using IntCal20
 calDates <- calibrate(
   x = dates$C14Age,
@@ -47,43 +49,47 @@ In this project we aim to conduct a demographic analysis of Mainland
 Southeast Asia from the late Pleistocene. Using radiocarbon dates we
 simulated population dynamics over time with summed probability
 distribution plots. We compare the SPDs against climate events to
-explain anomalous occupation dynamics.
+explain anomalous occupation dynamics. \[ BM: add a couple of research
+questions that we will answer with our data \]
 
 ## Background
 
 Early sites in Mainland Southeast Asia date back over 50 thousand years,
 we will be exploring them under different climate events in order.
 
-Marine Isotope Stage 3 (57-29 ka) The Marine Isotope Stage 3 is when
-humans started peopling Mainland Southeast Asia preceeding the LGM
-(Fitch et al. 2025) (Tam Pa Ling in Laos boasts the earliest
-anatomically modern human fossil, the partial human cranium found was
-dated using multiple methods, radiocarbon coming out to 56.5k cal BP
-(Diameter et al. 2012). Xiaodong in Yunnan, China contains the earliest
-evidence of Hoabinhian technology, being dated back from, 43.5-24.5 ka
-cal (Ji et al. 2016). Another site in Yunnan with possible Hoabinhian
-technology during this time period is Dedan (30.8 ka) although it
-remains unclear without more artifacts (Wu et al. 2022). These sites
-have brought into question the origins of the Hoabinhian possibly
-spreading from southern China. There are a couple sites without evidence
-of the Hoabinhian, notably Bailiandong (36 ka), Zhaoguo (33.4 ka),
-Yahuai (32.1-13.3 ka), in China and Lang Rongrien (37.3-27.1 ka) and
-Lang Kamnan (30.1-6.1 ka) in Thailand who used other lithic technologies
-(Zhou et al. 2019; Wei et al. 2020; Wu et al. 2020; Anderson 1997;
-Shoocongdej 2000). The earliest evidence of Hoabinhian in Thailand comes
-from Tham Lod dating to 34-12.1ka (Marwick and Gagan 2011, Chitkament et
-al. 2016), the site is especially rich in lithics and fossils across its
-entire sequence.
+### Marine Isotope Stage 3 (57-29 ka)
 
-Marine Isotope Stage 2 (29-11.7 ka) This time period is marked by more
-consistent cold (Fitch et al. 2025). Before the Last Glacial Maximum,
-sites like Xiaodong, Lang Rongrien, Lang Kamnan, and Tham Lod exhibit
-continued occupation through the beginning.
+The Marine Isotope Stage 3 is when humans started peopling Mainland
+Southeast Asia preceeding the LGM (Fitch et al. 2025). Tam Pa Ling in
+Laos boasts the earliest anatomically modern human fossil, the partial
+human cranium found was dated using multiple methods, radiocarbon coming
+out to 56.5k cal BP Demeter et al. (2012) (Demeter et al. 2012).
+Xiaodong in Yunnan, China contains the earliest evidence of Hoabinhian
+technology, being dated back from, 43.5-24.5 ka cal (Ji et al. 2016).
+Another site in Yunnan with possible Hoabinhian technology during this
+time period is Dedan (30.8 ka) although it remains unclear without more
+artifacts (Wu et al. 2022). These sites have brought into question the
+origins of the Hoabinhian possibly spreading from southern China. There
+are a couple sites without evidence of the Hoabinhian, notably
+Bailiandong (36 ka), Zhaoguo (33.4 ka), Yahuai (32.1-13.3 ka), in China
+and Lang Rongrien (37.3-27.1 ka) and Lang Kamnan (30.1-6.1 ka) in
+Thailand who used other lithic technologies (Zhou et al. 2019; Wei et
+al. 2020; Wu et al. 2020; Anderson 1997; Shoocongdej 2000). The earliest
+evidence of Hoabinhian in Thailand comes from Tham Lod dating to
+34-12.1ka (Marwick and Gagan 2011, Chitkament et al. 2016), the site is
+especially rich in lithics and fossils across its entire sequence.
 
-The Last Glacial Maximum (26.5-19 ka) is marked by global cooling (Clark
-et al. 2009) where it might be expected that occupation would be less
-but there are still a number of sites dating to this time. After a 10
-thousand year hiatus, Bailiandong resumes occupation during the LGM,
+### Marine Isotope Stage 2 (29-11.7 ka)
+
+This time period is marked by more consistent cold (Fitch et al. 2025).
+Before the Last Glacial Maximum, sites like Xiaodong, Lang Rongrien,
+Lang Kamnan, and Tham Lod exhibit continued occupation from the
+beginning of MIS 2.
+
+The **Last Glacial Maximum (26.5-19 ka)** is marked by global cooling
+(Clark et al. 2009) where it might be expected that occupation would be
+less but there are still a number of sites dating to this time. After a
+10 thousand year hiatus, Bailiandong resumes occupation during the LGM,
 dating to 25.9-6.9 ka (Zhou et al. 2019). Xiaodong, Lang Kamnan, Tham
 Lod, and Yahuai continues occupation during the LGM and a new Thai site
 at Moh Khiew (25.8 ka) emerged. The Vietnamese Hoabinhian sites of Hang
@@ -106,9 +112,9 @@ Xom Trai (17.5-17 ka) emerged in Vietnam for a brief time where
 researchers there had to correct for reservoir ages for the mollusk
 shells that were dated by 800 years (Görsdorf and Viet 1995).
 
-The Bølling–Allerød Interstadial (14.7-12.9 ka) is of special interest
-to us because it is a period of increased warmth globally in a general
-cold period (Rasmussen et al. 2006). In southern China Maludong
+The **Bølling–Allerød Interstadial (14.7-12.9 ka)** is of special
+interest to us because it is a period of increased warmth globally in a
+general cold period (Rasmussen et al. 2006). In southern China Maludong
 (14.7-11.4 ka) and Naminan (14.2-12.9 ka) emerge without Hoabinhian
 technology during the Bølling–Allerød Interstadial while Zhaoguo
 reemerges (19.5-9.5 ka) after nearly 15 thousand years (Curnoe et
@@ -128,44 +134,45 @@ to emerge during the Bølling–Allerød is Doi Pha Kan in Thailand
 argue the similarity of culture across Southeast Asia and southern China
 (Zeitoun et al. 2019).
 
-The Younger Dryas (12.9-11.7 ka) is a global return to cooler
+The **Younger Dryas (12.9-11.7 ka)** is a global return to cooler
 temperatures (Rasmussen et al. 2006). The only site to emerge during
 this time is Zhongshan in China (12.3-7.8 ka) without Hoabinhian tools
 (Tian et al. 2023).
 
-Marine Isotope Stage 1 (11.7 ka-present) Our current Marine Isotope
-stage is warmer compared to the last one (Fitch et al. 2025), many sites
-began occupation during this time. Many Hoabinhian sites from MIS 2
-persist into this period including Hang Trong, Hang Cho, Padah-lin, Tam
-Hang, and Con Moong. In the first millenia of MIS 1 many Hoabinhian Thai
-sites began emerging, Ban Tha Si (11.4-6.7 ka) is a site with a
-preserved burial that was analyzed (Zeitoun et al. 2012), Moh Khiew is
-reoccupied (11.3-4.3 ka) after 14 thousand years, Steep Cliff cave
-(11.2-5.2 ka) is interpreted as a hunting mass-kill location, Spirit
-(11.3-3 ka) and Banyan Valley (10.7-0.22 ka) caves similarly emerged
-with Banyan Valley being occupied into historic periods (Conrad et
-al. 2012). In Vietnam 2 Hoabinhian sites are inhabited for a brief time,
-Dong Cang and Hang Doi both only being dated to 10.5 ka (Viet 2008).
-Cambodia’s only well dated Hoabinhian site Laang Spean had its oldest
-layers dated to 71 ka with OSL but the radiocarbon dates only go from
-10-3.3 ka (Sophady et al. 2016). Hiem cave (9.2-9 ka) is a short
-Hoabinhian lived site in Vietnam where occupants exploited a large
-variety of food sources (Masojć et al. 2023). Tangzigou (9-7.4 ka) is
-another site in China with technology that isn’t Hoabinhian (Zhou et
-al. 2020). Ban Rai (8.9-6.6 ka) is a site in Thailand showing little
-change in technology as climate changed (Marwick and Gagan 2011). Only
-dated to 3.7 ka, Huai Hin is typically dated as the end of the
-Hoabinhian (Forestier et al. 2013). Ngeubinh Moxeu is a site in Laos
-that contains both pre-Hoabinhian and Hoabinhian lithics but the
-Hoabinhian layers couldn’t be dated, it is only known they are older
-than 1.2 ka (Zeitoun et al. 2012).
+## Marine Isotope Stage 1 (11.7 ka-present)
+
+Our current Marine Isotope stage is warmer compared to the last one
+(Fitch et al. 2025), many sites began occupation during this time. Many
+Hoabinhian sites from MIS 2 persist into this period including Hang
+Trong, Hang Cho, Padah-lin, Tam Hang, and Con Moong. In the first
+millenia of MIS 1 many Hoabinhian Thai sites began emerging, Ban Tha Si
+(11.4-6.7 ka) is a site with a preserved burial that was analyzed
+(Zeitoun et al. 2012), Moh Khiew is reoccupied (11.3-4.3 ka) after 14
+thousand years, Steep Cliff cave (11.2-5.2 ka) is interpreted as a
+hunting mass-kill location, Spirit (11.3-3 ka) and Banyan Valley
+(10.7-0.22 ka) caves similarly emerged with Banyan Valley being occupied
+into historic periods (Conrad et al. 2012). In Vietnam 2 Hoabinhian
+sites are inhabited for a brief time, Dong Cang and Hang Doi both only
+being dated to 10.5 ka (Viet 2008). Cambodia’s only well dated
+Hoabinhian site Laang Spean had its oldest layers dated to 71 ka with
+OSL but the radiocarbon dates only go from 10-3.3 ka (Sophady et
+al. 2016). Hiem cave (9.2-9 ka) is a short Hoabinhian lived site in
+Vietnam where occupants exploited a large variety of food sources
+(Masojć et al. 2023). Tangzigou (9-7.4 ka) is another site in China with
+technology that isn’t Hoabinhian (Zhou et al. 2020). Ban Rai (8.9-6.6
+ka) is a site in Thailand showing little change in technology as climate
+changed (Marwick and Gagan 2011). Only dated to 3.7 ka, Huai Hin is
+typically dated as the end of the Hoabinhian (Forestier et al. 2013).
+Ngeubinh Mouxeu, is a site in Laos that contains both pre-Hoabinhian and
+Hoabinhian lithics but the Hoabinhian layers couldn’t be dated, it is
+only known they are older than 1.2 ka (Zeitoun et al. 2012).
 
 ## Data
 
-I gathered 352 uncalibrated radiocarbon ages from 37 late Pliestocene to
-early Holocene sites across Southeast Asia and southern China. For one
-of the Chinese sites Xiaodong I had to uncalibrate the ages using the
-built in feature in rcarbon.
+We gathered 352 uncalibrated radiocarbon ages from 37 late Pliestocene
+to early Holocene sites across Southeast Asia and southern China. For
+one of the Chinese sites Xiaodong we had to uncalibrate the ages using
+the built in feature in rcarbon.
 
 ## Methods
 
@@ -185,9 +192,9 @@ event and Last Glacial Maximum to 8.2-kiloyear event
 ## Results
 
 The resulting plots are relatively consistent in peaks and show that
-practically every period is accounted for. The consistent increase in
-dates after 14,000 BP do call for some investigation which is our
-current focus.
+practically every period is accounted for \[ BM: edit this to be more
+informative \]. The consistent increase in dates after 14,000 BP do call
+for some investigation which is our current focus.
 
 ``` r
 age_range <- c(50000,2000)
@@ -201,15 +208,6 @@ spd_unbinned <- spd(
     [1] "Done."
 
 ``` r
-climate_events <- read_excel("Demographic analysis sites.xlsx",
-                             sheet = 2) |> 
-  mutate(midpoint = `End year` + ( `Start year` - `End year`) / 2 )
-
-
-# with ggplot2
-#| label: fig-unbinned-climate
-#| fig-cap: Unbinned SPD plot with climate events overlayed 
-
 climate_events <- read_excel("Demographic analysis sites.xlsx", sheet = 2) |>
   filter(!is.na(`Climate event`)) |>
   mutate(
@@ -298,31 +296,23 @@ climate_layers_for <- function(start_bp, end_bp) {
 ggplot(spd_unbinned$grid) +
   aes(calBP, PrDens) +
   geom_line() +
-  climate_layers+
+  climate_layers +
   scale_x_reverse() +
   theme_minimal() 
 ```
 
-<div id="fig-unbinned-climate">
-
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
 
-Figure 1: SPD plot with climate events overlayed, dates for global
-intersadials are from Wolff et al. 2010 and dates for Heinrich events
-are from Hemming 2004
-
-</div>
-
-In <a href="#fig-unbinned-climate" class="quarto-xref">Figure 1</a> we
-generated a SPD plot dating from 50-2 ka using all of the radiocarbon
-dates. there is a continuous occupation of Southeast Asia from 50000 BP
-to present. The peaks are relatively low until the LGM suggesting low
-occupation without any sustained growth. During the LGM where the slowly
-increasing rises, plataeus, and dips suggest a gradual intensification
-despite the global cold. This intensification trend continues past the
-LGM with extreme peaks in Bølling–Allerød Interstadial, Younger Dryas,
-and early Holocene. The trend then declines after 8 ka. The extreme peak
-of the Bølling–Allerød Interstadial are of interest because it might be
+<a href="#fig-unbinned-climate" class="quarto-xref">Figure 1</a> shows a
+SPD plot dating from 50-2 ka using all of the radiocarbon dates. There
+is a continuous occupation of Southeast Asia from 50000 BP to present.
+The peaks are relatively low until the LGM suggesting low occupation
+without any sustained growth. During the LGM where the slowly increasing
+rises, plataeus, and dips suggest a gradual intensification despite the
+global cold. This intensification trend continues past the LGM with
+extreme peaks in Bølling–Allerød Interstadial, Younger Dryas, and early
+Holocene. The trend then declines after 8 ka. The extreme peak of the
+Bølling–Allerød Interstadial are of interest because it might be
 explained by the global warming of the event making Mainland Southeast
 Asia more hospitable for the hunter gatherers, there is evidence of the
 warming in speleothems from Vietnam and Thailand during this time
@@ -365,14 +355,7 @@ ggplot(plot_df, aes(x = calBP)) +
   theme_classic()
 ```
 
-<div id="fig-MTCL1">
-
 ![](README_files/figure-commonmark/fig-MTCL1-1.png)
-
-Figure 2: Monte Carlo test of OD-BA with 100 simulations, positive
-deviations represented with green bars
-
-</div>
 
 To verify our observations we used Monte Carlo tests, after testing 1000
 and 100 simulations we found no difference in results and settled on 100
@@ -425,13 +408,7 @@ ggplot(plot_df2, aes(x = calBP)) +
   theme_classic()
 ```
 
-<div id="fig-MTCL2">
-
 ![](README_files/figure-commonmark/fig-MTCL2-1.png)
-
-Figure 3: Monte Carlo test of BA-YD
-
-</div>
 
 <a href="#fig-MTCL2" class="quarto-xref">Figure 3</a> shows our testing
 from Bølling–Allerød Interstadial to Younger Dryas, the same deviation
@@ -489,14 +466,7 @@ ggplot(plot_df4, aes(x = calBP)) +
   theme_classic()
 ```
 
-<div id="fig-MTCL4">
-
 ![](README_files/figure-commonmark/fig-MTCL4-1.png)
-
-Figure 4: Monte Carlo test of LGM-8.2k, negative deviations are
-represented in blue
-
-</div>
 
 <a href="#fig-MTCL4" class="quarto-xref">Figure 4</a> shows our test for
 LGM to the 8.2 kiloyear event there are multiple positive deviations,
@@ -551,13 +521,7 @@ ggplot(plot_df5, aes(x = calBP)) +
   theme_classic()
 ```
 
-<div id="fig-MTCL5">
-
 ![](README_files/figure-commonmark/fig-MTCL5-1.png)
-
-Figure 5: Monte Carlo test of 50K-8.2k
-
-</div>
 
 <a href="#fig-MTCL5" class="quarto-xref">Figure 5</a> shows our test
 from 50ka to the 8.2 kiloyear event, we can see a near constant positive
@@ -572,7 +536,7 @@ isn’t any envelope until the LGM, so any dates during that time period
 could easily exceed the expectation of the growth model.
 
 ``` r
-# Initial Monte Carlo test for MIS-1 to 5 ka
+# Initial Monte Carlo test for OD to 3 ka
 expnull6 <- modelTest(calDates, 
                       errors = dates$C14SD, 
                       model = "exponential", 
@@ -614,13 +578,7 @@ ggplot(plot_df6, aes(x = calBP)) +
   theme_classic()
 ```
 
-<div id="fig-MTCL6">
-
 ![](README_files/figure-commonmark/fig-MTCL6-1.png)
-
-Figure 6: Monte Carlo test of OD-3 ka
-
-</div>
 
 To investigate whether the 8.2 kiloyear event did negatively affect
 occupation intensity
@@ -659,13 +617,7 @@ ggplot(spd_res$grid) +
   theme_minimal() 
 ```
 
-<div id="fig-200-bin-climate">
-
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
-
-Figure 7: SPD plot with a bin of 200 years with climate events overlayed
-
-</div>
 
 To address the issue of intersite variability where a well dated site
 could dominate the whole data set we experimented with binning dates
@@ -694,7 +646,7 @@ library(rnaturalearthdata)
 library(sf)
 ```
 
-    Linking to GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0; sf_use_s2() is TRUE
+    Linking to GEOS 3.13.0, GDAL 3.5.3, PROJ 9.5.1; sf_use_s2() is TRUE
 
 ``` r
 library(ggrepel)
@@ -736,13 +688,7 @@ sea_map <- ggplot(world) +
 sea_map
 ```
 
-<div id="fig-map">
-
 ![](README_files/figure-commonmark/fig-map-1.png)
-
-Figure 8: Map of early sites in Southeast Asia
-
-</div>
 
 In <a href="#fig-map" class="quarto-xref">Figure 8</a> are all the sites
 in early Mainland Southeast Asia used in this study. We can see a
@@ -789,13 +735,7 @@ early_sea_map <-ggplot(world) +
 early_sea_map
 ```
 
-<div id="fig-early-map">
-
 ![](README_files/figure-commonmark/fig-early-map-1.png)
-
-Figure 9: Sites older than 30,000 BP
-
-</div>
 
 To investigate if there was any patterning to occupation we created
 several time separated maps. In
@@ -839,13 +779,7 @@ sea_map_after_14ka <-ggplot(world) +
 sea_map_after_14ka
 ```
 
-<div id="fig-after-map">
-
 ![](README_files/figure-commonmark/fig-after-map-1.png)
-
-Figure 10: Sites occupied after the 14 ka population rise
-
-</div>
 
 In <a href="#fig-after-map" class="quarto-xref">Figure 10</a> sites
 occupied after 13,000 are shown, we can see most of the sites from the
@@ -861,7 +795,7 @@ karst_sf <- st_read("whymap_karst__v1_poly.shp")
 ```
 
     Reading layer `whymap_karst__v1_poly' from data source 
-      `C:\Users\Brandon Nguyen\Documents\Independent study\whymap_karst__v1_poly.shp' 
+      `/Users/bmarwick/Downloads/Southeast-Asia-demographic-analysis/whymap_karst__v1_poly.shp' 
       using driver `ESRI Shapefile'
     Simple feature collection with 2805 features and 2 fields
     Geometry type: MULTIPOLYGON
@@ -896,13 +830,7 @@ ggplot(world) +
   labs(title = "Archaeological Sites and Karst Formations")
 ```
 
-<div id="fig-karst-map">
-
 ![](README_files/figure-commonmark/fig-karst-map-1.png)
-
-Figure 11: Early sites with Karst layered on top
-
-</div>
 
 To explain the paucity of early sites in Mainland Southeast Asia we
 looked at karst formations and added it to the map which can be seen in
@@ -912,182 +840,251 @@ sites in Laos. This explains the gap in sites as almost all of Cambodia
 and Southern Vietnam is devoid of karst, meanwhile there are some
 formations in southern Thailand which explains the few sites there.
 
-References Anderson, Douglas D. 1997. “Cave Archaeology in Southeast
-Asia.” Geoarchaeology 12 (6): 607–38.
+References
+
+Anderson, Douglas D. 1997. “Cave Archaeology in Southeast Asia.”
+Geoarchaeology 12 (6): 607–38.
 https://doi.org/10.1002/(SICI)1520-6548(199709)12:6%253C607::AID-GEA5%253E3.0.CO;2-2.
+
 Anisyutkin, N. K., and V. I. Timofeyev. 2006. “The Paleolithic Flake
 Industry in Vietnam.” Archaeology, Ethnology and Anthropology of Eurasia
-27 (1): 16–24. https://doi.org/10.1134/S1563011006030029. Chitkament,
-Thanon, Claire Gaillard, and Rasmi Shoocongdej. 2016. “Tham Lod
-Rockshelter (Pang Mapha District, North-Western Thailand): Evolution of
-the Lithic Assemblages during the Late Pleistocene.” Quaternary
+27 (1): 16–24. https://doi.org/10.1134/S1563011006030029.
+
+Chitkament, Thanon, Claire Gaillard, and Rasmi Shoocongdej. 2016. “Tham
+Lod Rockshelter (Pang Mapha District, North-Western Thailand): Evolution
+of the Lithic Assemblages during the Late Pleistocene.” Quaternary
 International, Southeast Asia: human evolution, dispersals and
 adaptation, vol. 416 (September): 151–61.
-https://doi.org/10.1016/j.quaint.2015.10.058. Clark, Peter U., Arthur S.
-Dyke, Jeremy D. Shakun, et al. 2009. “The Last Glacial Maximum.” Science
-325 (5941): 710–14. https://doi.org/10.1126/science.1172873. Conrad,
-Cyler, Rasmi Shoocongdej, Ben Marwick, et al. 2022. “Re-Evaluating
+https://doi.org/10.1016/j.quaint.2015.10.058.
+
+Clark, Peter U., Arthur S. Dyke, Jeremy D. Shakun, et al. 2009. “The
+Last Glacial Maximum.” Science 325 (5941): 710–14.
+https://doi.org/10.1126/science.1172873. Conrad, Cyler, Rasmi
+Shoocongdej, Ben Marwick, et al. 2022. “Re-Evaluating
 Pleistocene–Holocene Occupation of Cave Sites in North-West Thailand:
 New Radiocarbon and Luminescence Dating.” Antiquity 96 (386): 280–97.
-https://doi.org/10.15184/aqy.2021.44. Cook, Charlotte G., and Richard T.
-Jones. 2012. “Palaeoclimate Dynamics in Continental Southeast Asia over
-the Last ~   30,000   Cal   Yrs BP.” Palaeogeography, Palaeoclimatology,
-Palaeoecology 339–341 (July): 1–11.
-https://doi.org/10.1016/j.palaeo.2012.03.025. Curnoe, Darren, Ji
-Xueping, Andy I. R. Herries, et al. 2012. “Human Remains from the
-Pleistocene-Holocene Transition of Southwest China Suggest a Complex
-Evolutionary History for East Asians.” PLOS ONE 7 (3): e31918.
-https://doi.org/10.1371/journal.pone.0031918. Demeter, Fabrice, Laura L.
-Shackelford, Anne-Marie Bacon, et al. 2012. “Anatomically Modern Human
-in Southeast Asia (Laos) by 46 Ka.” Proceedings of the National Academy
-of Sciences of the United States of America 109 (36): 14375–80.
-https://doi.org/10.1073/pnas.1208104109. Fitch, Simon, Slavica Bosnjak,
-Jessica W. Cook Hale, Vedran Barbarić, Timothy A. Shaw, and Tanghua Li.
-2025. “Sequence Stratigraphy and Relative Sea Level Variations in
-Kaštela Bay, Dalmatian Coast, Croatia, and Implications for the
-Submerged Palaeolandscapes and Archaeology of the Late Pleistocene,
-Marine Isotope Stage 3 and Marine Isotope Stage 2.” Quaternary Science
-Reviews 369 (December): 109639.
-https://doi.org/10.1016/j.quascirev.2025.109639. Forestier, Hubert,
-Valéry Zeitoun, Chinnawut Winayalai, and Christophe Métais. 2013. “The
-Open-Air Site of Huai Hin (Northwestern Thailand): Chronological
-Perspectives for the Hoabinhian.” Comptes Rendus Palevol 12 (1): 45–55.
-https://doi.org/10.1016/j.crpv.2012.09.003. Forestier, Hubert, Yuduan
-Zhou, Prasit Auetrakulvit, et al. 2021. “Hoabinhian Variability in
-Mainland Southeast Asia Revisited: The Lithic Assemblage of Moh Khiew
-Cave, Southwestern Thailand.” Archaeological Research in Asia 25
-(March): 100236. https://doi.org/10.1016/j.ara.2020.100236. Görsdorf,
-Jochen, and Nguyen Viet. 1995. “Berlin 14C Dates of Archaeological Sites
-in Vietnam.” Radiocarbon 37 (2): 221–25.
-https://doi.org/10.1017/S0033822200030678. Hemming, Sidney R. 2004.
-“Heinrich Events: Massive Late Pleistocene Detritus Layers of the North
-Atlantic and Their Global Climate Imprint.” Reviews of Geophysics 42
-(1). https://doi.org/10.1029/2003RG000128. Huan, Fa-Xiang, Shi-Xia Yang,
-Feng Gao, et al. 2024. “Technological Diversity in the
-Tropical-Subtropical Zone of Southwest China during the Terminal
-Pleistocene: Excavations at Fodongdi Cave.” Archaeological and
+https://doi.org/10.15184/aqy.2021.44.
+
+Cook, Charlotte G., and Richard T. Jones. 2012. “Palaeoclimate Dynamics
+in Continental Southeast Asia over the Last ~   30,000   Cal   Yrs BP.”
+Palaeogeography, Palaeoclimatology, Palaeoecology 339–341 (July): 1–11.
+https://doi.org/10.1016/j.palaeo.2012.03.025.
+
+Curnoe, Darren, Ji Xueping, Andy I. R. Herries, et al. 2012. “Human
+Remains from the Pleistocene-Holocene Transition of Southwest China
+Suggest a Complex Evolutionary History for East Asians.” PLOS ONE 7 (3):
+e31918. https://doi.org/10.1371/journal.pone.0031918.
+
+Demeter, Fabrice, Laura L. Shackelford, Anne-Marie Bacon, et al. 2012.
+“Anatomically Modern Human in Southeast Asia (Laos) by 46 Ka.”
+Proceedings of the National Academy of Sciences of the United States of
+America 109 (36): 14375–80. https://doi.org/10.1073/pnas.1208104109.
+
+Fitch, Simon, Slavica Bosnjak, Jessica W. Cook Hale, Vedran Barbarić,
+Timothy A. Shaw, and Tanghua Li. 2025. “Sequence Stratigraphy and
+Relative Sea Level Variations in Kaštela Bay, Dalmatian Coast, Croatia,
+and Implications for the Submerged Palaeolandscapes and Archaeology of
+the Late Pleistocene, Marine Isotope Stage 3 and Marine Isotope Stage
+2.” Quaternary Science Reviews 369 (December): 109639.
+https://doi.org/10.1016/j.quascirev.2025.109639.
+
+Forestier, Hubert, Valéry Zeitoun, Chinnawut Winayalai, and Christophe
+Métais. 2013. “The Open-Air Site of Huai Hin (Northwestern Thailand):
+Chronological Perspectives for the Hoabinhian.” Comptes Rendus Palevol
+12 (1): 45–55. https://doi.org/10.1016/j.crpv.2012.09.003.
+
+Forestier, Hubert, Yuduan Zhou, Prasit Auetrakulvit, et al. 2021.
+“Hoabinhian Variability in Mainland Southeast Asia Revisited: The Lithic
+Assemblage of Moh Khiew Cave, Southwestern Thailand.” Archaeological
+Research in Asia 25 (March): 100236.
+https://doi.org/10.1016/j.ara.2020.100236.
+
+Görsdorf, Jochen, and Nguyen Viet. 1995. “Berlin 14C Dates of
+Archaeological Sites in Vietnam.” Radiocarbon 37 (2): 221–25.
+https://doi.org/10.1017/S0033822200030678.
+
+Hemming, Sidney R. 2004. “Heinrich Events: Massive Late Pleistocene
+Detritus Layers of the North Atlantic and Their Global Climate Imprint.”
+Reviews of Geophysics 42 (1). https://doi.org/10.1029/2003RG000128.
+
+Huan, Fa-Xiang, Shi-Xia Yang, Feng Gao, et al. 2024. “Technological
+Diversity in the Tropical-Subtropical Zone of Southwest China during the
+Terminal Pleistocene: Excavations at Fodongdi Cave.” Archaeological and
 Anthropological Sciences 16 (1): 25.
-https://doi.org/10.1007/s12520-023-01928-9. Ji, Xueping, Kathleen Kuman,
-R. J. Clarke, et al. 2016. “The Oldest Hoabinhian Technocomplex in Asia
-(43.5 Ka) at Xiaodong Rockshelter, Yunnan Province, Southwest China.”
-Quaternary International, Peking Man and related studies, vol. 400
-(May): 166–74. https://doi.org/10.1016/j.quaint.2015.09.080. Lu,
-Yongxiu, Feng Gao, Yiren Wang, et al. 2023. “Diversification of Faunal
-Exploitation Strategy and Human-Climate Interaction in Southern China
-and Southeast Asia during the Last Deglaciation.” Quaternary Science
-Reviews 322 (December): 108420.
-https://doi.org/10.1016/j.quascirev.2023.108420. Maloney, Bernard Kevin.
-1995. “Evidence for the Younger Dryas Climatic Event in Southeast Asia.”
-Quaternary Science Reviews 14 (9): 949–58.
-https://doi.org/10.1016/0277-3791(95)00073-9. Marwick, Ben, and Michael
-K. Gagan. 2011. “Late Pleistocene Monsoon Variability in Northwest
-Thailand: An Oxygen Isotope Sequence from the Bivalve Margaritanopsis
-Laosensis Excavated in Mae Hong Son Province.” Quaternary Science
-Reviews 30 (21): 3088–98.
-https://doi.org/10.1016/j.quascirev.2011.07.007. Marwick, Ben, Hannah G.
-Van Vlack, Cyler Conrad, Rasmi Shoocongdej, Cholawit
-Thongcharoenchaikit, and Seungki Kwak. 2017. “Adaptations to Sea Level
-Change and Transitions to Agriculture at Khao Toh Chong Rockshelter,
-Peninsular Thailand.” Journal of Archaeological Science, Geoarchaeology
-in the Humid Tropics: Practice, Problems, Prospects, vol. 77 (January):
-94–108. https://doi.org/10.1016/j.jas.2016.10.010. Masojć, Mirosław, Hai
-LE, T. Gralak, et al. 2023. “The Early Holocene Hoabinhian (8300-8000
-Cal BC) Occupation from Hiem Cave, Vietnam.” Comptes Rendus Palevol,
-ahead of print, March 1. https://doi.org/10.5852/cr-palevol2023v22a5.
+https://doi.org/10.1007/s12520-023-01928-9.
+
+Ji, Xueping, Kathleen Kuman, R. J. Clarke, et al. 2016. “The Oldest
+Hoabinhian Technocomplex in Asia (43.5 Ka) at Xiaodong Rockshelter,
+Yunnan Province, Southwest China.” Quaternary International, Peking Man
+and related studies, vol. 400 (May): 166–74.
+https://doi.org/10.1016/j.quaint.2015.09.080.
+
+Lu, Yongxiu, Feng Gao, Yiren Wang, et al. 2023. “Diversification of
+Faunal Exploitation Strategy and Human-Climate Interaction in Southern
+China and Southeast Asia during the Last Deglaciation.” Quaternary
+Science Reviews 322 (December): 108420.
+https://doi.org/10.1016/j.quascirev.2023.108420.
+
+Maloney, Bernard Kevin. 1995. “Evidence for the Younger Dryas Climatic
+Event in Southeast Asia.” Quaternary Science Reviews 14 (9): 949–58.
+https://doi.org/10.1016/0277-3791(95)00073-9.
+
+Marwick, Ben, and Michael K. Gagan. 2011. “Late Pleistocene Monsoon
+Variability in Northwest Thailand: An Oxygen Isotope Sequence from the
+Bivalve Margaritanopsis Laosensis Excavated in Mae Hong Son Province.”
+Quaternary Science Reviews 30 (21): 3088–98.
+https://doi.org/10.1016/j.quascirev.2011.07.007.
+
+Marwick, Ben, Hannah G. Van Vlack, Cyler Conrad, Rasmi Shoocongdej,
+Cholawit Thongcharoenchaikit, and Seungki Kwak. 2017. “Adaptations to
+Sea Level Change and Transitions to Agriculture at Khao Toh Chong
+Rockshelter, Peninsular Thailand.” Journal of Archaeological Science,
+Geoarchaeology in the Humid Tropics: Practice, Problems, Prospects,
+vol. 77 (January): 94–108. https://doi.org/10.1016/j.jas.2016.10.010.
+
+Masojć, Mirosław, Hai LE, T. Gralak, et al. 2023. “The Early Holocene
+Hoabinhian (8300-8000 Cal BC) Occupation from Hiem Cave, Vietnam.”
+Comptes Rendus Palevol, ahead of print, March 1.
+https://doi.org/10.5852/cr-palevol2023v22a5.
+
 Nesje, Atle, and Svein Olaf Dahl. 2001. “The Greenland 8200 Cal. Yr BP
 Event Detected in Loss-on-Ignition Profiles in Norwegian Lacustrine
 Sediment Sequences.” Journal of Quaternary Science 16 (2): 155–66.
-https://doi.org/10.1002/jqs.567. Nguyen, Doi Gia. 2005. “\[ARCHAEOLOGY
-IN VIETNAM\] Results of Recent Research into the Lithic Industries from
-Late Pleistocene and Early Holocene Sites in Northern Vietnam.” Bulletin
-of the Indo-Pacific Prehistory Association 25: 95–98.
-https://doi.org/10.7152/bippa.v25i0.11919. Patole-Edoumba, Elise,
-Philippe Duringer, Pascale Richardin, et al. 2015. “Evolution of the
-Hoabinhian Techno-Complex of Tam Hang Rock Shelter in Northeastern
-Laos.” Archaeological Discovery 3 (4): 140–57.
-https://doi.org/10.4236/ad.2015.34013. Rabett, R., N. Ludgate, C.
-Stimpson, et al. 2017. “Tropical Limestone Forest Resilience and Late
-Pleistocene Foraging during MIS-2 in the Tràng An Massif, Vietnam.”
-Quaternary International, Forests of Plenty, vol. 448 (August): 62–81.
-https://doi.org/10.1016/j.quaint.2016.06.010. Rasmussen, S. O., K. K.
-Andersen, A. M. Svensson, et al. 2006. “A New Greenland Ice Core
-Chronology for the Last Glacial Termination.” Journal of Geophysical
-Research: Atmospheres 111 (D6). https://doi.org/10.1029/2005JD006079.
+https://doi.org/10.1002/jqs.567.
+
+Nguyen, Doi Gia. 2005. “\[ARCHAEOLOGY IN VIETNAM\] Results of Recent
+Research into the Lithic Industries from Late Pleistocene and Early
+Holocene Sites in Northern Vietnam.” Bulletin of the Indo-Pacific
+Prehistory Association 25: 95–98.
+https://doi.org/10.7152/bippa.v25i0.11919.
+
+Patole-Edoumba, Elise, Philippe Duringer, Pascale Richardin, et
+al. 2015. “Evolution of the Hoabinhian Techno-Complex of Tam Hang Rock
+Shelter in Northeastern Laos.” Archaeological Discovery 3 (4): 140–57.
+https://doi.org/10.4236/ad.2015.34013.
+
+Rabett, R., N. Ludgate, C. Stimpson, et al. 2017. “Tropical Limestone
+Forest Resilience and Late Pleistocene Foraging during MIS-2 in the
+Tràng An Massif, Vietnam.” Quaternary International, Forests of Plenty,
+vol. 448 (August): 62–81. https://doi.org/10.1016/j.quaint.2016.06.010.
+
+Rasmussen, S. O., K. K. Andersen, A. M. Svensson, et al. 2006. “A New
+Greenland Ice Core Chronology for the Last Glacial Termination.” Journal
+of Geophysical Research: Atmospheres 111 (D6).
+https://doi.org/10.1029/2005JD006079.
+
 Shakun, Jeremy D., and Anders E. Carlson. 2010. “A Global Perspective on
 Last Glacial Maximum to Holocene Climate Change.” Quaternary Science
 Reviews, Special Theme: Arctic Palaeoclimate Synthesis (PP. 1674-1790),
 vol. 29 (15): 1801–16. https://doi.org/10.1016/j.quascirev.2010.03.016.
+
 Shoocongdej, Rasmi. 2000. “Forager Mobility Organization in Seasonal
 Tropical Environments of Western Thailand.” World Archaeology 32 (1):
-14–40. Sophady, Heng, Hubert Forestier, Valéry Zeitoun, et al. 2016.
-“Laang Spean Cave (Battambang Province): A Tale of Occupation in
-Cambodia from the Late Upper Pleistocene to Holocene.” Quaternary
-International, Southeast Asia: human evolution, dispersals and
-adaptation, vol. 416 (September): 162–76.
-https://doi.org/10.1016/j.quaint.2015.07.049. Thaw, U. Aung. 1971. “The
-‘Neolithic’ Culture of the Padah-Lin Caves.” Asian Perspectives 14:
-123–33. Thong, Pham Huy. 1980. “Con Moong Cave: A NOTEWORTHY
-ARCHAEOLOGICAL DISCOVERY IN VIETNAM.” Asian Perspectives 23 (1): 17–21.
+14–40.
+
+Sophady, Heng, Hubert Forestier, Valéry Zeitoun, et al. 2016. “Laang
+Spean Cave (Battambang Province): A Tale of Occupation in Cambodia from
+the Late Upper Pleistocene to Holocene.” Quaternary International,
+Southeast Asia: human evolution, dispersals and adaptation, vol. 416
+(September): 162–76. https://doi.org/10.1016/j.quaint.2015.07.049.
+
+Thaw, U. Aung. 1971. “The ‘Neolithic’ Culture of the Padah-Lin Caves.”
+Asian Perspectives 14: 123–33.
+
+Thong, Pham Huy. 1980. “Con Moong Cave: A NOTEWORTHY ARCHAEOLOGICAL
+DISCOVERY IN VIETNAM.” Asian Perspectives 23 (1): 17–21.
+
 Tian, Chun, Wei Liao, Yanyan Yao, et al. 2023. “New Lithic Evidence from
 Terminal Pleistocene-Early Holocene Zhongshan Rockshelter, Guangxi,
 Southern China.” Journal of Archaeological Science: Reports 49 (June):
-103916. https://doi.org/10.1016/j.jasrep.2023.103916. Tjoa-Bonatz, Mai
-Lin, Andreas Reinecke, and Dominik Bonatz. 2012. “New Excavation at Moh
-Khiew Site, Southern Thailand.” In Crossing Borders: Selected Papers
-from the 13th International Conference of the European Association of
-Southeast Asian Archaeologists. NUS Press Pte
-Ltd. https://muse.jhu.edu/pub/43/monograph/book/22896. Viet, Nguyen.
-2008. “\[LATE PLEISTOCENE AND EARLY HOLOCENE FORAGER ORGANIZATIONS IN
-SOUTHEAST ASIA\] Hoabinhian Macrobotanical Remains from Archaeological
-Sites in Vietnam: Indicators of Climate Changes from the Late
-Pleistocene to the Early Holocene.” Bulletin of the Indo-Pacific
+103916. https://doi.org/10.1016/j.jasrep.2023.103916.
+
+Tjoa-Bonatz, Mai Lin, Andreas Reinecke, and Dominik Bonatz. 2012. “New
+Excavation at Moh Khiew Site, Southern Thailand.” In Crossing Borders:
+Selected Papers from the 13th International Conference of the European
+Association of Southeast Asian Archaeologists. NUS Press Pte
+Ltd. https://muse.jhu.edu/pub/43/monograph/book/22896.
+
+Viet, Nguyen. 2008. “\[LATE PLEISTOCENE AND EARLY HOLOCENE FORAGER
+ORGANIZATIONS IN SOUTHEAST ASIA\] Hoabinhian Macrobotanical Remains from
+Archaeological Sites in Vietnam: Indicators of Climate Changes from the
+Late Pleistocene to the Early Holocene.” Bulletin of the Indo-Pacific
 Prehistory Association 28 (June): 80–83.
-https://doi.org/10.7152/bippa.v28i0.12019. Wei, Pianpian, Hongliang Lu,
-Kristian J. Carlson, et al. 2020. “The Upper Limb Skeleton and
-Behavioral Lateralization of Modern Humans from Zhaoguo Cave,
-Southwestern China.” American Journal of Physical Anthropology 173 (4):
-671–96. https://doi.org/10.1002/ajpa.24147. White, Joyce C., Daniel
-Penny, Lisa Kealhofer, and Bernard Maloney. 2004. “Vegetation Changes
-from the Late Pleistocene through the Holocene from Three Areas of
-Archaeological Significance in Thailand.” Quaternary International, The
-record of Human /Climate interaction in Lake Sediments, vol. 113 (1):
-111–32. https://doi.org/10.1016/j.quaint.2003.09.001. Wolff, E. W., J.
-Chappellaz, T. Blunier, S. O. Rasmussen, and A. Svensson. 2010.
-“Millennial-Scale Variability during the Last Glacial: The Ice Core
-Record.” Quaternary Science Reviews, Vegetation Response to
+https://doi.org/10.7152/bippa.v28i0.12019.
+
+Wei, Pianpian, Hongliang Lu, Kristian J. Carlson, et al. 2020. “The
+Upper Limb Skeleton and Behavioral Lateralization of Modern Humans from
+Zhaoguo Cave, Southwestern China.” American Journal of Physical
+Anthropology 173 (4): 671–96. https://doi.org/10.1002/ajpa.24147.
+
+White, Joyce C., Daniel Penny, Lisa Kealhofer, and Bernard Maloney.
+2004. “Vegetation Changes from the Late Pleistocene through the Holocene
+from Three Areas of Archaeological Significance in Thailand.” Quaternary
+International, The record of Human /Climate interaction in Lake
+Sediments, vol. 113 (1): 111–32.
+https://doi.org/10.1016/j.quaint.2003.09.001.
+
+Wolff, E. W., J. Chappellaz, T. Blunier, S. O. Rasmussen, and A.
+Svensson. 2010. “Millennial-Scale Variability during the Last Glacial:
+The Ice Core Record.” Quaternary Science Reviews, Vegetation Response to
 Millennial-scale Variability during the Last Glacial, vol. 29 (21):
-2828–38. https://doi.org/10.1016/j.quascirev.2009.10.013. Wu, Yan,
-Guangmao Xie, Limi Mao, Zhijun Zhao, and Miriam Belmaker. 2020.
+2828–38. https://doi.org/10.1016/j.quascirev.2009.10.013.
+
+Wu, Yan, Guangmao Xie, Limi Mao, Zhijun Zhao, and Miriam Belmaker. 2020.
 “Phytolith Evidence for Human-Plant Subsistence in Yahuai Cave (Guangxi,
 South China) over the Past 30000 Years.” Science China Earth Sciences 63
-(11): 1745–57. https://doi.org/10.1007/s11430-020-9640-3. Wu, Yun,
-Kaiwei Qiu, Yi Luo, et al. 2022. “Dedan Cave: Extending the Evidence of
-the Hoabinhian Technocomplex in Southwest China.” Journal of
+(11): 1745–57. https://doi.org/10.1007/s11430-020-9640-3.
+
+Wu, Yun, Kaiwei Qiu, Yi Luo, et al. 2022. “Dedan Cave: Extending the
+Evidence of the Hoabinhian Technocomplex in Southwest China.” Journal of
 Archaeological Science: Reports 44 (August): 103524.
-https://doi.org/10.1016/j.jasrep.2022.103524. Yi, Seonbok, J. J. Lee,
-Shin-Woo Kim, Yongwook Yoo, and D. Kim. 2008. “New Data on the
-Hoabinhian: Investigations at Hang Cho Cave, Northern Vietnam.” Bulletin
-of the Indo-Pacific Prehistory Association 28 (January): 73–79. Zeitoun,
-Valery, Prasit Auetrakulvit, Hubert Forestier, et al. 2013. “Discovery
-of a Mesolithic Burial near the Painted Rock-Shelter of Ban Tha Si
-(Lampang Province, Northern Thailand): Implications for Regional
+https://doi.org/10.1016/j.jasrep.2022.103524.
+
+Yi, Seonbok, J. J. Lee, Shin-Woo Kim, Yongwook Yoo, and D. Kim. 2008.
+“New Data on the Hoabinhian: Investigations at Hang Cho Cave, Northern
+Vietnam.” Bulletin of the Indo-Pacific Prehistory Association 28
+(January): 73–79.
+
+Zeitoun, Valery, Prasit Auetrakulvit, Hubert Forestier, et al. 2013.
+“Discovery of a Mesolithic Burial near the Painted Rock-Shelter of Ban
+Tha Si (Lampang Province, Northern Thailand): Implications for Regional
 Mortuary Practices.” Comptes Rendus Palevol 12 (2): 127–36.
-https://doi.org/10.1016/j.crpv.2012.09.002. Zeitoun, Valéry, Prasit
-Auetrakulvit, Antoine Zazzo, Alain Pierret, Stéphane Frère, and Hubert
-Forestier. 2019. “Discovery of an Outstanding Hoabinhian Site from the
-Late Pleistocene at Doi Pha Kan (Lampang Province, Northern Thailand).”
-Archaeological Research in Asia 18 (June): 1–16.
-https://doi.org/10.1016/j.ara.2019.01.002. Zeitoun, Valéry, Hubert
-Forestier, Alain Pierret, et al. 2012. “Multi-Millennial Occupation in
-Northwestern Laos: Preliminary Results of Excavations at the Ngeubhinh
-Mouxeu Rock-Shelter.” Comptes Rendus Palevol 11 (4): 305–13.
-https://doi.org/10.1016/j.crpv.2011.11.001. Zhou, Yuduan, Xueping Ji,
-Yinghua Li, et al. 2020. “Tangzigou Open-Air Site: A Unique Lithic
-Assemblage during the Early Holocene in Yunnan Province, Southwest
-China.” Quaternary International, Dispersal Barriers into Southeast Asia
-during the Late Pleistocene, vol. 563 (October): 105–18.
-https://doi.org/10.1016/j.quaint.2019.11.011. Zhou, Yuduan, Yuanjin
-Jiang, Ge Liang, et al. 2019. “A Technological Perspective on the Lithic
-Industry of the Bailiandong Cave (36–7 Ka) in Guangxi: An Effort to
-Redefine the Cobble-Tool Industry in South China.” Comptes Rendus
-Palevol 18 (8): 1095–121. https://doi.org/10.1016/j.crpv.2019.09.001.
+https://doi.org/10.1016/j.crpv.2012.09.002.
+
+Zeitoun, Valéry, Prasit Auetrakulvit, Antoine Zazzo, Alain Pierret,
+Stéphane Frère, and Hubert Forestier. 2019. “Discovery of an Outstanding
+Hoabinhian Site from the Late Pleistocene at Doi Pha Kan (Lampang
+Province, Northern Thailand).” Archaeological Research in Asia 18
+(June): 1–16. https://doi.org/10.1016/j.ara.2019.01.002.
+
+Zeitoun, Valéry, Hubert Forestier, Alain Pierret, et al. 2012.
+“Multi-Millennial Occupation in Northwestern Laos: Preliminary Results
+of Excavations at the Ngeubhinh Mouxeu Rock-Shelter.” Comptes Rendus
+Palevol 11 (4): 305–13. https://doi.org/10.1016/j.crpv.2011.11.001.
+
+Zhou, Yuduan, Xueping Ji, Yinghua Li, et al. 2020. “Tangzigou Open-Air
+Site: A Unique Lithic Assemblage during the Early Holocene in Yunnan
+Province, Southwest China.” Quaternary International, Dispersal Barriers
+into Southeast Asia during the Late Pleistocene, vol. 563 (October):
+105–18. https://doi.org/10.1016/j.quaint.2019.11.011.
+
+Zhou, Yuduan, Yuanjin Jiang, Ge Liang, et al. 2019. “A Technological
+Perspective on the Lithic Industry of the Bailiandong Cave (36–7 Ka) in
+Guangxi: An Effort to Redefine the Cobble-Tool Industry in South China.”
+Comptes Rendus Palevol 18 (8): 1095–121.
+https://doi.org/10.1016/j.crpv.2019.09.001.
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-demeterAnatomicallyModernHuman2012" class="csl-entry">
+
+Demeter, Fabrice, Laura L. Shackelford, Anne-Marie Bacon, Philippe
+Duringer, Kira Westaway, Thongsa Sayavongkhamdy, José Braga, Phonephanh
+Sichanthongtip, Phimmasaeng Khamdalavong, and Jean-Luc Ponche. 2012.
+“Anatomically Modern Human in Southeast Asia (Laos) by 46 Ka.”
+*Proceedings of the National Academy of Sciences* 109 (36): 14375–80.
+
+</div>
+
+</div>
