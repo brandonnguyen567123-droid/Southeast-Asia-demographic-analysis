@@ -49,8 +49,10 @@ In this project we aim to conduct a demographic analysis of Mainland
 Southeast Asia from the late Pleistocene. Using radiocarbon dates we
 simulated population dynamics over time with summed probability
 distribution plots. We compare the SPDs against climate events to
-explain anomalous occupation dynamics. \[ BM: add a couple of research
-questions that we will answer with our data \]
+explain anomalous occupation dynamics. Some questions we aim to address
+are, do global cooling events negatively affect population dynamics in
+Mainland Southeast Asia? And did warming events like the Bølling–Allerød
+Interstadial cause a population increase?
 
 ## Background
 
@@ -60,11 +62,16 @@ we will be exploring them under different climate events in order.
 ### Marine Isotope Stage 3 (57-29 ka)
 
 The Marine Isotope Stage 3 is when humans started peopling Mainland
-Southeast Asia preceeding the LGM (Fitch et al. 2025). Tam Pa Ling in
-Laos boasts the earliest anatomically modern human fossil, the partial
-human cranium found was dated using multiple methods, radiocarbon coming
-out to 56.5k cal BP Demeter et al. (2012) (Demeter et al. 2012).
-Xiaodong in Yunnan, China contains the earliest evidence of Hoabinhian
+Southeast Asia preceeding the LGM (Fitch et al. 2025). The earliest site
+in Mainland Southeast Asia is said to be before MIS3, Laang Spean was
+OSL dated to 71 ka although without published numbers of materials found
+in this bottom layer it is hard to interpret (Sophady et al. 2016). A
+similar issue appears in Ngeubhinh Mouxeu which was dated with OSL to 56
+ka with very little lithic material found (Zeitoun et al. 2012). Tam Pa
+Ling in Laos boasts the earliest anatomically modern human fossil, the
+partial human cranium found was dated using multiple methods,
+radiocarbon coming out to 56.5k cal BP (Demeter et al. 2012). Xiaodong
+in Yunnan, China contains the earliest evidence of Hoabinhian
 technology, being dated back from, 43.5-24.5 ka cal (Ji et al. 2016).
 Another site in Yunnan with possible Hoabinhian technology during this
 time period is Dedan (30.8 ka) although it remains unclear without more
@@ -135,9 +142,11 @@ argue the similarity of culture across Southeast Asia and southern China
 (Zeitoun et al. 2019).
 
 The **Younger Dryas (12.9-11.7 ka)** is a global return to cooler
-temperatures (Rasmussen et al. 2006). The only site to emerge during
-this time is Zhongshan in China (12.3-7.8 ka) without Hoabinhian tools
-(Tian et al. 2023).
+temperatures (Rasmussen et al. 2006). There is a theory at this time
+that the sudden cold from this event caused the advent of agriculture as
+traditional hunter gatherer food sources became sparse (Harris 2003).
+The only site to emerge during this time is Zhongshan in China (12.3-7.8
+ka) without Hoabinhian tools (Tian et al. 2023).
 
 ## Marine Isotope Stage 1 (11.7 ka-present)
 
@@ -153,19 +162,18 @@ hunting mass-kill location, Spirit (11.3-3 ka) and Banyan Valley
 (10.7-0.22 ka) caves similarly emerged with Banyan Valley being occupied
 into historic periods (Conrad et al. 2012). In Vietnam 2 Hoabinhian
 sites are inhabited for a brief time, Dong Cang and Hang Doi both only
-being dated to 10.5 ka (Viet 2008). Cambodia’s only well dated
-Hoabinhian site Laang Spean had its oldest layers dated to 71 ka with
-OSL but the radiocarbon dates only go from 10-3.3 ka (Sophady et
-al. 2016). Hiem cave (9.2-9 ka) is a short Hoabinhian lived site in
-Vietnam where occupants exploited a large variety of food sources
-(Masojć et al. 2023). Tangzigou (9-7.4 ka) is another site in China with
-technology that isn’t Hoabinhian (Zhou et al. 2020). Ban Rai (8.9-6.6
-ka) is a site in Thailand showing little change in technology as climate
-changed (Marwick and Gagan 2011). Only dated to 3.7 ka, Huai Hin is
-typically dated as the end of the Hoabinhian (Forestier et al. 2013).
-Ngeubinh Mouxeu, is a site in Laos that contains both pre-Hoabinhian and
-Hoabinhian lithics but the Hoabinhian layers couldn’t be dated, it is
-only known they are older than 1.2 ka (Zeitoun et al. 2012).
+being dated to 10.5 ka (Viet 2008). Laang Spean begins showing evidence
+of Hoabinhian at this time, radiocarbon dates going from 10-3.3 ka
+(Sophady et al. 2016). Hiem cave (9.2-9 ka) is a short Hoabinhian lived
+site in Vietnam where occupants exploited a large variety of food
+sources (Masojć et al. 2023). Tangzigou (9-7.4 ka) is another site in
+China with technology that isn’t Hoabinhian (Zhou et al. 2020). Ban Rai
+(8.9-6.6 ka) is a site in Thailand showing little change in technology
+as climate changed (Marwick and Gagan 2011). Only dated to 3.7 ka, Huai
+Hin is typically dated as the end of the Hoabinhian (Forestier et
+al. 2013). Ngeubinh Mouxeu, also contains Hoabinhian lithics but the
+Hoabinhian layers couldn’t be dated, it is only known they are older
+than 1.2 ka (Zeitoun et al. 2012).
 
 ## Data
 
@@ -177,24 +185,19 @@ the built in feature in rcarbon.
 ## Methods
 
 First we calibrated all the dates using IntCal20 in rcarbon, then we
-made summed probability distributions and visualized it in a plots,
-first without binning. Next to account for well dated sites
-overshadowing sites with less amount of dates we binned the data by
-different years to experiment. After the initial SPD plots we decided to
-evaluate these our findings with a Monte-Carlo simulation approach to
-check if taphonomic loss and calibration process affected the shape of
-the plot. With an exponential growth model our Monte-Carlo simulations
-were used to check 5 timelines, Oldest Dryas to Bølling–Allerød
-Interstadial, Bølling–Allerød Interstadial to Younger Dryas, Marine
-Isotope 3 to Last Glacial Maximum, , 50,000 years ago to 8.2-kiloyear
-event and Last Glacial Maximum to 8.2-kiloyear event
+made summed probability distributions and visualized it in plots,
+layering on climate events to assess any unique peaks visually. Next to
+account for well dated sites overshadowing sites with less amount of
+dates we experimented with binning the data by different years. After
+the initial SPD plots we decided to evaluate these our findings with a
+Monte-Carlo simulation approach to check if taphonomic loss and
+calibration process affected the shape of the plot. With an exponential
+growth model our Monte-Carlo simulations were used to check 5 timelines,
+Oldest Dryas to Bølling–Allerød Interstadial, Bølling–Allerød
+Interstadial to Younger Dryas, 50,000 years ago to 8.2-kiloyear event
+and Last Glacial Maximum to 8.2-kiloyear event.
 
 ## Results
-
-The resulting plots are relatively consistent in peaks and show that
-practically every period is accounted for \[ BM: edit this to be more
-informative \]. The consistent increase in dates after 14,000 BP do call
-for some investigation which is our current focus.
 
 ``` r
 age_range <- c(50000,2000)
@@ -301,18 +304,38 @@ ggplot(spd_unbinned$grid) +
   theme_minimal() 
 ```
 
+<div id="fig-unbinned-climate">
+
 ![](README_files/figure-commonmark/fig-unbinned-climate-1.png)
+
+Figure 1: SPD plot with climate events overlayed, dates for global
+intersadials are from Wolff et al. 2010 and dates for Heinrich events
+are from Hemming 2004
+
+</div>
 
 <a href="#fig-unbinned-climate" class="quarto-xref">Figure 1</a> shows a
 SPD plot dating from 50-2 ka using all of the radiocarbon dates. There
 is a continuous occupation of Southeast Asia from 50000 BP to present.
-The peaks are relatively low until the LGM suggesting low occupation
-without any sustained growth. During the LGM where the slowly increasing
-rises, plataeus, and dips suggest a gradual intensification despite the
-global cold. This intensification trend continues past the LGM with
-extreme peaks in Bølling–Allerød Interstadial, Younger Dryas, and early
-Holocene. The trend then declines after 8 ka. The extreme peak of the
-Bølling–Allerød Interstadial are of interest because it might be
+The line stays compressed until until about 25 ka where the curve picks
+up peaking near 10 ka before seemingly plummeting and never recovering
+till present day. The curve is relatively low during MIS 3 although
+there is a small peak at 32 ka. This continuous low occupation suggests
+the warming interstadials didn’t affect occupation dynamics during the
+MIS 3 with the population remaining low throughout MIS 3. During the
+beginning of MIS 2 the curve continues its compressed shape with an even
+smaller peak before the LGM. During the LGM the curve picks up with
+higher peaks than before, this is shocking as we would not expect a
+population increase during global cooling. This intensification trend
+continues past the LGM until there is a big dip at the beginning of the
+Oldest Dryas, a taller peak then another deep at the end of the Oldest
+dryas. The Bølling–Allerød Interstadial contained 2 even higher peaks
+then the tallest peak of MIS 2 occured during the beginning of the
+Younger Dryas before another dip. The curve recovers at the beginning of
+MIS 1 with the 3 tallest peaks happening before the 8.2 kiloyear event.
+The curve then declines continuously after the event, there are still
+some smaller peaks until summed probability hits 0. The extreme peak of
+the Bølling–Allerød Interstadial are of interest because it might be
 explained by the global warming of the event making Mainland Southeast
 Asia more hospitable for the hunter gatherers, there is evidence of the
 warming in speleothems from Vietnam and Thailand during this time
@@ -355,7 +378,14 @@ ggplot(plot_df, aes(x = calBP)) +
   theme_classic()
 ```
 
+<div id="fig-MTCL1">
+
 ![](README_files/figure-commonmark/fig-MTCL1-1.png)
+
+Figure 2: Monte Carlo test of OD-BA with 100 simulations, positive
+deviations represented with green bars
+
+</div>
 
 To verify our observations we used Monte Carlo tests, after testing 1000
 and 100 simulations we found no difference in results and settled on 100
@@ -408,7 +438,13 @@ ggplot(plot_df2, aes(x = calBP)) +
   theme_classic()
 ```
 
+<div id="fig-MTCL2">
+
 ![](README_files/figure-commonmark/fig-MTCL2-1.png)
+
+Figure 3: Monte Carlo test of BA-YD
+
+</div>
 
 <a href="#fig-MTCL2" class="quarto-xref">Figure 3</a> shows our testing
 from Bølling–Allerød Interstadial to Younger Dryas, the same deviation
@@ -420,7 +456,7 @@ intense occupation could be a reflection of the little evidence of the
 Younger Dryas seen in Mainland Southeast Asian records (Maloney 1995;
 Cook and Jones 2012). In Vietnam the forests surrounding Hang Trong
 remained stable throughout MIS-2 and speleothem records from central
-Vietnam failed to detect the Younger Dryas event (Rabbett et al. 2017,
+Vietnam failed to detect the Younger Dryas event (Rabbett et al. 2017;
 Patterson et al. 2023).
 
 ``` r
@@ -466,7 +502,14 @@ ggplot(plot_df4, aes(x = calBP)) +
   theme_classic()
 ```
 
+<div id="fig-MTCL4">
+
 ![](README_files/figure-commonmark/fig-MTCL4-1.png)
+
+Figure 4: Monte Carlo test of LGM-8.2k, negative deviations are
+represented in blue
+
+</div>
 
 <a href="#fig-MTCL4" class="quarto-xref">Figure 4</a> shows our test for
 LGM to the 8.2 kiloyear event there are multiple positive deviations,
@@ -521,7 +564,13 @@ ggplot(plot_df5, aes(x = calBP)) +
   theme_classic()
 ```
 
+<div id="fig-MTCL5">
+
 ![](README_files/figure-commonmark/fig-MTCL5-1.png)
+
+Figure 5: Monte Carlo test of 50K-8.2k
+
+</div>
 
 <a href="#fig-MTCL5" class="quarto-xref">Figure 5</a> shows our test
 from 50ka to the 8.2 kiloyear event, we can see a near constant positive
@@ -578,7 +627,13 @@ ggplot(plot_df6, aes(x = calBP)) +
   theme_classic()
 ```
 
+<div id="fig-MTCL6">
+
 ![](README_files/figure-commonmark/fig-MTCL6-1.png)
+
+Figure 6: Monte Carlo test of OD-3 ka
+
+</div>
 
 To investigate whether the 8.2 kiloyear event did negatively affect
 occupation intensity
@@ -588,9 +643,12 @@ deviations although the deviation during the late Oldest Dryas
 disappears and there are more minor positive deviations in the early
 Holocene. There is even a positive deviation during the beginning of the
 8.2 kiloyear event which suggests that the event itself didn’t intensely
-affect occupation dynamics. We can also see a general downward trend
-going through 3 ka from the 8.2 kiloyear event which supports people
-moving out of their caves into open air areas.
+affect occupation dynamics. An oddity is the half millennia long
+positive deviation immediately after the event, it is hard to interpret
+but is possibly a result of population decline lagging until after the
+deviation from adaptation to the 8.2 event. We can also see a general
+downward trend going through 3 ka from the 8.2 kiloyear event which
+supports people moving out of their caves into open air areas.
 
 ``` r
 # Grouping dates within 200 years of each other into bins
@@ -617,7 +675,13 @@ ggplot(spd_res$grid) +
   theme_minimal() 
 ```
 
+<div id="fig-200-bin-climate">
+
 ![](README_files/figure-commonmark/fig-200-bin-climate-1.png)
+
+Figure 7: SPD plot with a bin of 200 years with climate events overlayed
+
+</div>
 
 To address the issue of intersite variability where a well dated site
 could dominate the whole data set we experimented with binning dates
@@ -646,7 +710,7 @@ library(rnaturalearthdata)
 library(sf)
 ```
 
-    Linking to GEOS 3.13.0, GDAL 3.5.3, PROJ 9.5.1; sf_use_s2() is TRUE
+    Linking to GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0; sf_use_s2() is TRUE
 
 ``` r
 library(ggrepel)
@@ -688,7 +752,13 @@ sea_map <- ggplot(world) +
 sea_map
 ```
 
+<div id="fig-map">
+
 ![](README_files/figure-commonmark/fig-map-1.png)
+
+Figure 8: Map of early sites in Southeast Asia
+
+</div>
 
 In <a href="#fig-map" class="quarto-xref">Figure 8</a> are all the sites
 in early Mainland Southeast Asia used in this study. We can see a
@@ -735,7 +805,13 @@ early_sea_map <-ggplot(world) +
 early_sea_map
 ```
 
+<div id="fig-early-map">
+
 ![](README_files/figure-commonmark/fig-early-map-1.png)
+
+Figure 9: Sites older than 30,000 BP
+
+</div>
 
 To investigate if there was any patterning to occupation we created
 several time separated maps. In
@@ -779,7 +855,13 @@ sea_map_after_14ka <-ggplot(world) +
 sea_map_after_14ka
 ```
 
+<div id="fig-after-map">
+
 ![](README_files/figure-commonmark/fig-after-map-1.png)
+
+Figure 10: Sites occupied after the 14 ka population rise
+
+</div>
 
 In <a href="#fig-after-map" class="quarto-xref">Figure 10</a> sites
 occupied after 13,000 are shown, we can see most of the sites from the
@@ -795,7 +877,7 @@ karst_sf <- st_read("whymap_karst__v1_poly.shp")
 ```
 
     Reading layer `whymap_karst__v1_poly' from data source 
-      `/Users/bmarwick/Downloads/Southeast-Asia-demographic-analysis/whymap_karst__v1_poly.shp' 
+      `C:\Users\Brandon Nguyen\Documents\Independent study\whymap_karst__v1_poly.shp' 
       using driver `ESRI Shapefile'
     Simple feature collection with 2805 features and 2 fields
     Geometry type: MULTIPOLYGON
@@ -830,7 +912,13 @@ ggplot(world) +
   labs(title = "Archaeological Sites and Karst Formations")
 ```
 
+<div id="fig-karst-map">
+
 ![](README_files/figure-commonmark/fig-karst-map-1.png)
+
+Figure 11: Early sites with Karst layered on top
+
+</div>
 
 To explain the paucity of early sites in Mainland Southeast Asia we
 looked at karst formations and added it to the map which can be seen in
@@ -840,7 +928,59 @@ sites in Laos. This explains the gap in sites as almost all of Cambodia
 and Southern Vietnam is devoid of karst, meanwhile there are some
 formations in southern Thailand which explains the few sites there.
 
-References
+## Discussion
+
+Drawing back to our questions, we can definitively say no to both,
+population increase was consistent from the LGM up until 8 thousand
+years ago. In
+<a href="#fig-unbinned-climate" class="quarto-xref">Figure 1</a> we saw
+population didn’t increase during MIS 3 even throughout the interstadial
+periods, it wasn’t until near the beginning of the LGM our curve picked
+up. The curve continued to rise even during the Oldest Dryas and the
+highest peak happened during the beginning of the Younger Dryas. A
+possible reason for this is that these cold periods drove people into
+cave sites more as reflected in
+<a href="#fig-karst-map" class="quarto-xref">Figure 11</a>. However with
+the few positive deviations in
+<a href="#fig-MTCL4" class="quarto-xref">Figure 4</a> we are inclined
+there is some genuine population growth. Another explanation is that
+there is some kind of regional buffer against extreme weather conditions
+in Mainland Southeast Asia, during the LGM, Cambodia, Vietnam, and
+Thailand consistently did not have the coldest and driest values when
+comparing paleoclimate records allowing populations to increase without
+the stress of extreme cold (Cook and Jones 2012). There also is no
+evidence of the Younger Dryas in speleothems from central Vietnam
+(Patterson et al. 2023).
+
+With the curve increasing at a rapid rate our investigations looked at
+the Bølling–Allerød Interstadial to see if the warming event caused the
+curve to increase so much. However our Monte Carlo tests found no
+significant deviations lasting more than a few decades
+(<a href="#fig-MTCL1" class="quarto-xref">Figure 2</a> and
+<a href="#fig-MTCL2" class="quarto-xref">Figure 3</a>). The short
+deviations we find during the Bølling–Allerød Interstadial could
+represent genuine growth however it just seems to be a part of a
+continuing population trend of the MIS 2 rather than the warm period
+inflating the curve itself. Comparing local paleoclimate records there
+isn’t much of a difference between climate conditions between the
+Bølling–Allerød Interstadial and Younger dryas (Cook and Jones 2012).
+This seems contradictory with speleothem records from central Vietnam
+showing the Bølling–Allerød Interstadial being a warm period however the
+authors attribute their results to rising sea levels nearby (Patterson
+et al. 2023) while almost all of our sites are further inland
+<a href="#fig-map" class="quarto-xref">Figure 8</a>.
+
+## Conclusion
+
+Our results show the potential to investigate Mainland Southeast Asian
+dynamics using SPDs, collecting site and dates we were able to plot our
+results and compare them against climate events. Our plots found an
+increasing curve that could be verified with Monte Carlo tests. Although
+we didn’t find climate driven population dynamics we were still able to
+determine possible reasons why these events didn’t affect the population
+as it grew.
+
+## References
 
 Anderson, Douglas D. 1997. “Cave Archaeology in Southeast Asia.”
 Geoarchaeology 12 (6): 607–38.
@@ -902,6 +1042,10 @@ https://doi.org/10.1016/j.ara.2020.100236.
 Görsdorf, Jochen, and Nguyen Viet. 1995. “Berlin 14C Dates of
 Archaeological Sites in Vietnam.” Radiocarbon 37 (2): 221–25.
 https://doi.org/10.1017/S0033822200030678.
+
+Harris. 2003. “Climatic Change and the Beginnings of Agriculture: The
+Case of the Younger Dryas.” In Evolution on Planet Earth. Academic
+Press. https://doi.org/10.1016/B978-012598655-7/50047-1.
 
 Hemming, Sidney R. 2004. “Heinrich Events: Massive Late Pleistocene
 Detritus Layers of the North Atlantic and Their Global Climate Imprint.”
@@ -1073,18 +1217,3 @@ Perspective on the Lithic Industry of the Bailiandong Cave (36–7 Ka) in
 Guangxi: An Effort to Redefine the Cobble-Tool Industry in South China.”
 Comptes Rendus Palevol 18 (8): 1095–121.
 https://doi.org/10.1016/j.crpv.2019.09.001.
-
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
-
-<div id="ref-demeterAnatomicallyModernHuman2012" class="csl-entry">
-
-Demeter, Fabrice, Laura L. Shackelford, Anne-Marie Bacon, Philippe
-Duringer, Kira Westaway, Thongsa Sayavongkhamdy, José Braga, Phonephanh
-Sichanthongtip, Phimmasaeng Khamdalavong, and Jean-Luc Ponche. 2012.
-“Anatomically Modern Human in Southeast Asia (Laos) by 46 Ka.”
-*Proceedings of the National Academy of Sciences* 109 (36): 14375–80.
-
-</div>
-
-</div>
