@@ -1,5 +1,4 @@
-# Using radiocarbon ages as a proxy for human population dynamics in
-late Pleistocene mainland Southeast Asia
+# Using radiocarbon ages as a proxy for human population dynamics in late Pleistocene mainland Southeast Asia
 
 
 ``` r
